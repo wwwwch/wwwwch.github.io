@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Google Authenticator-like Captcha</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #captcha {
+      font-size: 36px;
+      margin-top: 20px;
+      font-weight: bold;
+      letter-spacing: 5px;
+    }
+    input[type="password"] {
+      padding: 10px;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .timer {
+      font-size: 14px;
+      color: #666;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Google Authenticator-like Captcha</h1>
+  
+  <!-- 显示验证码 -->
+  <div id="captcha-container">
+    <h2>Your Dynamic Captcha</h2>
+    <div id="captcha"></div>
+    <div id="timer" class="timer"></div>
+  </div>
+
+  <!-- 使用本地自定义的 totp 库 (without external dependencies) -->
+  <script src="./otplib-browser.js"></script>
+
+  <script>
+    // TOTP 设置
+    const secret = 'jrtuu3tacqnmqee6jkifcydekzg3fs4d'; // 这是你的固定共享密钥（请替换为你提供的密钥）
+
+    // 页面加载完成后自动启动
+    window.onload = startCaptcha;
+
+    function startCaptcha() {
+       // 设置TOTP的时间步长（单位：秒），一般是30秒
+       if (window.otplib && window.otplib.authenticator) {
+          try {
+            // v10.2.3 和 v12 API 稍有不同，但基本的 generate 和 options 兼容
+            otplib.authenticator.options = { step: 30 };
+            updateCaptcha();
+            // 每秒刷新一次以更新倒计时和检查是否需要新 token
+            setInterval(updateCaptcha, 1000);
+          } catch (err) {
+             console.error(err);
+             document.getElementById('captcha').textContent = "Error initializing otplib: " + err.message;
+          }
+       } else {
+           document.getElementById('captcha').textContent = "Error: otplib library object not found.";
+       }
+    }
+
+    // 生成动态验证码
+    function updateCaptcha() {
+      try {
+        const token = otplib.authenticator.generate(secret);
+        document.getElementById('captcha').textContent = token;
+        
+        // 计算剩余时间
+        const epoch = Math.floor(Date.now() / 1000);
+        const step = 30;
+        const remaining = step - (epoch % step);
+        document.getElementById('timer').textContent = `Refresh in ${remaining}s`;
+        
+      } catch (err) {
+        console.error(err);
+        document.getElementById('captcha').textContent = "Error generating token";
+      }
+    }
+  </script>
+
+</body>
+</html>
