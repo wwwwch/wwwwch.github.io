@@ -1,0 +1,37 @@
+﻿[
+    {
+        "number":  120,
+        "title":  "120. 三角形最小路径和｜自底向上 DP",
+        "file":  "120_triangle_min_path_sum_a_4_notes.html"
+    },
+    {
+        "number":  121,
+        "title":  "121. 买卖股票的最佳时机 —— 一次遍历解法",
+        "file":  "121_stock_profit_a_4_infographic.html"
+    },
+    {
+        "number":  136,
+        "title":  "136. 只出现一次的数字 - 多解法总结",
+        "file":  "136_single_number_a_4_infographic.html"
+    },
+    {
+        "number":  169,
+        "title":  "169. 多数元素 - Boyer-Moore投票算法",
+        "file":  "169_boyer_moore_majority_vote_a_4_poster.html"
+    },
+    {
+        "number":  206,
+        "title":  "206. 反转链表 —— 解题思想总结",
+        "file":  "206_linked_list_reverse_a_4_notes.html"
+    },
+    {
+        "number":  300,
+        "title":  "LeetCode 300 最长递增子序列 LIS",
+        "file":  "300_lis_a_4_html.html"
+    },
+    {
+        "number":  560,
+        "title":  "560. 和为K的子数组 —— 前缀和+哈希表",
+        "file":  "560_subarray_sum_a_4_html.html"
+    }
+]

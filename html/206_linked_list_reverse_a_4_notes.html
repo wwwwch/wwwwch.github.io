@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>206. 反转链表 —— 解题思想总结</title>
+  <style>
+    :root {
+      --blue-900: #0f2f6f;
+      --blue-700: #1d4ed8;
+      --blue-600: #2563eb;
+      --blue-100: #dbeafe;
+      --blue-50: #eff6ff;
+      --green-700: #15803d;
+      --green-50: #f0fdf4;
+      --gray-900: #111827;
+      --gray-700: #374151;
+      --gray-500: #6b7280;
+      --gray-200: #e5e7eb;
+      --amber-500: #f59e0b;
+      --page-bg: #f3f6fb;
+      --white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--page-bg);
+      color: var(--gray-900);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+      line-height: 1.55;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 24px auto;
+      padding: 18mm 16mm;
+      background: var(--white);
+      border: 1px solid var(--blue-100);
+      border-radius: 18px;
+      box-shadow: 0 16px 40px rgba(15, 47, 111, 0.14);
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding-bottom: 14px;
+      border-bottom: 3px solid var(--blue-100);
+    }
+
+    .hero-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #dbeafe, #eff6ff);
+      font-size: 34px;
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--blue-900);
+      font-size: 33px;
+      line-height: 1.18;
+      letter-spacing: -0.5px;
+    }
+
+    .lead {
+      margin: 8px 0 0;
+      color: var(--gray-700);
+      font-size: 15px;
+    }
+
+    .method-grid {
+      margin-top: 18px;
+      display: grid;
+      gap: 16px;
+    }
+
+    .card {
+      position: relative;
+      padding: 16px 18px 16px 76px;
+      border: 1px solid var(--blue-100);
+      border-radius: 18px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      box-shadow: 0 8px 22px rgba(15, 47, 111, 0.06);
+    }
+
+    .badge {
+      position: absolute;
+      left: 18px;
+      top: 16px;
+      width: 40px;
+      height: 40px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      background: var(--blue-900);
+      color: white;
+      font-weight: 800;
+      font-size: 22px;
+    }
+
+    h2 {
+      margin: 0 0 10px;
+      color: var(--blue-900);
+      font-size: 22px;
+      line-height: 1.25;
+    }
+
+    .point {
+      margin: 8px 0;
+      color: var(--gray-700);
+      font-size: 14.5px;
+    }
+
+    .label {
+      display: inline-block;
+      min-width: 76px;
+      color: var(--blue-700);
+      font-weight: 800;
+    }
+
+    .sublist {
+      margin: 6px 0 0 78px;
+      padding-left: 18px;
+      color: var(--gray-700);
+      font-size: 14px;
+    }
+
+    code.inline {
+      padding: 1px 5px;
+      border-radius: 6px;
+      background: var(--blue-50);
+      color: var(--blue-900);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 0.92em;
+    }
+
+    pre {
+      margin: 9px 0 10px;
+      padding: 13px 14px;
+      overflow-x: auto;
+      border: 1px solid #bfdbfe;
+      border-radius: 14px;
+      background: #f8fbff;
+      color: #0f172a;
+      font-size: 13px;
+      line-height: 1.48;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      white-space: pre;
+    }
+
+    .callout {
+      margin-top: 10px;
+      padding: 10px 12px;
+      border-radius: 13px;
+      border-left: 5px solid var(--blue-600);
+      background: var(--blue-50);
+      color: var(--blue-900);
+      font-weight: 700;
+      font-size: 14.5px;
+    }
+
+    .mnemonic {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 12px;
+      border: 1px dashed var(--blue-600);
+      border-radius: 12px;
+      background: #ffffff;
+      color: var(--blue-900);
+      font-weight: 800;
+    }
+
+    .steps {
+      margin: 6px 0 0 78px;
+      padding-left: 20px;
+      color: var(--gray-700);
+      font-size: 14px;
+    }
+
+    .summary-section {
+      margin-top: 18px;
+      padding: 16px 18px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid var(--blue-100);
+      box-shadow: 0 8px 22px rgba(15, 47, 111, 0.06);
+    }
+
+    .summary-section h2 {
+      margin-bottom: 12px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 14px;
+      font-size: 14px;
+    }
+
+    thead th {
+      background: var(--blue-900);
+      color: white;
+      padding: 10px 8px;
+      text-align: center;
+      font-weight: 800;
+    }
+
+    tbody td {
+      padding: 10px 8px;
+      border: 1px solid var(--blue-100);
+      text-align: center;
+      color: var(--gray-700);
+      background: #ffffff;
+    }
+
+    tbody tr:nth-child(even) td {
+      background: var(--blue-50);
+    }
+
+    tbody td:first-child {
+      color: var(--blue-900);
+      font-weight: 800;
+    }
+
+    .stars {
+      color: var(--amber-500);
+      letter-spacing: 1px;
+      font-size: 16px;
+      white-space: nowrap;
+    }
+
+    .final {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 16px;
+      border: 1px solid #bbf7d0;
+      border-left: 6px solid var(--green-700);
+      background: var(--green-50);
+      color: #14532d;
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .memory-strip {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+    }
+
+    .memory-item {
+      padding: 10px 12px;
+      border-radius: 14px;
+      background: var(--blue-50);
+      border: 1px solid var(--blue-100);
+      text-align: center;
+    }
+
+    .memory-item strong {
+      display: block;
+      color: var(--blue-900);
+      font-size: 15px;
+    }
+
+    .memory-item span {
+      color: var(--gray-500);
+      font-size: 13px;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .page {
+        margin: 0;
+        width: 210mm;
+        min-height: 297mm;
+        border: none;
+        border-radius: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="hero-icon">📚</div>
+      <div>
+        <h1>206. 反转链表 —— 解题思想总结</h1>
+        <p class="lead">
+          本题要求将单向链表原地反转，常见解法可分为三类：<strong>递归回溯法、显式状态递归法、双指针迭代法</strong>。以下是各方法的核心思想与对比。
+        </p>
+      </div>
+    </header>
+
+    <section class="memory-strip" aria-label="记忆主线">
+      <div class="memory-item"><strong>回溯反转</strong><span>递归到尾，再反向改指针</span></div>
+      <div class="memory-item"><strong>状态传递</strong><span>pre / cur 作为递归状态</span></div>
+      <div class="memory-item"><strong>双指针迭代</strong><span>空间 O(1)，首选写法</span></div>
+    </section>
+
+    <section class="method-grid">
+      <article class="card">
+        <div class="badge">1</div>
+        <h2>V1 - 递归法（自底向上回溯反转）</h2>
+
+        <p class="point"><span class="label">思想：</span>利用函数调用栈“递归到末尾，再逐层返回”的特性，在<strong>回溯过程中完成指针反转</strong>。</p>
+        <p class="point"><span class="label">关键操作：</span></p>
+<pre><code>new_head = self.reverseList(head.next)  # 递归得到新头
+head.next.next = head                   # 让后继节点指回头部
+head.next = None                        # 断开原连接，防止环</code></pre>
+
+        <p class="point"><span class="label">特点：</span></p>
+        <ul class="sublist">
+          <li>简洁优雅，逻辑集中于回溯阶段。</li>
+          <li>依赖系统栈，空间复杂度为 <strong>O(N)</strong>。</li>
+          <li>时间复杂度：<strong>O(N)</strong></li>
+        </ul>
+        <div class="callout">📌 适用场景：理解递归本质，适合教学演示。</div>
+      </article>
+
+      <article class="card">
+        <div class="badge">2</div>
+        <h2>V1.1 - 递归法（显式传参模拟尾递归）</h2>
+
+        <p class="point"><span class="label">思想：</span>显式传递当前节点 <code class="inline">cur</code> 和前驱节点 <code class="inline">pre</code>，模拟迭代中的双指针行为，把状态通过参数传递。</p>
+        <p class="point"><span class="label">关键操作：</span></p>
+<pre><code>def recur(self, pre: ListNode, cur: ListNode) -> ListNode:
+    """
+    递归反转链表的辅助函数
+    pre: 当前节点的前驱节点（反转后的 next 指向）
+    cur: 当前节点
+    return: 新链表的头节点（原链表尾节点）
+    """
+    if not cur:
+        return pre  # 终止条件：到达原链表末尾，pre 即为新头
+
+    head = self.recur(cur, cur.next)    # 递归处理后续节点
+
+    cur.next = pre  # 将当前节点的 next 指向前驱节点，完成反转
+
+    return head     # 返回最终的新头节点（始终是最后一个返回的 pre）</code></pre>
+
+        <p class="point"><span class="label">特点：</span></p>
+        <ul class="sublist">
+          <li>更接近迭代逻辑，结构清晰。</li>
+          <li>虽仍使用递归栈，但状态管理更明确。</li>
+          <li>时间复杂度：<strong>O(N)</strong>，空间复杂度：<strong>O(N)</strong></li>
+        </ul>
+        <div class="callout">📌 优势：易于从迭代版本转换而来，便于理解“状态传递”。</div>
+      </article>
+
+      <article class="card">
+        <div class="badge">3</div>
+        <h2>V2 - 双指针迭代法</h2>
+
+        <p class="point"><span class="label">思想：</span>使用两个指针 <code class="inline">prev</code> 和 <code class="inline">curr</code>，从前向后遍历链表，逐步修改每个节点的 <code class="inline">next</code> 指针。</p>
+        <p class="point"><span class="label">关键步骤：</span></p>
+        <ol class="steps">
+          <li>保存 <code class="inline">next_node = curr.next</code></li>
+          <li>将 <code class="inline">curr.next = prev</code></li>
+          <li><code class="inline">prev = curr</code>，<code class="inline">curr = next_node</code></li>
+        </ol>
+
+        <p class="point"><span class="label">特点：</span></p>
+        <ul class="sublist">
+          <li>原地操作，无需额外数据结构。</li>
+          <li><strong>空间复杂度仅 O(1)</strong></li>
+          <li>时间复杂度：<strong>O(N)</strong></li>
+          <li>工业级推荐写法</li>
+        </ul>
+        <div class="callout">
+          📌 一句话口诀：<span class="mnemonic">“暂存下一，反向链接，双指针前进。”</span>
+        </div>
+      </article>
+    </section>
+
+    <section class="summary-section">
+      <h2>🔍 三种方法对比总结</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>时间复杂度</th>
+            <th>空间复杂度</th>
+            <th>是否原地</th>
+            <th>思维难度</th>
+            <th>推荐程度</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>V1 递归回溯</td>
+            <td>O(N)</td>
+            <td>O(N)</td>
+            <td>是</td>
+            <td>中等</td>
+            <td class="stars">⭐⭐⭐☆</td>
+          </tr>
+          <tr>
+            <td>V1.1 显式递归</td>
+            <td>O(N)</td>
+            <td>O(N)</td>
+            <td>是</td>
+            <td>中</td>
+            <td class="stars">⭐⭐⭐⭐</td>
+          </tr>
+          <tr>
+            <td>V2 双指针迭代</td>
+            <td>O(N)</td>
+            <td>O(1)</td>
+            <td>是</td>
+            <td>低</td>
+            <td class="stars">⭐⭐⭐⭐⭐</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="final">
+        ✅ 总体总结一句话：递归法重在理解“回溯”与“状态传递”，而双指针迭代法以最优空间效率成为首选实现方式。掌握这三种方法，可全面应对链表反转类问题。
+      </div>
+    </section>
+  </main>
+</body>
+</html>
