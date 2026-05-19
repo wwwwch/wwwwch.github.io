@@ -1,5 +1,50 @@
 ﻿[
     {
+        "number":  11,
+        "title":  "LeetCode 11 盛最多水的容器 - A4笔记",
+        "file":  "11_a_4_note_html.html"
+    },
+    {
+        "number":  15,
+        "title":  "15.三数之和 - 排序+双指针解法总结",
+        "file":  "15_three_sum_a_4_notes_html.html"
+    },
+    {
+        "number":  20,
+        "title":  "20.有效的括号 —— 栈解法总结",
+        "file":  "20_valid_parentheses_stack_notes_a_4.html"
+    },
+    {
+        "number":  21,
+        "title":  "21.合并两个有序链表 —— 多解法总结",
+        "file":  "21_merge_two_sorted_lists_notes_html.html"
+    },
+    {
+        "number":  53,
+        "title":  "53.最大子数组和 —— 解法总结",
+        "file":  "53_maximum_subarray_a_4_notes_html.html"
+    },
+    {
+        "number":  55,
+        "title":  "55. 跳跃游戏 —— 贪心解法",
+        "file":  "55_jump_game_greedy_notes_html.html"
+    },
+    {
+        "number":  56,
+        "title":  "56. 合并区间 - 完整解法总结",
+        "file":  "56_merge_intervals_a_4_note_html.html"
+    },
+    {
+        "number":  70,
+        "title":  "LeetCode 70. 爬楼梯 —— 解题思想总结",
+        "file":  "70_climbing_stairs_a_4_note_html.html"
+    },
+    {
+        "number":  73,
+        "title":  "73.矩阵置零 —— 空间优化对比",
+        "file":  "73_matrix_zeroing_a_4_note_html.html"
+    },
+    {
         "number":  120,
         "title":  "120. 三角形最小路径和｜自底向上 DP",
         "file":  "120_triangle_min_path_sum_a_4_notes.html"
@@ -30,9 +75,19 @@
         "file":  "239_sliding_window_maximum_note_html.html"
     },
     {
+        "number":  283,
+        "title":  "283.移动零 - 双指针解法总结",
+        "file":  "283_move_zeroes_a_4_note_html.html"
+    },
+    {
         "number":  300,
         "title":  "LeetCode 300 最长递增子序列 LIS",
         "file":  "300_lis_a_4_html.html"
+    },
+    {
+        "number":  347,
+        "title":  "347.前K个高频元素 - 解法总结",
+        "file":  "347_top_k_frequent_elements_notes_html.html"
     },
     {
         "number":  560,

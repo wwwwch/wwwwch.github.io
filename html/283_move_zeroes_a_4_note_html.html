@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>283.移动零 - 双指针解法总结</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef3fb;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #1f2937;
+      line-height: 1.45;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 12mm 11mm;
+      background: #ffffff;
+      box-shadow: 0 10px 35px rgba(15, 23, 42, 0.12);
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: 0 0 10px;
+      color: #12356f;
+      font-size: 30px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+    }
+
+    .grid-top {
+      display: grid;
+      grid-template-columns: 0.85fr 1.45fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .grid-main {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .card {
+      border: 1.5px solid #7aa7e9;
+      border-radius: 9px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+      overflow: hidden;
+    }
+
+    .card.pad {
+      padding: 9px 11px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 10px;
+      color: #0f4fb3;
+      font-weight: 850;
+      font-size: 16px;
+      background: linear-gradient(90deg, #f1f7ff 0%, #ffffff 100%);
+      border-bottom: 1px solid #c7dcfa;
+    }
+
+    .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 6px;
+      background: #1f64c8;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+      box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .content {
+      padding: 9px 11px;
+      font-size: 13.4px;
+    }
+
+    .problem {
+      min-height: 78px;
+      font-size: 14.2px;
+      font-weight: 600;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 12.2px;
+    }
+
+    th {
+      background: #1757b7;
+      color: #fff;
+      padding: 5px 4px;
+      font-weight: 800;
+      border: 1px solid #8bb2ec;
+    }
+
+    td {
+      padding: 5px 5px;
+      border: 1px solid #bdd1ee;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    td:first-child {
+      font-weight: 800;
+      color: #102a56;
+    }
+
+    .subcard {
+      border: 1.3px solid #8fd0cd;
+      border-radius: 8px;
+      padding: 8px 9px;
+      margin-bottom: 7px;
+      background: #fcffff;
+    }
+
+    .subcard:last-child {
+      margin-bottom: 0;
+    }
+
+    .sub-title {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+      color: #08766f;
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .mini-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 5px;
+      background: #0d9488;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
+    .lead {
+      margin: 0 0 5px;
+      font-weight: 700;
+    }
+
+    .muted {
+      color: #475569;
+      font-weight: 600;
+    }
+
+    pre {
+      margin: 5px 0 6px;
+      padding: 8px 9px;
+      border: 1px solid #b9d6d5;
+      border-radius: 6px;
+      background: #f7fbfb;
+      color: #0f172a;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 11.3px;
+      line-height: 1.35;
+      white-space: pre-wrap;
+    }
+
+    .points {
+      margin: 4px 0 0;
+      padding-left: 17px;
+      font-size: 12.7px;
+    }
+
+    .points li {
+      margin: 2px 0;
+    }
+
+    .analysis {
+      font-size: 12.9px;
+    }
+
+    .analysis h3 {
+      margin: 0 0 7px;
+      color: #08766f;
+      font-size: 15.2px;
+    }
+
+    .analysis h4 {
+      margin: 8px 0 4px;
+      color: #08766f;
+      font-size: 13.8px;
+    }
+
+    .analysis ol {
+      margin: 3px 0 0;
+      padding-left: 21px;
+    }
+
+    .analysis li {
+      margin: 3px 0;
+    }
+
+    .quote {
+      margin: 6px 0;
+      padding: 7px 9px;
+      border-left: 4px solid #0d9488;
+      background: #effaf8;
+      border-radius: 5px;
+      font-weight: 800;
+    }
+
+    .dash {
+      margin: 8px 0;
+      border-top: 1px dashed #8bb2ec;
+    }
+
+    .compact-table th,
+    .compact-table td {
+      padding: 4px 5px;
+      font-size: 12.5px;
+    }
+
+    .summary {
+      margin-top: 8px;
+      padding: 10px 13px;
+      border: 1.5px solid #f5a623;
+      border-radius: 9px;
+      background: linear-gradient(90deg, #fff8e8 0%, #ffffff 100%);
+    }
+
+    .summary-title {
+      margin: 0 0 5px;
+      color: #c56a00;
+      font-size: 17px;
+      font-weight: 900;
+    }
+
+    .summary p {
+      margin: 0;
+      font-size: 14px;
+      font-weight: 650;
+    }
+
+    .tag {
+      display: inline-block;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background: #e6f4ff;
+      color: #0f4fb3;
+      font-weight: 850;
+      font-family: Consolas, Menlo, monospace;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1 class="title">📚 283.移动零 - 双指针解法总结</h1>
+
+    <section class="grid-top">
+      <div class="card">
+        <div class="section-title"><span class="num">1</span> 🎯 核心问题</div>
+        <div class="content problem">
+          将数组中的零移动到末尾，同时<strong>保持非零元素的相对顺序</strong>。
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="num">2</span> 📊 两种方法对比</div>
+        <div class="content">
+          <table>
+            <thead>
+              <tr>
+                <th style="width: 20%;">方法</th>
+                <th style="width: 32%;">思路</th>
+                <th style="width: 16%;">时间复杂度</th>
+                <th style="width: 14%;">空间复杂度</th>
+                <th style="width: 18%;">特点</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>双指针覆盖法</td>
+                <td>两次遍历：先覆盖非零元素，后补零</td>
+                <td>O(2n) → O(n)</td>
+                <td>O(1)</td>
+                <td>逻辑直观，操作简单</td>
+              </tr>
+              <tr>
+                <td>双指针交换法</td>
+                <td>一次遍历：遇非零元素时交换到前面</td>
+                <td>O(n)</td>
+                <td>O(1)</td>
+                <td>效率更高，一次完成</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid-main">
+      <div class="card">
+        <div class="section-title"><span class="num">3</span> 🔍 方法详解</div>
+        <div class="content">
+          <div class="subcard">
+            <div class="sub-title"><span class="mini-num">1</span> 双指针覆盖法（两次遍历）</div>
+            <p class="lead">核心思想：<span class="muted">先把所有非零元素移动到前面，然后在后面补零。</span></p>
+<pre><code>cur = 0
+# 第一次遍历：将非零元素覆盖到前面
+for k in range(n):
+    if nums[k] != 0:
+        nums[cur] = nums[k]
+        cur += 1
+
+# 第二次遍历：从cur开始填充0
+for i in range(cur, n):
+    nums[i] = 0</code></pre>
+            <strong style="color:#08766f;">关键点：</strong>
+            <ul class="points">
+              <li><span class="tag">cur</span> 记录下一个非零元素应放置的位置</li>
+              <li>第一遍完成后，<span class="tag">cur</span> 表示非零元素的数量</li>
+              <li>优点：逻辑清晰，不会改变非零元素顺序</li>
+              <li>缺点：需要两次遍历</li>
+            </ul>
+          </div>
+
+          <div class="subcard">
+            <div class="sub-title"><span class="mini-num">2</span> 双指针交换法（一次遍历）</div>
+            <p class="lead">核心思想：<span class="muted">使用双指针，遇到非零元素时交换到前面位置。</span></p>
+<pre><code>cur = 0  # cur指向下一个非零元素应该放置的位置
+for k in range(n):
+    if nums[k] != 0:
+        # 交换当前元素到cur位置
+        nums[cur], nums[k] = nums[k], nums[cur]
+        cur += 1</code></pre>
+            <p class="lead">优化版本（避免自交换）：</p>
+<pre><code>cur = 0
+for k in range(n):
+    if nums[k] != 0:
+        if k > cur:  # 避免自交换，提高效率
+            nums[cur], nums[k] = nums[k], nums[cur]
+        cur += 1</code></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title"><span class="num">4</span> 🔬 算法原理深度分析</div>
+        <div class="content analysis">
+          <h3>✅ 双指针交换法的严谨证明</h3>
+
+          <h4>指针定义与维护的不变量</h4>
+          <ol>
+            <li><strong>cur 指针：</strong>指向下一个非零元素应该放置的位置</li>
+            <li><strong>循环不变量：</strong>cur 之前的所有元素都是非零的，且保持了原数组的相对顺序</li>
+          </ol>
+
+          <div class="dash"></div>
+
+          <h4>关键性质证明</h4>
+          <div class="quote">定理：当 <span class="tag">k &gt; cur</span> 时，<span class="tag">nums[cur]</span> 一定是 0。</div>
+          <strong>证明：</strong>
+          <ol>
+            <li>初始化时，cur = 0，不变量成立（空数组）</li>
+            <li>假设在处理到某个位置 k 之前，不变量成立</li>
+            <li>当遇到 nums[k] ≠ 0 时：
+              <ul class="points">
+                <li>如果 k = cur：当前位置已经是正确位置，直接 cur += 1</li>
+                <li>如果 k &gt; cur：根据不变量，nums[cur] 是下一个非零元素放置位置；由于还未在此处放置非零元素，且 cur &lt; k，所以 nums[cur] 一定是 0</li>
+              </ul>
+            </li>
+            <li>交换后，nums[cur] 变为非零元素，不变量仍然成立</li>
+          </ol>
+
+          <div class="dash"></div>
+
+          <h4>顺序保持的数学证明</h4>
+          <ol>
+            <li><strong>非零元素相对顺序不变：</strong>算法按顺序遍历，先遇到的非零元素先放到前面，因此相对顺序保持不变。</li>
+            <li><strong>零元素全部后移：</strong>每个非零元素都会前移到 cur 位置，cur 单调递增覆盖前部位置，零元素自然被交换到后部。</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-title"><span class="num">5</span> 📊 复杂度对比</div>
+      <div class="content">
+        <table class="compact-table">
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>覆盖法（两次遍历）</th>
+              <th>交换法（一次遍历）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>时间复杂度</td>
+              <td>O(2n) → O(n)</td>
+              <td>O(n)</td>
+            </tr>
+            <tr>
+              <td>空间复杂度</td>
+              <td>O(1)</td>
+              <td>O(1)</td>
+            </tr>
+            <tr>
+              <td>赋值操作</td>
+              <td>n次覆盖 + (n-cur)次补零</td>
+              <td>最多cur次交换</td>
+            </tr>
+            <tr>
+              <td>交换次数</td>
+              <td>0</td>
+              <td>≤非零元素个数</td>
+            </tr>
+            <tr>
+              <td>实际效率</td>
+              <td>两次遍历，但操作简单</td>
+              <td>一次遍历，条件判断多</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="summary">
+      <div class="summary-title">💎 一句话总结</div>
+      <p>双指针法解决移动零问题：覆盖法两次遍历逻辑清晰，交换法一次遍历效率更优，两种方法都能保持非零元素顺序，根据场景选择合适方法。</p>
+    </section>
+  </main>
+</body>
+</html>

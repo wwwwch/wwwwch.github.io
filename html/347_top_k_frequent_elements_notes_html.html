@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>347.前K个高频元素 - 解法总结</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: #eef3fb;
+      color: #172033;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.42;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 12mm 11mm;
+      background: #ffffff;
+    }
+
+    .sheet {
+      border: 2px solid #2563eb;
+      border-radius: 16px;
+      padding: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      box-shadow: 0 10px 30px rgba(30, 64, 175, 0.12);
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 12px 12px;
+      border-bottom: 2px solid #dbeafe;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0;
+      color: #123c8c;
+      font-size: 34px;
+      letter-spacing: 0.02em;
+      font-weight: 900;
+    }
+
+    .tag {
+      white-space: nowrap;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #1d4ed8;
+      font-weight: 800;
+      font-size: 13px;
+      border: 1px solid #bfdbfe;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1.45fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .methods {
+      display: grid;
+      grid-template-columns: 1fr 1.18fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .bottom {
+      display: grid;
+      grid-template-columns: 1fr 1.2fr;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .card {
+      border: 1.6px solid #93c5fd;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.92);
+      overflow: hidden;
+    }
+
+    .card.purple {
+      border-color: #c4b5fd;
+    }
+
+    .card.warning {
+      border-color: #facc15;
+      background: #fffdf2;
+    }
+
+    .head {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0;
+      padding: 7px 10px;
+      background: linear-gradient(90deg, #1d4ed8, #2563eb);
+      color: white;
+      font-size: 18px;
+      font-weight: 850;
+    }
+
+    .head.purple {
+      background: linear-gradient(90deg, #7c3aed, #8b5cf6);
+    }
+
+    .head.light {
+      background: #eff6ff;
+      color: #1e40af;
+      border-bottom: 1px solid #bfdbfe;
+    }
+
+    .num {
+      display: inline-grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: white;
+      color: #1d4ed8;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .content {
+      padding: 10px 11px;
+      font-size: 14px;
+    }
+
+    .content.compact {
+      padding: 8px 10px;
+    }
+
+    p {
+      margin: 0 0 7px;
+    }
+
+    .lead {
+      font-size: 15px;
+      font-weight: 650;
+    }
+
+    .sub {
+      margin: 0 0 6px;
+      color: #5b21b6;
+      font-size: 16px;
+      font-weight: 850;
+    }
+
+    .steps,
+    .bullets {
+      margin: 0 0 8px;
+      padding-left: 20px;
+    }
+
+    .steps li,
+    .bullets li {
+      margin: 3px 0;
+    }
+
+    .bullets.tight li {
+      margin: 2px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+    }
+
+    th {
+      background: #1d4ed8;
+      color: #fff;
+      padding: 6px 5px;
+      border: 1px solid #bfdbfe;
+      font-weight: 850;
+    }
+
+    td {
+      padding: 6px 5px;
+      border: 1px solid #cbd5e1;
+      text-align: center;
+      vertical-align: middle;
+    }
+
+    td:first-child {
+      font-weight: 800;
+      color: #1e3a8a;
+    }
+
+    .compare th:nth-child(1) { width: 14%; }
+    .compare th:nth-child(2) { width: 26%; }
+    .compare th:nth-child(3) { width: 15%; }
+    .compare th:nth-child(4) { width: 15%; }
+    .compare th:nth-child(5) { width: 16%; }
+    .compare th:nth-child(6) { width: 14%; }
+
+    .hi {
+      color: #1d4ed8;
+      font-weight: 900;
+    }
+
+    .code {
+      margin: 7px 0 9px;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #f8fafc;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12.4px;
+      line-height: 1.48;
+      white-space: pre-wrap;
+      overflow: hidden;
+      color: #0f172a;
+    }
+
+    .kw { color: #2563eb; font-weight: 800; }
+    .cm { color: #15803d; }
+    .fn { color: #9333ea; }
+    .op { color: #dc2626; }
+
+    .note {
+      padding: 7px 9px;
+      border-radius: 9px;
+      background: #f5f3ff;
+      color: #312e81;
+      border: 1px solid #ddd6fe;
+      font-size: 13px;
+      font-weight: 650;
+      margin: 6px 0 8px;
+    }
+
+    .summary {
+      border: 2px solid #2563eb;
+      border-radius: 13px;
+      padding: 12px 16px;
+      background: linear-gradient(90deg, #eff6ff, #ffffff);
+      color: #1e3a8a;
+      font-size: 17px;
+      font-weight: 900;
+      text-align: center;
+    }
+
+    .mini-title {
+      margin: 0 0 5px;
+      font-size: 14px;
+      color: #1e40af;
+      font-weight: 900;
+    }
+
+    .memory {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .memory div {
+      padding: 7px 8px;
+      border-radius: 9px;
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      font-size: 12.5px;
+      font-weight: 700;
+      color: #1e3a8a;
+      text-align: center;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+      .page {
+        margin: 0;
+        padding: 8mm;
+        box-shadow: none;
+      }
+      .sheet {
+        box-shadow: none;
+      }
+    }
+
+    @media (max-width: 850px) {
+      .page {
+        width: 100%;
+        min-height: auto;
+        padding: 10px;
+      }
+      h1 {
+        font-size: 24px;
+      }
+      .grid-2,
+      .methods,
+      .bottom,
+      .memory {
+        grid-template-columns: 1fr;
+      }
+      table,
+      .code {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="sheet">
+      <header class="title">
+        <h1>📚 347.前K个高频元素 - 解法总结</h1>
+        <span class="tag">哈希表 · 排序 · 桶排序</span>
+      </header>
+
+      <section class="grid-2">
+        <article class="card">
+          <h2 class="head light"><span class="num">1</span>🎯 题目本质</h2>
+          <div class="content">
+            <p class="lead">给定整数数组 <b>nums</b> 和整数 <b>k</b>，返回出现频率最高的前 <b>k</b> 个元素。</p>
+            <p>答案顺序任意，核心是：<span class="hi">先统计频率，再选出最高的 k 个。</span></p>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 class="head light"><span class="num">2</span>📊 两种方法对比</h2>
+          <div class="content compact">
+            <table class="compare">
+              <thead>
+                <tr>
+                  <th>方法</th>
+                  <th>核心思想</th>
+                  <th>时间</th>
+                  <th>空间</th>
+                  <th>结构</th>
+                  <th>特点</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>字典排序法</td>
+                  <td>统计频率后对键按值降序排序</td>
+                  <td>O(n log n)</td>
+                  <td>O(n)</td>
+                  <td>哈希表 + 排序</td>
+                  <td>简单，适合小数据</td>
+                </tr>
+                <tr>
+                  <td>桶排序法</td>
+                  <td>利用频率范围有限，建立频率桶</td>
+                  <td class="hi">O(n)</td>
+                  <td>O(n)</td>
+                  <td>哈希表 + 列表数组</td>
+                  <td>线性时间，适合大数据</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="methods">
+        <article class="card purple">
+          <h2 class="head purple"><span class="num">3.1</span>字典排序法</h2>
+          <div class="content">
+            <h3 class="sub">核心步骤</h3>
+            <ol class="steps">
+              <li>用哈希表 <b>count</b> 统计每个数字的出现频率。</li>
+              <li>对哈希表的键按照频率值降序排序。</li>
+              <li>返回排序后前 <b>k</b> 个键。</li>
+            </ol>
+
+            <pre class="code"><span class="kw">from</span> collections <span class="kw">import</span> defaultdict
+count = defaultdict(int)
+<span class="kw">for</span> num <span class="kw">in</span> nums:
+    count[num] += 1
+
+<span class="cm"># 按频率降序排序键，取前k个</span>
+result = sorted(count.keys(), key=<span class="kw">lambda</span> x: count[x], reverse=<span class="kw">True</span>)
+<span class="kw">return</span> result[:k]</pre>
+
+            <h3 class="sub">关键点</h3>
+            <ul class="bullets tight">
+              <li>排序对象是 <b>键</b>，排序依据是 <b>值</b>。</li>
+              <li>瓶颈在排序，最坏时间复杂度 <b>O(n log n)</b>。</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card purple">
+          <h2 class="head purple"><span class="num">3.2</span>桶排序法</h2>
+          <div class="content">
+            <h3 class="sub">核心思想</h3>
+            <p>频率范围是 <b>[1, n]</b>，创建 <b>n+1</b> 个桶：下标 <b>i</b> 的桶存放所有频率为 <b>i</b> 的数字；再从高频到低频收集结果。</p>
+
+            <h3 class="sub">实现步骤</h3>
+            <ol class="steps">
+              <li>统计频率：<b>count</b> 字典（数字 → 频率）。</li>
+              <li>创建桶：</li>
+            </ol>
+            <pre class="code">buckets = [[] <span class="kw">for</span> _ <span class="kw">in</span> range(len(nums) + 1)]</pre>
+            <p class="note">索引 <b>freq</b> 表示频率，<b>buckets[freq]</b> 存放该频率的数字。</p>
+
+            <ol class="steps" start="3">
+              <li>将每个数字放入对应频率的桶中：</li>
+            </ol>
+            <pre class="code"><span class="kw">for</span> num, freq <span class="kw">in</span> count.items():
+    buckets[freq].append(num)</pre>
+
+            <ol class="steps" start="4">
+              <li>从最大频率 <b>n</b> 向下遍历，直到收集 <b>k</b> 个：</li>
+            </ol>
+            <pre class="code">result = []
+<span class="kw">for</span> freq <span class="kw">in</span> range(len(nums), 0, -1):
+    <span class="kw">for</span> num <span class="kw">in</span> buckets[freq]:
+        result.append(num)
+        <span class="kw">if</span> len(result) == k:
+            <span class="kw">return</span> result</pre>
+
+            <h3 class="sub">关键点</h3>
+            <ul class="bullets tight">
+              <li>桶数量为 <b>n+1</b>：频率最大为 n，频率 0 不使用。</li>
+              <li>从高频向低频遍历，保证优先取高频元素。</li>
+              <li>总时间复杂度 <b class="hi">O(n)</b>：统计 O(n)，装桶 O(m)，收集 O(n)。</li>
+            </ul>
+          </div>
+        </article>
+      </section>
+
+      <section class="bottom">
+        <article class="card warning">
+          <h2 class="head light"><span class="num">4</span>⚠️ 注意事项</h2>
+          <div class="content compact">
+            <ul class="bullets tight">
+              <li><b>频率统计</b>：两种方法都依赖字典记录频率。</li>
+              <li><b>桶排序前提</b>：频率范围有限且已知（1~n）。</li>
+              <li><b>结果顺序</b>：题目不要求顺序；桶排序天然按频率从高到低收集。</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="card">
+          <h2 class="head light"><span class="num">5</span>📊 复杂度分析对比</h2>
+          <div class="content compact">
+            <table>
+              <thead>
+                <tr>
+                  <th>维度</th>
+                  <th>字典排序法</th>
+                  <th>桶排序法</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>时间复杂度</td>
+                  <td>O(n log n)</td>
+                  <td class="hi">O(n)</td>
+                </tr>
+                <tr>
+                  <td>空间复杂度</td>
+                  <td>O(n)</td>
+                  <td>O(n)</td>
+                </tr>
+                <tr>
+                  <td>适用场景</td>
+                  <td>数据较小或频率分布较散</td>
+                  <td>大规模数据，追求线性时间</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="card">
+        <h2 class="head light"><span class="num">6</span>💡 选择建议</h2>
+        <div class="content compact">
+          <div class="memory">
+            <div>小数据：字典排序更直接</div>
+            <div>大数据：桶排序更优</div>
+            <div>本质：以空间换时间</div>
+          </div>
+          <ul class="bullets tight" style="margin-top:8px;">
+            <li>如果数据量不大（例如 n &lt; 10<sup>5</sup>），两种方法都可，字典排序更简单。</li>
+            <li>如果追求最优时间复杂度，或 n 非常大，桶排序是更好的选择。</li>
+            <li>桶排序利用频率作为下标，避免了排序。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section style="margin-top:10px;">
+        <div class="summary">
+          💎 一句话总结：前K高频元素有两种经典解法：字典排序法直观但需 <span class="hi">O(n log n)</span>；桶排序法利用频率范围构建桶，达到 <span class="hi">O(n)</span> 线性时间，是本题最优解。
+        </div>
+      </section>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>73.矩阵置零 —— 空间优化对比</title>
+  <style>
+    :root {
+      --blue: #1d4ed8;
+      --blue-dark: #123c91;
+      --blue-soft: #eaf2ff;
+      --cyan-soft: #eff8ff;
+      --line: #bfd3f5;
+      --text: #172033;
+      --muted: #52637a;
+      --green: #15803d;
+      --amber: #f59e0b;
+      --paper: #ffffff;
+      --code-bg: #f7fbff;
+    }
+
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #eef3fb;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.35;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      padding: 18px;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--paper);
+      border-radius: 18px;
+      box-shadow: 0 18px 50px rgba(29, 78, 216, 0.16);
+      padding: 14mm 13mm 12mm;
+      overflow: hidden;
+    }
+
+    .title {
+      margin: 0 0 10px;
+      text-align: center;
+      color: var(--blue-dark);
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .card {
+      border: 1.5px solid var(--line);
+      border-radius: 14px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
+      padding: 10px 12px;
+      margin-bottom: 10px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 7px;
+      color: var(--blue-dark);
+      font-size: 19px;
+      font-weight: 850;
+      line-height: 1.1;
+    }
+
+    .problem {
+      font-size: 15px;
+      color: #111827;
+      margin: 0;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      align-items: stretch;
+      margin-bottom: 10px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      font-size: 13px;
+      overflow: hidden;
+      border-radius: 10px;
+    }
+
+    th {
+      background: var(--blue);
+      color: #fff;
+      font-weight: 800;
+      padding: 7px 8px;
+      border: 1px solid #4f7ee8;
+      white-space: nowrap;
+    }
+
+    td {
+      border: 1px solid var(--line);
+      padding: 6px 8px;
+      vertical-align: middle;
+      background: #fff;
+    }
+
+    tr:nth-child(even) td { background: #f7fbff; }
+
+    .compare th:nth-child(1), .compare td:nth-child(1) { width: 18%; font-weight: 800; }
+    .compare th:nth-child(2), .compare td:nth-child(2) { width: 15%; text-align: center; }
+    .compare th:nth-child(3), .compare td:nth-child(3) { width: 37%; }
+    .compare th:nth-child(4), .compare td:nth-child(4) { width: 30%; }
+
+    .detail th:nth-child(1), .detail td:nth-child(1) { width: 25%; font-weight: 800; text-align: center; }
+    .detail th:nth-child(2), .detail td:nth-child(2) { width: 28%; text-align: center; }
+    .detail th:nth-child(3), .detail td:nth-child(3) { width: 47%; text-align: center; }
+
+    .method {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 0;
+      padding: 10px;
+    }
+
+    .method .section-title {
+      font-size: 18px;
+      margin-bottom: 8px;
+    }
+
+    .mini-title {
+      margin: 0 0 5px;
+      color: var(--blue-dark);
+      font-size: 14px;
+      font-weight: 850;
+    }
+
+    ul {
+      margin: 0 0 8px 0;
+      padding-left: 18px;
+      font-size: 12.8px;
+      color: #1f2937;
+    }
+
+    li { margin: 2px 0; }
+
+    .code-label {
+      margin-top: auto;
+    }
+
+    pre {
+      margin: 0;
+      padding: 8px 9px;
+      border: 1px solid #c8dbfb;
+      border-radius: 11px;
+      background: var(--code-bg);
+      overflow: hidden;
+      font-size: 9.8px;
+      line-height: 1.28;
+      tab-size: 4;
+      white-space: pre;
+    }
+
+    code {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      color: #162033;
+    }
+
+    .kw { color: #7c3aed; font-weight: 700; }
+    .fn { color: #0369a1; font-weight: 700; }
+    .cm { color: var(--green); font-weight: 700; }
+    .num { color: #0f766e; }
+    .bool { color: #1d4ed8; font-weight: 700; }
+
+    .summary {
+      border-color: #f6c453;
+      background: linear-gradient(180deg, #fffdf5 0%, #fff8e6 100%);
+      margin-bottom: 0;
+    }
+
+    .quote {
+      border: 1.6px dashed #f2b021;
+      border-radius: 14px;
+      padding: 12px 18px;
+      background: #fffaf0;
+      color: var(--blue-dark);
+      font-size: 22px;
+      font-weight: 900;
+      line-height: 1.35;
+      text-align: center;
+      position: relative;
+    }
+
+    .quote::before,
+    .quote::after {
+      position: absolute;
+      color: #1d4ed8;
+      font-size: 42px;
+      line-height: 1;
+      opacity: 0.88;
+    }
+
+    .quote::before { content: "“"; left: 13px; top: 6px; }
+    .quote::after { content: "”"; right: 13px; bottom: -6px; }
+
+    .tag {
+      display: inline-block;
+      padding: 1px 6px;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue-dark);
+      font-weight: 850;
+      font-size: 0.9em;
+    }
+
+    strong { color: var(--blue-dark); }
+
+    @media print {
+      body {
+        padding: 0;
+        background: #fff;
+      }
+
+      .page {
+        width: 210mm;
+        height: 297mm;
+        min-height: 297mm;
+        box-shadow: none;
+        border-radius: 0;
+        padding: 12mm 11mm 10mm;
+      }
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <h1 class="title">📚 73.矩阵置零 —— 空间优化对比</h1>
+
+    <section class="card">
+      <h2 class="section-title">🎯 问题本质</h2>
+      <p class="problem">给定 <strong>m×n</strong> 矩阵，若某个元素为 <strong>0</strong>，则将其所在行和列的所有元素都设为 <strong>0</strong>。<strong>原地修改</strong>。</p>
+    </section>
+
+    <section class="card">
+      <h2 class="section-title">📊 方法对比</h2>
+      <table class="compare">
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>空间复杂度</th>
+            <th>实现思路</th>
+            <th>优缺点</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>V1：辅助数组</td>
+            <td>O(m+n)</td>
+            <td>用两个数组分别标记需要清零的行和列</td>
+            <td>直观易懂，但需额外空间</td>
+          </tr>
+          <tr>
+            <td>V2：常量空间</td>
+            <td>O(1)</td>
+            <td>利用<strong>第一行和第一列</strong>作为标记数组</td>
+            <td>空间最优，但需特殊处理第一行/列</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="grid-2">
+      <section class="card method">
+        <h2 class="section-title">🔍 V1：辅助数组法 <span class="tag">O(m+n)</span></h2>
+        <h3 class="mini-title">💡 核心思想</h3>
+        <ul>
+          <li>用 <code>row_zero[i]</code> 标记第 <code>i</code> 行是否需要清零</li>
+          <li>用 <code>col_zero[j]</code> 标记第 <code>j</code> 列是否需要清零</li>
+        </ul>
+        <h3 class="mini-title code-label">💻 关键代码</h3>
+        <pre><code><span class="kw">def</span> <span class="fn">setZeroes</span>(self, matrix: List[List[int]]) -&gt; None:
+    m, n = len(matrix), len(matrix[<span class="num">0</span>])
+    row_zero = [<span class="bool">False</span>] * m
+    col_zero = [<span class="bool">False</span>] * n
+
+    <span class="cm"># 第一遍：标记</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(m):
+        <span class="kw">for</span> j <span class="kw">in</span> range(n):
+            <span class="kw">if</span> matrix[i][j] == <span class="num">0</span>:
+                row_zero[i] = <span class="bool">True</span>
+                col_zero[j] = <span class="bool">True</span>
+
+    <span class="cm"># 第二遍：置零</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(m):
+        <span class="kw">if</span> row_zero[i]:
+            matrix[i] = [<span class="num">0</span>] * n      <span class="cm"># 整行清零</span>
+        <span class="kw">else</span>:
+            <span class="kw">for</span> j <span class="kw">in</span> range(n):
+                <span class="kw">if</span> col_zero[j]:
+                    matrix[i][j] = <span class="num">0</span></code></pre>
+      </section>
+
+      <section class="card method">
+        <h2 class="section-title">🔍 V2：常量空间法 <span class="tag">O(1)</span></h2>
+        <h3 class="mini-title">💡 核心思想</h3>
+        <ul>
+          <li>用<strong>第一行</strong>记录哪些列需要清零</li>
+          <li>用<strong>第一列</strong>记录哪些行需要清零</li>
+          <li>额外用两个变量记录第一行/列本身是否需要清零</li>
+        </ul>
+        <h3 class="mini-title code-label">💻 关键代码</h3>
+        <pre><code><span class="kw">def</span> <span class="fn">setZeroes</span>(self, matrix: List[List[int]]) -&gt; None:
+    m, n = len(matrix), len(matrix[<span class="num">0</span>])
+    first_row_zero = any(matrix[<span class="num">0</span>][j] == <span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> range(n))
+    first_col_zero = any(matrix[i][<span class="num">0</span>] == <span class="num">0</span> <span class="kw">for</span> i <span class="kw">in</span> range(m))
+
+    <span class="cm"># 第一遍：用第一行和第一列做标记（跳过第一行第一列）</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">1</span>, m):
+        <span class="kw">for</span> j <span class="kw">in</span> range(<span class="num">1</span>, n):
+            <span class="kw">if</span> matrix[i][j] == <span class="num">0</span>:
+                matrix[i][<span class="num">0</span>] = <span class="num">0</span>
+                matrix[<span class="num">0</span>][j] = <span class="num">0</span>
+
+    <span class="cm"># 第二遍：根据标记置零（跳过第一行第一列）</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">1</span>, m):
+        <span class="kw">if</span> matrix[i][<span class="num">0</span>] == <span class="num">0</span>:
+            matrix[i] = [<span class="num">0</span>] * n
+        <span class="kw">else</span>:
+            <span class="kw">for</span> j <span class="kw">in</span> range(<span class="num">1</span>, n):
+                <span class="kw">if</span> matrix[<span class="num">0</span>][j] == <span class="num">0</span>:
+                    matrix[i][j] = <span class="num">0</span>
+
+    <span class="cm"># 最后处理第一行和第一列</span>
+    <span class="kw">if</span> first_row_zero:
+        <span class="kw">for</span> j <span class="kw">in</span> range(n):
+            matrix[<span class="num">0</span>][j] = <span class="num">0</span>
+    <span class="kw">if</span> first_col_zero:
+        <span class="kw">for</span> i <span class="kw">in</span> range(m):
+            matrix[i][<span class="num">0</span>] = <span class="num">0</span></code></pre>
+      </section>
+    </div>
+
+    <section class="card">
+      <h2 class="section-title">⚠️ 关键细节</h2>
+      <table class="detail">
+        <thead>
+          <tr>
+            <th>细节</th>
+            <th>V1 处理</th>
+            <th>V2 处理</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>标记方式</td>
+            <td>独立数组</td>
+            <td>复用矩阵的第一行和第一列</td>
+          </tr>
+          <tr>
+            <td>行清零</td>
+            <td>直接赋整行0</td>
+            <td>行标记在 <code>matrix[i][0]</code></td>
+          </tr>
+          <tr>
+            <td>列清零</td>
+            <td>遍历列标记</td>
+            <td>列标记在 <code>matrix[0][j]</code></td>
+          </tr>
+          <tr>
+            <td>第一行/列自身</td>
+            <td>正常标记</td>
+            <td>需额外变量记录，最后处理</td>
+          </tr>
+          <tr>
+            <td>遍历范围</td>
+            <td>全部</td>
+            <td>跳过第一行第一列，避免干扰</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card summary">
+      <h2 class="section-title">💡 一句话总结</h2>
+      <div class="quote">V1用辅助数组标记行列，V2复用第一行/列作为标记区，额外变量记录首行列状态，空间从 O(m+n) 降至 O(1)。</div>
+    </section>
+  </main>
+</body>
+</html>

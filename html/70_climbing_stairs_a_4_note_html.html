@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeetCode 70. 爬楼梯 —— 解题思想总结</title>
+  <style>
+    @page { size: A4; margin: 10mm; }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: #eef2f7;
+      color: #111827;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.42;
+    }
+
+    .sheet {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto;
+      padding: 11mm 10mm;
+      background: #fbfdff;
+      box-shadow: 0 16px 50px rgba(15, 23, 42, 0.16);
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      border-bottom: 3px solid #dbeafe;
+      padding-bottom: 7px;
+    }
+
+    .badge {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 10px;
+      background: #16a34a;
+      color: #fff;
+      font-size: 23px;
+      font-weight: 800;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      letter-spacing: -0.6px;
+      color: #0f172a;
+    }
+
+    .intro {
+      margin: 0 0 9px;
+      padding: 8px 10px;
+      border: 1.5px solid #fbbf24;
+      border-radius: 10px;
+      background: #fffbeb;
+      font-size: 13.5px;
+      font-weight: 600;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 9px;
+    }
+
+    .card {
+      border: 1.5px solid var(--color);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+      min-height: 0;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 10px;
+      color: #fff;
+      background: linear-gradient(90deg, var(--color), var(--color-dark));
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .icon {
+      width: 25px;
+      height: 25px;
+      display: grid;
+      place-items: center;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.18);
+      font-size: 16px;
+      flex: 0 0 auto;
+    }
+
+    .card-body {
+      padding: 8px 10px 9px;
+      font-size: 11.6px;
+    }
+
+    .section {
+      margin: 0 0 6px;
+    }
+
+    .section strong {
+      color: var(--color-dark);
+      font-size: 12.2px;
+    }
+
+    .section p {
+      margin: 2px 0 0;
+    }
+
+    ul {
+      margin: 2px 0 0;
+      padding-left: 16px;
+    }
+
+    li { margin: 1px 0; }
+
+    code, pre {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    pre {
+      margin: 4px 0 6px;
+      padding: 7px 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      background: #f8fafc;
+      font-size: 11px;
+      line-height: 1.38;
+      overflow: hidden;
+      white-space: pre-wrap;
+    }
+
+    .note {
+      margin-top: 6px;
+      padding: 5px 8px;
+      border-radius: 8px;
+      border: 1px solid color-mix(in srgb, var(--color) 55%, white);
+      background: color-mix(in srgb, var(--color) 9%, white);
+      font-size: 11.7px;
+      font-weight: 700;
+      color: #334155;
+    }
+
+    .note + .note { margin-top: 4px; }
+
+    .compare {
+      margin-top: 5px;
+      border: 1.5px solid #2563eb;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .compare h2 {
+      margin: 0;
+      padding: 7px 10px;
+      background: #eff6ff;
+      color: #1e3a8a;
+      font-size: 17px;
+      text-align: center;
+      border-bottom: 1px solid #bfdbfe;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+
+    th {
+      background: #2563eb;
+      color: #fff;
+      padding: 5px 6px;
+      font-weight: 800;
+      border-right: 1px solid rgba(255,255,255,0.45);
+    }
+
+    td {
+      padding: 5px 6px;
+      border-top: 1px solid #dbe4ef;
+      border-right: 1px solid #dbe4ef;
+      text-align: center;
+    }
+
+    td:first-child, td:last-child { text-align: left; }
+    tr:nth-child(even) td { background: #f8fafc; }
+
+    .bad { color: #dc2626; font-weight: 800; }
+    .ok { color: #ca8a04; font-weight: 800; }
+    .good { color: #16a34a; font-weight: 800; }
+    .best { color: #15803d; font-weight: 900; }
+
+    .summary {
+      margin-top: 9px;
+      padding: 8px 10px;
+      border: 1.5px solid #16a34a;
+      border-radius: 12px;
+      background: linear-gradient(180deg, #f0fdf4, #ffffff);
+    }
+
+    .summary h2 {
+      margin: 0 0 5px;
+      color: #166534;
+      font-size: 17px;
+    }
+
+    .quote {
+      margin: 0;
+      padding: 7px 10px;
+      border-left: 5px solid #22c55e;
+      border-radius: 8px;
+      background: #ffffff;
+      font-size: 13px;
+      font-weight: 700;
+      color: #14532d;
+    }
+
+    .blue { --color: #2563eb; --color-dark: #1d4ed8; }
+    .green { --color: #16a34a; --color-dark: #15803d; }
+    .purple { --color: #7c3aed; --color-dark: #6d28d9; }
+    .orange { --color: #f97316; --color-dark: #ea580c; }
+
+    .compact-line { margin: 0; }
+
+    @media print {
+      body { background: #fff; }
+      .sheet {
+        width: auto;
+        min-height: auto;
+        margin: 0;
+        padding: 0;
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="sheet">
+    <header class="header">
+      <div class="badge">✓</div>
+      <h1>LeetCode 70. 爬楼梯 —— 解题思想总结</h1>
+    </header>
+
+    <p class="intro">
+      本题要求计算到达第 <code>n</code> 级台阶的不同方法数，每次可走 <strong>1 步或 2 步</strong>。本质是经典的<strong>斐波那契数列建模问题</strong>，可通过多种方法求解，逐步优化效率。
+    </p>
+
+    <section class="grid">
+      <article class="card blue">
+        <div class="card-title"><span class="icon">↻</span>V1 - 暴力递归（未优化）</div>
+        <div class="card-body">
+          <div class="section">
+            <strong>思想：</strong>
+            <p>到达第 <code>n</code> 级的方法 = 到达第 <code>n-1</code> 级的方法 + 到达第 <code>n-2</code> 级的方法</p>
+            <p>即：<code>climbStairs(n) = climbStairs(n-1) + climbStairs(n-2)</code></p>
+          </div>
+          <div class="section">
+            <strong>实现：</strong>
+            <pre><code>if n &lt;= 2: return n
+return self.climbStairs(n-1) + self.climbStairs(n-2)</code></pre>
+          </div>
+          <div class="section">
+            <strong>缺点：</strong>
+            <ul>
+              <li>存在大量重复子问题（如多次计算 <code>climbStairs(3)</code>）</li>
+              <li>时间复杂度：<code>O(2^n)</code>（指数级），不可接受</li>
+              <li>空间复杂度：<code>O(n)</code>（递归栈深度）</li>
+            </ul>
+          </div>
+          <div class="note">📌 仅用于理解递归结构，实际不可用</div>
+        </div>
+      </article>
+
+      <article class="card green">
+        <div class="card-title"><span class="icon">🧠</span>V2 - 记忆化递归（自顶向下 DP）</div>
+        <div class="card-body">
+          <div class="section">
+            <strong>思想：</strong>
+            <p>在递归基础上引入缓存数组 <code>dp</code> 或哈希表，保存已计算结果，避免重复调用。</p>
+          </div>
+          <div class="section">
+            <strong>关键点：</strong>
+            <ul>
+              <li>使用长度为 <code>n+1</code> 的数组，使得 <code>dp[i]</code> 对应第 <code>i</code> 级台阶的方案数</li>
+              <li>先查缓存，命中则直接返回；否则递归计算并存储</li>
+            </ul>
+          </div>
+          <div class="section">
+            <strong>复杂度：</strong>
+            <ul>
+              <li>时间复杂度：<code>O(n)</code>（每个状态只计算一次）</li>
+              <li>空间复杂度：<code>O(n)</code>（递归栈 + 缓存数组）</li>
+            </ul>
+          </div>
+          <div class="note">✅ 优点：逻辑清晰，易于从暴力递归转化</div>
+          <div class="note">💡 是动态规划的入门范式之一</div>
+        </div>
+      </article>
+
+      <article class="card purple">
+        <div class="card-title"><span class="icon">▥</span>V3 - 动态规划（自底向上，数组实现）</div>
+        <div class="card-body">
+          <div class="section">
+            <strong>思想：</strong>
+            <ul>
+              <li>状态定义：<code>dp[i]</code> 表示爬到第 <code>i</code> 级的方法总数</li>
+              <li>转移方程：<code>dp[i] = dp[i-1] + dp[i-2]</code></li>
+              <li>初始条件：<code>dp[0] = 1</code>, <code>dp[1] = 1</code></li>
+            </ul>
+          </div>
+          <div class="section">
+            <strong>遍历顺序：</strong>
+            <p>从小到大递推至 <code>n</code></p>
+          </div>
+          <div class="section">
+            <strong>复杂度：</strong>
+            <ul>
+              <li>时间：<code>O(n)</code></li>
+              <li>空间：<code>O(n)</code></li>
+            </ul>
+          </div>
+          <div class="note">📌 适合展示完整 DP 思维流程</div>
+        </div>
+      </article>
+
+      <article class="card orange">
+        <div class="card-title"><span class="icon">🚀</span>V4 - 滚动数组优化（最优解）</div>
+        <div class="card-body">
+          <div class="section">
+            <strong>思想：</strong>
+            <p>观察发现：当前状态只依赖前两个状态 → 不需要整个数组，只需两个变量滚动更新。</p>
+          </div>
+          <div class="section">
+            <strong>实现：</strong>
+            <pre><code>a, b = 1, 1
+for _ in range(2, n+1):
+    a, b = b, a + b
+return b</code></pre>
+          </div>
+          <div class="section">
+            <strong>复杂度：</strong>
+            <ul>
+              <li>时间复杂度：<code>O(n)</code></li>
+              <li>空间复杂度：<code>O(1)</code> <span class="best">✅ 最优</span></li>
+            </ul>
+          </div>
+          <div class="note">📌 推荐作为最终提交版本，体现空间优化意识</div>
+        </div>
+      </article>
+    </section>
+
+    <section class="compare">
+      <h2>🔍 四种方法对比总结</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>方法</th>
+            <th>时间复杂度</th>
+            <th>空间复杂度</th>
+            <th>是否推荐</th>
+            <th>说明</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>V1 暴力递归</td>
+            <td><code>O(2^n)</code></td>
+            <td><code>O(n)</code></td>
+            <td class="bad">❌ 否</td>
+            <td>效率极低</td>
+          </tr>
+          <tr>
+            <td>V2 记忆化递归</td>
+            <td><code>O(n)</code></td>
+            <td><code>O(n)</code></td>
+            <td class="ok">⭕ 可接受</td>
+            <td>展示 DP 思维</td>
+          </tr>
+          <tr>
+            <td>V3 动态规划数组</td>
+            <td><code>O(n)</code></td>
+            <td><code>O(n)</code></td>
+            <td class="good">✅ 是</td>
+            <td>清晰易懂</td>
+          </tr>
+          <tr>
+            <td>V4 滚动数组</td>
+            <td><code>O(n)</code></td>
+            <td><code>O(1)</code></td>
+            <td class="best">✅✅ 强烈推荐</td>
+            <td>工业级最优解</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="summary">
+      <h2>✅ 一句话总结：</h2>
+      <p class="quote">
+        本题从“斐波那契”关系出发，通过<strong>记忆化递归 → 动态规划 → 滚动数组优化</strong>，实现了从指数时间到线性时间再到常数空间的演进过程，是学习<strong>动态规划设计与优化技巧</strong>的经典范例。
+      </p>
+    </section>
+  </main>
+</body>
+</html>
