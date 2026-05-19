@@ -25,6 +25,11 @@
         "file":  "206_linked_list_reverse_a_4_notes.html"
     },
     {
+        "number":  239,
+        "title":  "239. 滑动窗口最大值 —— 单调队列解法",
+        "file":  "239_sliding_window_maximum_note_html.html"
+    },
+    {
         "number":  300,
         "title":  "LeetCode 300 最长递增子序列 LIS",
         "file":  "300_lis_a_4_html.html"
