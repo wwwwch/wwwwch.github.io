@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <title>Python 全栈开发常用技术栈复习笔记</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      line-height: 1.7;
+      max-width: 1100px;
+      margin: 40px auto;
+      padding: 0 24px;
+      color: #222;
+      background: #fafafa;
+    }
+
+    h1, h2, h3 {
+      color: #111;
+    }
+
+    h1 {
+      border-bottom: 3px solid #333;
+      padding-bottom: 10px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      border-left: 5px solid #333;
+      padding-left: 12px;
+    }
+
+    h3 {
+      margin-top: 24px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      background: #fff;
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f0f0f0;
+    }
+
+    code {
+      background: #eee;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-family: Consolas, monospace;
+    }
+
+    pre {
+      background: #1e1e1e;
+      color: #f5f5f5;
+      padding: 14px;
+      border-radius: 8px;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .note {
+      background: #fff8dc;
+      border-left: 5px solid #d6a100;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+
+    .summary {
+      background: #eef6ff;
+      border-left: 5px solid #3b82f6;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+
+    .danger {
+      background: #fff1f1;
+      border-left: 5px solid #e11d48;
+      padding: 12px 16px;
+      margin: 16px 0;
+    }
+
+    .keyword {
+      font-weight: bold;
+      color: #0f172a;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>Python 全栈开发常用技术栈复习笔记</h1>
+
+<div class="summary">
+  <p><strong>核心理解：</strong>Python 全栈开发不是只会 Python 后端，而是要理解从前端页面、接口通信、后端框架、业务模型、数据库、中间件、部署运维到测试安全的完整链路。</p>
+</div>
+
+<pre>
+用户浏览器
+  ↓
+前端：React / Vue / HTML / CSS / JavaScript / TypeScript
+  ↓
+前端构建：Vite / Webpack / npm / pnpm
+  ↓
+网络通信：HTTP / REST API / JSON / WebSocket
+  ↓
+Python 后端：FastAPI / Flask / Django
+  ↓
+业务与数据模型：Pydantic / ORM / 认证 / 权限 / 任务调度
+  ↓
+数据与中间件：PostgreSQL / MySQL / MongoDB / Redis / RabbitMQ / Kafka
+  ↓
+部署运维：Linux / Nginx / Uvicorn / Gunicorn / Docker / CI/CD
+  ↓
+质量保障：测试 / 日志 / 监控 / 安全 / 性能优化
+</pre>
+
+<hr />
+
+<h2>一、前端基础技术</h2>
+
+<p>前端负责用户看到的页面、交互行为和数据展示。</p>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+    <th>特点与场景</th>
+  </tr>
+  <tr>
+    <td>HTML</td>
+    <td>定义页面结构</td>
+    <td>标题、表单、按钮、列表、表格等页面骨架</td>
+  </tr>
+  <tr>
+    <td>CSS</td>
+    <td>控制页面样式</td>
+    <td>颜色、布局、字体、响应式适配</td>
+  </tr>
+  <tr>
+    <td>JavaScript</td>
+    <td>实现页面交互</td>
+    <td>点击事件、表单校验、调用后端接口</td>
+  </tr>
+  <tr>
+    <td>TypeScript</td>
+    <td>带类型系统的 JavaScript</td>
+    <td>适合中大型前端项目，减少类型错误，提高可维护性</td>
+  </tr>
+  <tr>
+    <td>React</td>
+    <td>前端 UI 框架</td>
+    <td>生态强、灵活度高，适合复杂交互应用</td>
+  </tr>
+  <tr>
+    <td>Vue</td>
+    <td>前端 UI 框架</td>
+    <td>上手相对简单，常用于后台管理系统、中小型业务系统</td>
+  </tr>
+</table>
+
+<h3>简单示例：HTML + JavaScript 调用后端 API</h3>
+
+<pre>
+&lt;input id="task" placeholder="请输入任务" /&gt;
+&lt;button onclick="createTask()"&gt;创建任务&lt;/button&gt;
+
+&lt;script&gt;
+async function createTask() {
+  const title = document.getElementById("task").value;
+
+  await fetch("/api/tasks", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ title })
+  });
+}
+&lt;/script&gt;
+</pre>
+
+<div class="note">
+  <p><strong>面试记忆：</strong>HTML 是结构，CSS 是样式，JavaScript 是交互，TypeScript 是更工程化的 JavaScript，React/Vue 是用来组织复杂页面的前端框架。</p>
+</div>
+
+<hr />
+
+<h2>二、前端构建工具</h2>
+
+<p>前端构建工具负责依赖管理、开发服务器、代码打包、资源压缩和生产环境构建。</p>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+    <th>区别与场景</th>
+  </tr>
+  <tr>
+    <td>npm</td>
+    <td>Node.js 默认包管理器</td>
+    <td>安装 React、Vue、Axios 等前端依赖</td>
+  </tr>
+  <tr>
+    <td>pnpm</td>
+    <td>现代包管理器</td>
+    <td>安装速度快，节省磁盘空间，现代项目常用</td>
+  </tr>
+  <tr>
+    <td>Webpack</td>
+    <td>老牌前端打包工具</td>
+    <td>功能强大，配置复杂，很多老项目仍在使用</td>
+  </tr>
+  <tr>
+    <td>Vite</td>
+    <td>现代前端构建工具</td>
+    <td>启动快，配置简单，React/Vue 新项目常用</td>
+  </tr>
+</table>
+
+<h3>简单命令</h3>
+
+<pre>
+# 安装依赖
+pnpm install
+
+# 启动开发环境
+pnpm dev
+
+# 构建生产环境文件
+pnpm build
+</pre>
+
+<div class="note">
+  <p><strong>面试记忆：</strong>npm/pnpm 负责管理依赖，Vite/Webpack 负责编译和打包。新项目一般更常见 Vite，老项目可能使用 Webpack。</p>
+</div>
+
+<hr />
+
+<h2>三、网络通信层</h2>
+
+<p>网络通信层负责前端和后端之间的数据交换。</p>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+    <th>场景</th>
+  </tr>
+  <tr>
+    <td>HTTP</td>
+    <td>浏览器和服务端通信的基础协议</td>
+    <td>网页访问、接口调用</td>
+  </tr>
+  <tr>
+    <td>REST API</td>
+    <td>一种常见 API 设计风格</td>
+    <td>使用 GET、POST、PUT、DELETE 表示查询、新增、修改、删除</td>
+  </tr>
+  <tr>
+    <td>JSON</td>
+    <td>前后端传输数据的常用格式</td>
+    <td>轻量、易读、前后端都支持</td>
+  </tr>
+  <tr>
+    <td>WebSocket</td>
+    <td>浏览器和服务端之间的双向实时通信</td>
+    <td>聊天、实时通知、行情推送、协同编辑</td>
+  </tr>
+</table>
+
+<h3>REST API 示例</h3>
+
+<pre>
+GET    /api/tasks        查询任务列表
+POST   /api/tasks        新建任务
+GET    /api/tasks/1      查询单个任务
+PUT    /api/tasks/1      更新任务
+DELETE /api/tasks/1      删除任务
+</pre>
+
+<h3>JSON 示例</h3>
+
+<pre>
+{
+  "id": 1,
+  "title": "完成周报",
+  "done": false
+}
+</pre>
+
+<div class="note">
+  <p><strong>面试记忆：</strong>普通业务系统主要使用 HTTP + REST API + JSON；如果需要实时双向通信，再考虑 WebSocket。</p>
+</div>
+
+<hr />
+
+<h2>四、Python 后端框架</h2>
+
+<p>后端负责接收请求、执行业务逻辑、访问数据库、返回响应结果。</p>
+
+<table>
+  <tr>
+    <th>框架</th>
+    <th>特点</th>
+    <th>适合场景</th>
+  </tr>
+  <tr>
+    <td>FastAPI</td>
+    <td>现代、高性能、类型注解友好、自动生成接口文档</td>
+    <td>REST API、微服务、AI 服务、前后端分离项目</td>
+  </tr>
+  <tr>
+    <td>Flask</td>
+    <td>轻量、灵活、简单，扩展由开发者自由选择</td>
+    <td>小项目、原型系统、轻量接口服务</td>
+  </tr>
+  <tr>
+    <td>Django</td>
+    <td>大而全，自带 ORM、Admin、用户系统、模板系统</td>
+    <td>后台管理系统、CMS、传统 Web 应用、业务系统</td>
+  </tr>
+</table>
+
+<h3>FastAPI 简单示例</h3>
+
+<pre>
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+app = FastAPI()
+
+class TaskCreate(BaseModel):
+    title: str
+
+@app.post("/api/tasks")
+def create_task(task: TaskCreate):
+    return {
+        "id": 1,
+        "title": task.title,
+        "done": False
+    }
+</pre>
+
+<p><strong>说明：</strong>FastAPI 会自动解析 JSON 请求体，并用 Pydantic 校验数据结构。</p>
+
+<h3>Flask 简单示例</h3>
+
+<pre>
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route("/api/tasks", methods=["POST"])
+def create_task():
+    data = request.json
+    return jsonify({
+        "id": 1,
+        "title": data["title"],
+        "done": False
+    })
+</pre>
+
+<p><strong>说明：</strong>Flask 更轻量，很多功能需要自己选择扩展库。</p>
+
+<h3>Django 简单理解</h3>
+
+<pre>
+# Django 通常会包含：
+# models.py    定义数据库模型
+# views.py     处理请求
+# urls.py      配置路由
+# admin.py     配置后台管理
+</pre>
+
+<p><strong>说明：</strong>Django 更像“全家桶”，适合快速开发完整业务系统。</p>
+
+<div class="summary">
+  <p><strong>后端选型总结：</strong></p>
+  <ul>
+    <li>只写 API、AI 服务、微服务：优先考虑 <strong>FastAPI</strong></li>
+    <li>项目小、想灵活控制：可以用 <strong>Flask</strong></li>
+    <li>需要后台管理、用户系统、ORM 一体化：适合 <strong>Django</strong></li>
+  </ul>
+</div>
+
+<hr />
+
+<h2>五、业务与数据模型层</h2>
+
+<p>这一层是后端开发的重点，负责数据校验、业务规则、数据库模型、登录认证、权限控制和后台任务。</p>
+
+<h3>1. Pydantic</h3>
+
+<p><strong>Pydantic 是 Python 的数据校验和序列化库。</strong>在 FastAPI 中常用于定义请求体、响应体和配置模型。</p>
+
+<table>
+  <tr>
+    <th>能力</th>
+    <th>说明</th>
+  </tr>
+  <tr>
+    <td>数据校验</td>
+    <td>判断字段是否符合类型和约束</td>
+  </tr>
+  <tr>
+    <td>类型转换</td>
+    <td>例如把字符串 "123" 转成整数 123</td>
+  </tr>
+  <tr>
+    <td>嵌套模型</td>
+    <td>支持复杂 JSON 数据结构</td>
+  </tr>
+  <tr>
+    <td>序列化</td>
+    <td>把 Python 对象转成 dict 或 JSON</td>
+  </tr>
+</table>
+
+<pre>
+from pydantic import BaseModel, Field
+
+class UserCreate(BaseModel):
+    username: str = Field(min_length=3, max_length=20)
+    age: int = Field(ge=0, le=120)
+</pre>
+
+<p><strong>面试重点：</strong>Pydantic 不是静态类型检查器，而是运行时数据校验工具。</p>
+
+<h3>2. ORM</h3>
+
+<p><strong>ORM，全称 Object Relational Mapping，对象关系映射。</strong>它允许开发者用 Python 对象操作数据库，而不是直接写 SQL。</p>
+
+<table>
+  <tr>
+    <th>ORM</th>
+    <th>特点</th>
+    <th>场景</th>
+  </tr>
+  <tr>
+    <td>SQLAlchemy</td>
+    <td>Python 生态常用 ORM，灵活强大</td>
+    <td>FastAPI、Flask 项目常用</td>
+  </tr>
+  <tr>
+    <td>Django ORM</td>
+    <td>Django 自带 ORM，和框架集成度高</td>
+    <td>Django 项目默认使用</td>
+  </tr>
+</table>
+
+<pre>
+# ORM 思路示例
+user = User(name="Alice", age=20)
+db.add(user)
+db.commit()
+</pre>
+
+<p>等价于执行类似 SQL：</p>
+
+<pre>
+INSERT INTO users (name, age) VALUES ('Alice', 20);
+</pre>
+
+<p><strong>面试重点：</strong>ORM 提高开发效率，但复杂查询、性能优化、索引设计仍需要理解 SQL。</p>
+
+<h3>3. 认证 Authentication</h3>
+
+<p><strong>认证解决“你是谁”的问题。</strong></p>
+
+<p>常见方式：</p>
+
+<ul>
+  <li>Session 登录</li>
+  <li>Cookie 登录</li>
+  <li>Token 登录</li>
+  <li>JWT</li>
+  <li>OAuth2</li>
+</ul>
+
+<pre>
+Authorization: Bearer eyJhbGciOiJIUzI1NiIs...
+</pre>
+
+<p><strong>典型流程：</strong></p>
+
+<pre>
+用户登录
+  ↓
+服务端校验用户名密码
+  ↓
+返回 Token / Session
+  ↓
+前端后续请求携带 Token
+  ↓
+后端识别当前用户
+</pre>
+
+<h3>4. 权限 Authorization</h3>
+
+<p><strong>权限解决“你能做什么”的问题。</strong></p>
+
+<table>
+  <tr>
+    <th>概念</th>
+    <th>含义</th>
+  </tr>
+  <tr>
+    <td>认证</td>
+    <td>确认用户身份，例如你是谁</td>
+  </tr>
+  <tr>
+    <td>权限</td>
+    <td>判断用户是否有资格执行某个操作</td>
+  </tr>
+</table>
+
+<pre>
+普通用户：只能查看自己的任务
+管理员：可以查看所有用户任务
+</pre>
+
+<p>常见权限模型：</p>
+
+<ul>
+  <li>RBAC：基于角色的权限控制，例如管理员、运营、普通用户</li>
+  <li>ABAC：基于属性的权限控制，例如部门、地区、资源归属</li>
+</ul>
+
+<h3>5. 任务调度与异步任务</h3>
+
+<p>有些任务不适合在接口请求中同步完成，例如发邮件、生成报表、处理图片、调用慢接口。</p>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+    <th>场景</th>
+  </tr>
+  <tr>
+    <td>Celery</td>
+    <td>Python 常用异步任务框架</td>
+    <td>发邮件、报表生成、后台任务</td>
+  </tr>
+  <tr>
+    <td>APScheduler</td>
+    <td>Python 定时任务库</td>
+    <td>定时清理数据、定时报表</td>
+  </tr>
+</table>
+
+<pre>
+用户提交订单
+  ↓
+接口立即返回成功
+  ↓
+后台任务异步发送邮件、通知、生成报表
+</pre>
+
+<hr />
+
+<h2>六、数据与中间件</h2>
+
+<h3>1. 关系型数据库：PostgreSQL / MySQL</h3>
+
+<p>关系型数据库用表、行、列组织数据，适合结构清晰、需要事务一致性的业务。</p>
+
+<table>
+  <tr>
+    <th>数据库</th>
+    <th>特点</th>
+    <th>场景</th>
+  </tr>
+  <tr>
+    <td>PostgreSQL</td>
+    <td>功能强，支持复杂查询、事务、JSON、扩展能力好</td>
+    <td>复杂业务系统、数据一致性要求高的项目</td>
+  </tr>
+  <tr>
+    <td>MySQL</td>
+    <td>使用广泛，生态成熟，性能稳定</td>
+    <td>电商、后台系统、常规业务系统</td>
+  </tr>
+  <tr>
+    <td>SQLite</td>
+    <td>轻量、无需单独数据库服务</td>
+    <td>本地开发、小工具、Demo 项目</td>
+  </tr>
+</table>
+
+<pre>
+SELECT * FROM tasks WHERE user_id = 1;
+</pre>
+
+<h3>2. MongoDB</h3>
+
+<p><strong>MongoDB 是文档型数据库。</strong>它以类似 JSON 的文档形式存储数据，适合结构变化较频繁的数据。</p>
+
+<pre>
+{
+  "title": "完成周报",
+  "tags": ["工作", "周报"],
+  "metadata": {
+    "priority": "high"
+  }
+}
+</pre>
+
+<p><strong>场景：</strong>内容系统、日志、配置、非固定结构数据。</p>
+
+<h3>3. Redis</h3>
+
+<p><strong>Redis 是内存型数据存储，常用于缓存、计数器、限流、分布式锁、排行榜等。</strong></p>
+
+<table>
+  <tr>
+    <th>用途</th>
+    <th>例子</th>
+  </tr>
+  <tr>
+    <td>缓存</td>
+    <td>缓存热点商品详情，减少数据库压力</td>
+  </tr>
+  <tr>
+    <td>验证码</td>
+    <td>保存短信验证码，设置过期时间</td>
+  </tr>
+  <tr>
+    <td>限流</td>
+    <td>限制同一 IP 每分钟访问次数</td>
+  </tr>
+  <tr>
+    <td>排行榜</td>
+    <td>使用有序集合维护分数排行</td>
+  </tr>
+  <tr>
+    <td>任务队列 Broker</td>
+    <td>Celery 可以使用 Redis 作为消息中间件</td>
+  </tr>
+</table>
+
+<pre>
+# 逻辑示例
+先查 Redis 缓存
+如果没有，再查数据库
+查到后写入 Redis
+最后返回给前端
+</pre>
+
+<h3>4. RabbitMQ 和 Kafka</h3>
+
+<p>二者都属于消息系统，但定位不同。</p>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>特点</th>
+    <th>适合场景</th>
+  </tr>
+  <tr>
+    <td>RabbitMQ</td>
+    <td>传统消息队列，强调可靠投递和任务分发</td>
+    <td>订单处理、邮件发送、异步任务</td>
+  </tr>
+  <tr>
+    <td>Kafka</td>
+    <td>高吞吐分布式日志系统，适合流式数据</td>
+    <td>日志采集、用户行为埋点、实时数据流</td>
+  </tr>
+</table>
+
+<pre>
+RabbitMQ：更像任务队列
+Kafka：更像高吞吐数据管道
+</pre>
+
+<hr />
+
+<h2>七、部署与运维</h2>
+
+<p>部署运维层负责把项目稳定运行在服务器或云环境中。</p>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+    <th>场景</th>
+  </tr>
+  <tr>
+    <td>Linux</td>
+    <td>服务器操作系统</td>
+    <td>大多数后端服务部署在 Linux 上</td>
+  </tr>
+  <tr>
+    <td>Nginx</td>
+    <td>反向代理、静态资源服务、HTTPS 入口</td>
+    <td>把外部请求转发给 Python 后端</td>
+  </tr>
+  <tr>
+    <td>Uvicorn</td>
+    <td>ASGI Server</td>
+    <td>常用于运行 FastAPI</td>
+  </tr>
+  <tr>
+    <td>Gunicorn</td>
+    <td>Python 进程管理服务器</td>
+    <td>常用于 Flask、Django，也可配合 Uvicorn Worker</td>
+  </tr>
+  <tr>
+    <td>Docker</td>
+    <td>容器化部署</td>
+    <td>统一开发、测试、生产环境</td>
+  </tr>
+  <tr>
+    <td>CI/CD</td>
+    <td>自动化测试、构建和发布</td>
+    <td>代码提交后自动执行测试和部署流程</td>
+  </tr>
+</table>
+
+<h3>典型部署链路</h3>
+
+<pre>
+用户浏览器
+  ↓
+Nginx
+  ↓
+Uvicorn / Gunicorn
+  ↓
+FastAPI / Flask / Django
+  ↓
+PostgreSQL / MySQL / Redis
+</pre>
+
+<h3>Docker Compose 简单理解</h3>
+
+<pre>
+一个项目可能同时启动：
+- backend 后端服务
+- frontend 前端服务
+- postgres 数据库
+- redis 缓存
+- nginx 网关
+</pre>
+
+<div class="note">
+  <p><strong>面试记忆：</strong>Nginx 是入口，Uvicorn/Gunicorn 是运行 Python Web 应用的服务，Docker 用来封装环境，CI/CD 用来自动发布。</p>
+</div>
+
+<hr />
+
+<h2>八、质量保障</h2>
+
+<h3>1. 测试</h3>
+
+<p>测试用于验证代码是否符合预期。</p>
+
+<table>
+  <tr>
+    <th>类型</th>
+    <th>说明</th>
+  </tr>
+  <tr>
+    <td>单元测试</td>
+    <td>测试单个函数或模块</td>
+  </tr>
+  <tr>
+    <td>接口测试</td>
+    <td>测试 API 请求和响应是否正确</td>
+  </tr>
+  <tr>
+    <td>集成测试</td>
+    <td>测试多个模块组合后的行为</td>
+  </tr>
+</table>
+
+<pre>
+def test_add():
+    assert 1 + 1 == 2
+</pre>
+
+<p>Python 常用测试框架：<code>pytest</code>。</p>
+
+<h3>2. 日志</h3>
+
+<p>日志用于记录系统运行过程，方便排查问题和做审计。</p>
+
+<pre>
+import logging
+
+logging.info("user created task")
+logging.error("database connection failed")
+</pre>
+
+<p>常见日志内容：</p>
+
+<ul>
+  <li>请求路径</li>
+  <li>用户 ID</li>
+  <li>错误堆栈</li>
+  <li>接口耗时</li>
+  <li>关键业务操作</li>
+</ul>
+
+<h3>3. 监控</h3>
+
+<p>监控用于观察系统健康状态。</p>
+
+<table>
+  <tr>
+    <th>监控对象</th>
+    <th>例子</th>
+  </tr>
+  <tr>
+    <td>系统资源</td>
+    <td>CPU、内存、磁盘、网络</td>
+  </tr>
+  <tr>
+    <td>接口状态</td>
+    <td>QPS、响应时间、错误率</td>
+  </tr>
+  <tr>
+    <td>业务指标</td>
+    <td>注册数、订单数、支付成功率</td>
+  </tr>
+</table>
+
+<p>常见工具：Prometheus、Grafana、Sentry。</p>
+
+<h3>4. 安全</h3>
+
+<table>
+  <tr>
+    <th>安全点</th>
+    <th>说明</th>
+  </tr>
+  <tr>
+    <td>HTTPS</td>
+    <td>加密传输，防止数据被窃听</td>
+  </tr>
+  <tr>
+    <td>密码加密</td>
+    <td>密码不能明文存储，应使用哈希算法</td>
+  </tr>
+  <tr>
+    <td>JWT / Session</td>
+    <td>用于用户登录态管理</td>
+  </tr>
+  <tr>
+    <td>CORS</td>
+    <td>控制跨域访问</td>
+  </tr>
+  <tr>
+    <td>SQL 注入防护</td>
+    <td>使用参数化查询或 ORM，不拼接 SQL</td>
+  </tr>
+  <tr>
+    <td>XSS 防护</td>
+    <td>避免用户输入被当作脚本执行</td>
+  </tr>
+  <tr>
+    <td>CSRF 防护</td>
+    <td>防止用户在不知情情况下提交恶意请求</td>
+  </tr>
+</table>
+
+<div class="danger">
+  <p><strong>安全重点：</strong>认证不等于权限。认证是识别用户身份，权限是判断用户是否能执行某个操作。</p>
+</div>
+
+<h3>5. 性能优化</h3>
+
+<table>
+  <tr>
+    <th>方向</th>
+    <th>常见做法</th>
+  </tr>
+  <tr>
+    <td>数据库优化</td>
+    <td>建立索引、分页查询、避免 N+1 查询、优化慢 SQL</td>
+  </tr>
+  <tr>
+    <td>缓存优化</td>
+    <td>使用 Redis 缓存热点数据</td>
+  </tr>
+  <tr>
+    <td>接口优化</td>
+    <td>减少不必要字段、压缩响应、异步处理耗时任务</td>
+  </tr>
+  <tr>
+    <td>并发优化</td>
+    <td>合理使用异步 I/O、任务队列、连接池</td>
+  </tr>
+  <tr>
+    <td>前端优化</td>
+    <td>代码分包、懒加载、静态资源缓存</td>
+  </tr>
+</table>
+
+<hr />
+
+<h2>九、一个完整业务例子：任务管理系统</h2>
+
+<p>假设开发一个简单的任务管理系统，用户可以登录、创建任务、查看任务列表。</p>
+
+<table>
+  <tr>
+    <th>层级</th>
+    <th>涉及技术</th>
+    <th>作用</th>
+  </tr>
+  <tr>
+    <td>前端</td>
+    <td>React / Vue / HTML / CSS / TypeScript</td>
+    <td>展示登录页、任务列表页、创建任务表单</td>
+  </tr>
+  <tr>
+    <td>前端构建</td>
+    <td>Vite / pnpm</td>
+    <td>启动前端开发环境，打包生产静态文件</td>
+  </tr>
+  <tr>
+    <td>网络通信</td>
+    <td>HTTP / REST API / JSON</td>
+    <td>前端通过接口和后端交换数据</td>
+  </tr>
+  <tr>
+    <td>后端</td>
+    <td>FastAPI</td>
+    <td>提供登录、创建任务、查询任务接口</td>
+  </tr>
+  <tr>
+    <td>数据模型</td>
+    <td>Pydantic / ORM</td>
+    <td>校验请求数据，操作数据库中的用户表和任务表</td>
+  </tr>
+  <tr>
+    <td>认证权限</td>
+    <td>JWT / RBAC</td>
+    <td>判断用户是否登录，是否只能访问自己的任务</td>
+  </tr>
+  <tr>
+    <td>数据库</td>
+    <td>PostgreSQL / MySQL</td>
+    <td>保存用户和任务数据</td>
+  </tr>
+  <tr>
+    <td>缓存</td>
+    <td>Redis</td>
+    <td>缓存用户信息、验证码、热点数据</td>
+  </tr>
+  <tr>
+    <td>异步任务</td>
+    <td>Celery / RabbitMQ</td>
+    <td>异步发送任务提醒邮件</td>
+  </tr>
+  <tr>
+    <td>部署</td>
+    <td>Nginx / Uvicorn / Docker / Linux</td>
+    <td>把系统部署到服务器</td>
+  </tr>
+  <tr>
+    <td>质量保障</td>
+    <td>pytest / logging / Prometheus</td>
+    <td>测试接口、记录日志、监控服务状态</td>
+  </tr>
+</table>
+
+<h3>请求链路示例</h3>
+
+<pre>
+用户点击“创建任务”
+  ↓
+React / Vue 收集表单数据
+  ↓
+fetch / axios 发送 POST /api/tasks
+  ↓
+FastAPI 接收请求
+  ↓
+Pydantic 校验 title 是否为空
+  ↓
+认证模块识别当前用户
+  ↓
+权限模块判断用户是否能创建任务
+  ↓
+ORM 写入 PostgreSQL / MySQL
+  ↓
+Redis 可缓存任务列表
+  ↓
+消息队列异步发送提醒邮件
+  ↓
+后端返回 JSON
+  ↓
+前端刷新任务列表
+</pre>
+
+<hr />
+
+<h2>十、面试高频总结</h2>
+
+<h3>1. Python 全栈开发包含哪些层？</h3>
+
+<pre>
+前端页面
+前端构建
+网络通信
+Python 后端
+业务模型
+数据存储
+缓存与消息队列
+部署运维
+测试、安全、监控、性能优化
+</pre>
+
+<h3>2. FastAPI、Flask、Django 怎么选？</h3>
+
+<table>
+  <tr>
+    <th>框架</th>
+    <th>一句话区别</th>
+  </tr>
+  <tr>
+    <td>FastAPI</td>
+    <td>适合现代 API 服务，类型提示强，自动文档友好</td>
+  </tr>
+  <tr>
+    <td>Flask</td>
+    <td>轻量灵活，适合小项目和高度定制</td>
+  </tr>
+  <tr>
+    <td>Django</td>
+    <td>全家桶，适合完整业务系统和后台管理</td>
+  </tr>
+</table>
+
+<h3>3. Pydantic 和 ORM 的区别？</h3>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+  </tr>
+  <tr>
+    <td>Pydantic</td>
+    <td>负责数据校验、类型转换、请求响应模型</td>
+  </tr>
+  <tr>
+    <td>ORM</td>
+    <td>负责把 Python 对象映射到数据库表，操作数据库</td>
+  </tr>
+</table>
+
+<h3>4. Redis、RabbitMQ、Kafka 的区别？</h3>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>定位</th>
+  </tr>
+  <tr>
+    <td>Redis</td>
+    <td>高速缓存和内存数据结构存储</td>
+  </tr>
+  <tr>
+    <td>RabbitMQ</td>
+    <td>可靠消息队列，适合任务分发</td>
+  </tr>
+  <tr>
+    <td>Kafka</td>
+    <td>高吞吐消息流，适合日志和实时数据管道</td>
+  </tr>
+</table>
+
+<h3>5. 认证和权限的区别？</h3>
+
+<pre>
+认证 Authentication：确认你是谁
+权限 Authorization：确认你能做什么
+</pre>
+
+<h3>6. Nginx、Uvicorn、Gunicorn 的区别？</h3>
+
+<table>
+  <tr>
+    <th>技术</th>
+    <th>作用</th>
+  </tr>
+  <tr>
+    <td>Nginx</td>
+    <td>对外入口，负责反向代理、HTTPS、静态资源</td>
+  </tr>
+  <tr>
+    <td>Uvicorn</td>
+    <td>ASGI Server，常用于 FastAPI</td>
+  </tr>
+  <tr>
+    <td>Gunicorn</td>
+    <td>Python 进程管理服务，常用于 Flask/Django，也可管理 Uvicorn Worker</td>
+  </tr>
+</table>
+
+<hr />
+
+<h2>十一、最终记忆版</h2>
+
+<pre>
+前端：
+HTML/CSS/JS/TS + React/Vue，负责页面和交互。
+
+构建：
+npm/pnpm 管依赖，Vite/Webpack 负责开发和打包。
+
+通信：
+HTTP + REST API + JSON 是主流，WebSocket 用于实时通信。
+
+后端：
+FastAPI 适合 API 和微服务，Flask 轻量灵活，Django 大而全。
+
+模型：
+Pydantic 校验数据，ORM 操作数据库，认证判断是谁，权限判断能做什么。
+
+数据：
+MySQL/PostgreSQL 存结构化业务数据，MongoDB 存文档数据。
+
+中间件：
+Redis 做缓存，RabbitMQ 做任务队列，Kafka 做高吞吐数据流。
+
+部署：
+Linux 运行服务，Nginx 做入口，Uvicorn/Gunicorn 跑 Python 应用，Docker 统一环境，CI/CD 自动发布。
+
+质量：
+测试保证正确性，日志方便排查，监控观察状态，安全防攻击，性能优化提升响应速度。
+</pre>
+
+</body>
+</html>

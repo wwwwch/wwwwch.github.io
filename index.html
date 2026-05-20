@@ -3,25 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>LeetCode 笔记索引</title>
+  <title>笔记导航</title>
   <style>
     :root {
       color-scheme: light;
-      --bg: #f3f5f8;
+      --bg: #f5f7fb;
       --panel: #ffffff;
       --text: #1f2937;
       --muted: #667085;
       --line: #d9dee7;
       --line-soft: #edf0f5;
-      --accent: #0f766e;
-      --accent-2: #f59e0b;
-      --accent-soft: #e6f4f1;
-      --accent-2-soft: #fff5db;
+      --teal: #0f766e;
+      --amber: #b45309;
+      --blue: #2563eb;
+      --rose: #be123c;
+      --violet: #7c3aed;
+      --soft-teal: #e6f4f1;
+      --soft-amber: #fff4dc;
+      --soft-blue: #eaf1ff;
+      --soft-rose: #fff1f4;
+      --soft-violet: #f3edff;
       --shadow: 0 18px 45px rgba(16, 24, 40, 0.09);
     }
 
     * {
       box-sizing: border-box;
+    }
+
+    [hidden] {
+      display: none !important;
     }
 
     body {
@@ -30,13 +40,13 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
       color: var(--text);
       background:
-        linear-gradient(135deg, rgba(15, 118, 110, 0.12), transparent 34%),
-        linear-gradient(315deg, rgba(245, 158, 11, 0.13), transparent 32%),
+        linear-gradient(135deg, rgba(15, 118, 110, 0.11), transparent 34%),
+        linear-gradient(315deg, rgba(37, 99, 235, 0.10), transparent 30%),
         var(--bg);
     }
 
     .page {
-      width: min(1080px, calc(100% - 32px));
+      width: min(1180px, calc(100% - 32px));
       margin: 0 auto;
       padding: 42px 0 56px;
     }
@@ -46,12 +56,12 @@
       grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
       align-items: end;
       gap: 24px;
-      margin-bottom: 18px;
+      margin-bottom: 22px;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 42px);
+      font-size: clamp(30px, 4vw, 44px);
       line-height: 1.12;
       letter-spacing: 0;
     }
@@ -60,39 +70,6 @@
       margin-top: 10px;
       color: var(--muted);
       font-size: 15px;
-    }
-
-    .summary {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin: 18px 0 22px;
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      min-height: 34px;
-      padding: 7px 12px;
-      border: 1px solid rgba(15, 118, 110, 0.18);
-      border-radius: 999px;
-      color: #175f59;
-      background: rgba(255, 255, 255, 0.76);
-      font-size: 14px;
-      box-shadow: 0 8px 18px rgba(16, 24, 40, 0.05);
-    }
-
-    .chip strong {
-      color: var(--text);
-      font-variant-numeric: tabular-nums;
-    }
-
-    .tools {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      min-width: min(360px, 100%);
     }
 
     .search {
@@ -109,8 +86,136 @@
     }
 
     .search:focus {
-      border-color: var(--accent);
+      border-color: var(--teal);
       box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.14);
+    }
+
+    .categories {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .category {
+      min-height: 138px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 16px;
+      background: var(--panel);
+      color: inherit;
+      text-align: left;
+      font: inherit;
+      cursor: pointer;
+      box-shadow: 0 12px 30px rgba(16, 24, 40, 0.07);
+      transition: transform 140ms ease, border-color 140ms ease, background 140ms ease;
+    }
+
+    .category:hover,
+    .category:focus-visible,
+    .category.is-active {
+      transform: translateY(-2px);
+      outline: none;
+    }
+
+    .category[data-key="project"]:hover,
+    .category[data-key="project"]:focus-visible,
+    .category[data-key="project"].is-active {
+      border-color: rgba(37, 99, 235, 0.45);
+      background: linear-gradient(135deg, var(--soft-blue), #fff 68%);
+    }
+
+    .category[data-key="paper"]:hover,
+    .category[data-key="paper"]:focus-visible,
+    .category[data-key="paper"].is-active {
+      border-color: rgba(190, 18, 60, 0.42);
+      background: linear-gradient(135deg, var(--soft-rose), #fff 68%);
+    }
+
+    .category[data-key="leetcode"]:hover,
+    .category[data-key="leetcode"]:focus-visible,
+    .category[data-key="leetcode"].is-active {
+      border-color: rgba(15, 118, 110, 0.45);
+      background: linear-gradient(135deg, var(--soft-teal), #fff 68%);
+    }
+
+    .category[data-key="interview"]:hover,
+    .category[data-key="interview"]:focus-visible,
+    .category[data-key="interview"].is-active {
+      border-color: rgba(124, 58, 237, 0.42);
+      background: linear-gradient(135deg, var(--soft-violet), #fff 68%);
+    }
+
+    .category-title {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 14px;
+      font-weight: 700;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .category-count {
+      min-width: 38px;
+      height: 28px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      color: #fff;
+      text-align: center;
+      font-size: 14px;
+      line-height: 20px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .category[data-key="project"] .category-count {
+      background: var(--blue);
+    }
+
+    .category[data-key="paper"] .category-count {
+      background: var(--rose);
+    }
+
+    .category[data-key="leetcode"] .category-count {
+      background: var(--teal);
+    }
+
+    .category[data-key="interview"] .category-count {
+      background: var(--violet);
+    }
+
+    .category-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.55;
+    }
+
+    .summary {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 0 0 14px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 34px;
+      padding: 7px 12px;
+      border: 1px solid rgba(15, 118, 110, 0.18);
+      border-radius: 999px;
+      color: #175f59;
+      background: rgba(255, 255, 255, 0.78);
+      font-size: 14px;
+      box-shadow: 0 8px 18px rgba(16, 24, 40, 0.05);
+    }
+
+    .chip strong {
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
     }
 
     .list {
@@ -123,7 +228,7 @@
 
     .table-head {
       display: grid;
-      grid-template-columns: 88px minmax(0, 1fr) 28px;
+      grid-template-columns: 96px minmax(0, 1fr) 28px;
       gap: 14px;
       padding: 11px 18px;
       color: var(--muted);
@@ -135,7 +240,7 @@
 
     .note {
       display: grid;
-      grid-template-columns: 88px minmax(0, 1fr) 28px;
+      grid-template-columns: 96px minmax(0, 1fr) 28px;
       align-items: center;
       gap: 14px;
       min-height: 54px;
@@ -157,33 +262,33 @@
 
     .note:hover,
     .note:focus-visible {
-      background: linear-gradient(90deg, var(--accent-soft), #fff);
+      background: linear-gradient(90deg, var(--soft-amber), #fff);
       outline: none;
     }
 
     .note:hover .arrow,
     .note:focus-visible .arrow {
-      color: var(--accent);
+      color: var(--amber);
       transform: translateX(2px);
     }
 
-    .number {
+    .tag {
       display: block;
-      color: var(--accent);
+      color: var(--teal);
       font-weight: 700;
       font-size: 15px;
       line-height: 1.3;
       font-variant-numeric: tabular-nums;
     }
 
-    .number::before {
+    .tag::before {
       content: "";
       display: inline-block;
       width: 7px;
       height: 7px;
       margin-right: 8px;
       border-radius: 50%;
-      background: var(--accent-2);
+      background: var(--amber);
       vertical-align: 1px;
     }
 
@@ -218,52 +323,143 @@
       background: #fff3f2;
     }
 
-    @media (max-width: 720px) {
+    .viewer {
+      min-height: 100vh;
+      background: #fff;
+    }
+
+    .viewer-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      min-height: 68px;
+      padding: 0 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.96);
+      box-shadow: 0 8px 24px rgba(16, 24, 40, 0.08);
+    }
+
+    .home-link {
+      flex: 0 0 auto;
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      color: var(--teal);
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 26px;
+      line-height: 1.2;
+    }
+
+    .home-link:hover,
+    .home-link:focus-visible {
+      color: var(--amber);
+      outline: none;
+    }
+
+    .viewer-title {
+      min-width: 0;
+      color: var(--muted);
+      font-size: 15px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .note-frame {
+      display: block;
+      width: 100%;
+      height: calc(100vh - 68px);
+      border: 0;
+      background: #fff;
+    }
+
+    @media (max-width: 820px) {
       .page {
-        width: min(100% - 22px, 1080px);
+        width: min(100% - 22px, 1180px);
         padding-top: 28px;
       }
 
       header {
-        display: grid;
         grid-template-columns: 1fr;
-        align-items: start;
       }
 
-      .tools {
-        width: 100%;
+      .categories {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
       }
 
       .table-head,
       .note {
-        grid-template-columns: 64px minmax(0, 1fr) 20px;
+        grid-template-columns: 76px minmax(0, 1fr) 20px;
         gap: 10px;
         padding-inline: 13px;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .categories {
+        grid-template-columns: 1fr;
+      }
+
+      .viewer-bar {
+        min-height: 62px;
+        padding-inline: 14px;
+      }
+
+      .home-link {
+        min-height: 40px;
+        font-size: 22px;
+      }
+
+      .note-frame {
+        height: calc(100vh - 62px);
       }
     }
   </style>
 </head>
 <body>
-  <main class="page">
+  <main class="page" id="homePage">
     <header>
       <div>
-        <h1>LeetCode 笔记</h1>
-        <div class="meta" id="meta">正在读取笔记...</div>
+        <h1>笔记导航</h1>
+        <div class="meta" id="meta">正在读取笔记清单...</div>
       </div>
       <div class="tools">
-        <input class="search" id="search" type="search" placeholder="搜索题号或标题" autocomplete="off">
+        <input class="search" id="search" type="search" placeholder="搜索标题、题号或文件名" autocomplete="off">
       </div>
     </header>
 
+    <nav class="categories" aria-label="笔记分类">
+      <button class="category is-active" type="button" data-key="project">
+        <span class="category-title">项目 Project <span class="category-count" id="projectCount">0</span></span>
+        <p class="category-desc">项目实践、工程记录与阶段性总结。</p>
+      </button>
+      <button class="category" type="button" data-key="paper">
+        <span class="category-title">论文 Paper <span class="category-count" id="paperCount">0</span></span>
+        <p class="category-desc">论文阅读、方法梳理与实验复盘。</p>
+      </button>
+      <button class="category" type="button" data-key="leetcode">
+        <span class="category-title">算法题 LeetCode <span class="category-count" id="leetcodeCount">0</span></span>
+        <p class="category-desc">算法题笔记、解法模板与复杂度分析。</p>
+      </button>
+      <button class="category" type="button" data-key="interview">
+        <span class="category-title">面经 Interview <span class="category-count" id="interviewCount">0</span></span>
+        <p class="category-desc">面试题整理、复盘记录与高频知识点。</p>
+      </button>
+    </nav>
+
     <section class="summary" aria-label="笔记概览">
-      <span class="chip">当前收录 <strong id="totalCount">0</strong> 篇</span>
-      <span class="chip">题号范围 <strong id="rangeText">-</strong></span>
-      <span class="chip">点击题目打开笔记</span>
+      <span class="chip">当前分类 <strong id="categoryName">项目 Project</strong></span>
+      <span class="chip">当前显示 <strong id="visibleCount">0</strong> 篇</span>
+      <span class="chip">全部收录 <strong id="totalCount">0</strong> 篇</span>
     </section>
 
     <section class="list" aria-live="polite">
       <div class="table-head" aria-hidden="true">
-        <span>题号</span>
+        <span>标识</span>
         <span>标题</span>
         <span></span>
       </div>
@@ -271,38 +467,153 @@
     </section>
   </main>
 
+  <section class="viewer" id="viewerPage" hidden>
+    <div class="viewer-bar">
+      <a class="home-link" id="homeLink" href="./index.html">笔记导航</a>
+      <span class="viewer-title" id="viewerTitle"></span>
+    </div>
+    <iframe class="note-frame" id="noteFrame" title="笔记内容"></iframe>
+  </section>
+
   <script>
+    const categories = {
+      project: {
+        label: "项目 Project",
+        dir: "project_html",
+        json: "project_html/notes.json",
+        empty: "项目笔记目录暂时为空。把 HTML 文件放入 project_html 后运行生成脚本即可显示。"
+      },
+      paper: {
+        label: "论文 Paper",
+        dir: "paper_html",
+        json: "paper_html/notes.json",
+        empty: "论文笔记目录暂时为空。把 HTML 文件放入 paper_html 后运行生成脚本即可显示。"
+      },
+      leetcode: {
+        label: "算法题 LeetCode",
+        dir: "leetcode_html",
+        json: "leetcode_html/notes.json",
+        empty: "还没有生成算法题笔记清单。"
+      },
+      interview: {
+        label: "面经 Interview",
+        dir: "interview_html",
+        json: "interview_html/notes.json",
+        empty: "面经目录暂时为空。把 HTML 文件放入 interview_html 后运行生成脚本即可显示。"
+      }
+    };
+
+    const homePage = document.querySelector("#homePage");
+    const viewerPage = document.querySelector("#viewerPage");
+    const noteFrame = document.querySelector("#noteFrame");
+    const viewerTitleEl = document.querySelector("#viewerTitle");
+    const homeLink = document.querySelector("#homeLink");
     const notesEl = document.querySelector("#notes");
     const metaEl = document.querySelector("#meta");
     const searchEl = document.querySelector("#search");
+    const categoryNameEl = document.querySelector("#categoryName");
+    const visibleCountEl = document.querySelector("#visibleCount");
     const totalCountEl = document.querySelector("#totalCount");
-    const rangeTextEl = document.querySelector("#rangeText");
+    const categoryButtons = Array.from(document.querySelectorAll(".category"));
 
-    let allNotes = [];
+    let activeKey = "project";
+    const noteStore = {};
 
     function normalizeText(value) {
       return String(value || "").toLowerCase().trim();
     }
 
     function displayTitle(note) {
-      const title = note.title || "未命名笔记";
+      const title = note.title || note.file || "未命名笔记";
       if (!note.number) {
         return title;
       }
 
       return title
         .replace(new RegExp(`^\\s*LeetCode\\s+${note.number}\\s*`, "i"), "")
-        .replace(new RegExp(`^\\s*${note.number}\\s*[.．、-]?\\s*`), "")
+        .replace(new RegExp(`^\\s*${note.number}\\s*[.。．、]?\\s*`), "")
         .trim() || title;
+    }
+
+    function noteTag(note) {
+      if (Number.isFinite(note.number)) {
+        return String(note.number);
+      }
+
+      const name = note.file ? note.file.replace(/\.html?$/i, "") : "HTML";
+      return name.slice(0, 12) || "HTML";
+    }
+
+    function notePath(config, note) {
+      return `${config.dir}/${encodeURIComponent(note.file)}`;
+    }
+
+    function noteHash(path, title) {
+      const params = new URLSearchParams();
+      params.set("path", path);
+      params.set("title", title);
+      return `#note=${params.toString()}`;
+    }
+
+    function parseNoteHash() {
+      if (!location.hash.startsWith("#note=")) {
+        return null;
+      }
+
+      const params = new URLSearchParams(location.hash.slice(6));
+      const path = params.get("path");
+      if (!path) {
+        return null;
+      }
+
+      return {
+        path,
+        title: params.get("title") || "笔记内容"
+      };
+    }
+
+    function showHome() {
+      viewerPage.hidden = true;
+      homePage.hidden = false;
+      noteFrame.removeAttribute("src");
+      viewerTitleEl.textContent = "";
+      document.title = "笔记导航";
+    }
+
+    function showViewer(path, title) {
+      homePage.hidden = true;
+      viewerPage.hidden = false;
+      noteFrame.src = path;
+      viewerTitleEl.textContent = title;
+      document.title = `${title} - 笔记导航`;
+      window.scrollTo(0, 0);
+    }
+
+    function syncRoute() {
+      const note = parseNoteHash();
+      if (note) {
+        showViewer(note.path, note.title);
+      } else {
+        showHome();
+      }
+    }
+
+    function sortNotes(notes) {
+      return [...notes].sort((a, b) => {
+        const aNumber = Number.isFinite(a.number) ? a.number : Number.MAX_SAFE_INTEGER;
+        const bNumber = Number.isFinite(b.number) ? b.number : Number.MAX_SAFE_INTEGER;
+        return aNumber - bNumber || String(a.file || "").localeCompare(String(b.file || ""), "zh-CN");
+      });
     }
 
     function render(notes) {
       notesEl.innerHTML = "";
+      const config = categories[activeKey];
 
       if (!notes.length) {
         const empty = document.createElement("div");
         empty.className = "empty";
-        empty.textContent = searchEl.value ? "没有匹配的笔记。" : "还没有生成笔记清单。";
+        empty.textContent = searchEl.value ? "没有匹配的笔记。" : config.empty;
         notesEl.appendChild(empty);
         return;
       }
@@ -310,24 +621,31 @@
       const fragment = document.createDocumentFragment();
 
       for (const note of notes) {
+        const titleText = displayTitle(note);
+        const path = notePath(config, note);
         const link = document.createElement("a");
         link.className = "note";
-        link.href = `html/${encodeURIComponent(note.file)}`;
+        link.href = noteHash(path, titleText);
+        link.addEventListener("click", event => {
+          event.preventDefault();
+          history.pushState(null, "", noteHash(path, titleText));
+          showViewer(path, titleText);
+        });
 
-        const number = document.createElement("span");
-        number.className = "number";
-        number.textContent = note.number ? note.number : "HTML";
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = noteTag(note);
 
         const title = document.createElement("p");
         title.className = "title";
-        title.textContent = displayTitle(note);
+        title.textContent = titleText;
 
         const arrow = document.createElement("span");
         arrow.className = "arrow";
         arrow.setAttribute("aria-hidden", "true");
         arrow.textContent = "›";
 
-        link.append(number, title, arrow);
+        link.append(tag, title, arrow);
         fragment.appendChild(link);
       }
 
@@ -336,39 +654,69 @@
 
     function applyFilter() {
       const query = normalizeText(searchEl.value);
+      const allNotes = noteStore[activeKey] || [];
       const filtered = query
-        ? allNotes.filter(note => normalizeText(`${note.number} ${displayTitle(note)}`).includes(query))
+        ? allNotes.filter(note => normalizeText(`${note.number || ""} ${displayTitle(note)} ${note.file || ""}`).includes(query))
         : allNotes;
+
       render(filtered);
+      categoryNameEl.textContent = categories[activeKey].label;
+      visibleCountEl.textContent = filtered.length;
+      totalCountEl.textContent = allNotes.length;
       metaEl.textContent = query
-        ? `共 ${allNotes.length} 篇，当前显示 ${filtered.length} 篇`
-        : `共 ${allNotes.length} 篇笔记，按题号排序`;
+        ? `${categories[activeKey].label} 共 ${allNotes.length} 篇，当前显示 ${filtered.length} 篇`
+        : `${categories[activeKey].label} 共 ${allNotes.length} 篇笔记`;
     }
 
-    async function loadNotes() {
+    function setActiveCategory(key) {
+      activeKey = key;
+      categoryButtons.forEach(button => {
+        button.classList.toggle("is-active", button.dataset.key === key);
+      });
+      applyFilter();
+    }
+
+    async function loadCategory(key) {
+      const config = categories[key];
       try {
-        const response = await fetch("html/notes.json", { cache: "no-store" });
+        const response = await fetch(config.json, { cache: "no-store" });
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }
 
-        allNotes = await response.json();
-        allNotes.sort((a, b) => (a.number ?? Number.MAX_SAFE_INTEGER) - (b.number ?? Number.MAX_SAFE_INTEGER));
-        const numbered = allNotes.map(note => note.number).filter(Number.isFinite);
-        totalCountEl.textContent = allNotes.length;
-        rangeTextEl.textContent = numbered.length ? `${Math.min(...numbered)} - ${Math.max(...numbered)}` : "-";
-        applyFilter();
+        noteStore[key] = sortNotes(await response.json());
       } catch (error) {
-        metaEl.textContent = "读取失败";
-        notesEl.innerHTML = "";
-        const box = document.createElement("div");
-        box.className = "error";
-        box.textContent = "无法读取 html/notes.json。新增或修改笔记后，请先运行 scripts/generate-notes-index.ps1 生成清单。";
-        notesEl.appendChild(box);
+        noteStore[key] = [];
+        if (key === activeKey) {
+          notesEl.innerHTML = "";
+          const box = document.createElement("div");
+          box.className = "error";
+          box.textContent = `无法读取 ${config.json}。新增或修改笔记后，请先运行 scripts/generate-notes-index.ps1 生成清单。`;
+          notesEl.appendChild(box);
+        }
       }
+
+      const countEl = document.querySelector(`#${key}Count`);
+      countEl.textContent = noteStore[key].length;
     }
 
+    async function loadNotes() {
+      await Promise.all(Object.keys(categories).map(loadCategory));
+      setActiveCategory(activeKey);
+      syncRoute();
+    }
+
+    categoryButtons.forEach(button => {
+      button.addEventListener("click", () => setActiveCategory(button.dataset.key));
+    });
     searchEl.addEventListener("input", applyFilter);
+    homeLink.addEventListener("click", event => {
+      event.preventDefault();
+      history.pushState(null, "", location.pathname);
+      showHome();
+    });
+    window.addEventListener("hashchange", syncRoute);
+    window.addEventListener("popstate", syncRoute);
     loadNotes();
   </script>
 </body>

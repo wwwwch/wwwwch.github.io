@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>121. 买卖股票的最佳时机 —— 一次遍历解法</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      --blue: #0f4db8;
+      --blue-2: #1e67d1;
+      --red: #d71920;
+      --green: #16833c;
+      --orange: #f28c18;
+      --ink: #111827;
+      --muted: #5b6472;
+      --line: #c8d7f0;
+      --paper: #ffffff;
+      --soft-blue: #eef6ff;
+      --soft-green: #effaf2;
+      --soft-red: #fff2f2;
+      --soft-orange: #fff8e8;
+      --code-bg: #101820;
+    }
+
+    body {
+      margin: 0;
+      background: #dfe5ee;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      color: var(--ink);
+      line-height: 1.42;
+    }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 18px auto;
+      background:
+        radial-gradient(circle at top left, rgba(30, 103, 209, 0.08), transparent 33%),
+        radial-gradient(circle at bottom right, rgba(242, 140, 24, 0.09), transparent 32%),
+        var(--paper);
+      padding: 13mm 12mm 11mm;
+      box-shadow: 0 12px 36px rgba(15, 23, 42, 0.22);
+      overflow: hidden;
+    }
+
+    .title {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+      padding-bottom: 10px;
+      border-bottom: 3px solid #dbe7fb;
+    }
+
+    .title-icon {
+      font-size: 34px;
+      flex: 0 0 auto;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 31px;
+      line-height: 1.16;
+      letter-spacing: -0.5px;
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    h1 span {
+      color: #111827;
+      font-size: 25px;
+      font-weight: 800;
+    }
+
+    .section {
+      border: 2px solid var(--line);
+      border-radius: 11px;
+      padding: 10px 13px;
+      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.82);
+    }
+
+    .section.problem {
+      border-color: #f6a3a3;
+      background: var(--soft-red);
+    }
+
+    .section.idea {
+      border-color: #a9d9b5;
+      background: var(--soft-green);
+    }
+
+    .section.summary {
+      border-color: #f4c46b;
+      background: var(--soft-orange);
+      margin-top: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      color: var(--blue);
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    .section.problem .section-title {
+      color: var(--red);
+    }
+
+    .section.idea .section-title {
+      color: var(--green);
+    }
+
+    .section.summary .section-title {
+      color: var(--blue);
+    }
+
+    .lead {
+      margin: 0;
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .lead code,
+    td code,
+    .summary-text code {
+      color: var(--red);
+      background: rgba(215, 25, 32, 0.08);
+      padding: 1px 5px;
+      border-radius: 5px;
+      font-weight: 800;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    .idea-text {
+      margin: 0;
+      font-size: 16.4px;
+      font-weight: 700;
+    }
+
+    .idea-text strong {
+      color: var(--green);
+      font-size: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      overflow: hidden;
+      border-radius: 9px;
+      font-size: 15px;
+      background: #fff;
+    }
+
+    th {
+      color: var(--blue);
+      background: linear-gradient(180deg, #edf5ff, #dcecff);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    th,
+    td {
+      border: 1.6px solid #73a4e9;
+      padding: 7px 9px;
+      vertical-align: middle;
+    }
+
+    td {
+      font-weight: 650;
+    }
+
+    .step-badge {
+      display: inline-grid;
+      place-items: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: white;
+      font-weight: 900;
+      box-shadow: inset 0 -2px 0 rgba(0,0,0,0.16);
+    }
+
+    .code-section {
+      margin-top: 10px;
+    }
+
+    .code-card {
+      background: var(--code-bg);
+      border-radius: 12px;
+      color: #e8edf2;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.14);
+      box-shadow: 0 7px 18px rgba(16, 24, 32, 0.22);
+    }
+
+    .code-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 12px;
+      background: linear-gradient(180deg, #1c2a38, #131d27);
+      color: #b8c4d3;
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.2px;
+    }
+
+    .dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #738198;
+    }
+
+    pre {
+      margin: 0;
+      padding: 13px 15px 14px;
+      overflow: hidden;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 16px;
+      line-height: 1.54;
+      font-weight: 700;
+      white-space: pre-wrap;
+    }
+
+    .kw { color: #ff78d1; }
+    .fn { color: #ffe66d; }
+    .type { color: #55d6ff; }
+    .var { color: #f1f5f9; }
+    .num { color: #f8d66d; }
+    .comment { color: #79d45f; }
+    .op { color: #cbd5e1; }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 12px;
+      align-items: stretch;
+    }
+
+    .mini-card {
+      border: 2px solid #c5d9f7;
+      background: var(--soft-blue);
+      border-radius: 11px;
+      padding: 10px 12px;
+      height: 100%;
+    }
+
+    .mini-card h3 {
+      margin: 0 0 7px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: var(--blue);
+      font-size: 19px;
+      font-weight: 900;
+    }
+
+    .complexity table {
+      font-size: 15.5px;
+    }
+
+    .complexity td:nth-child(2) {
+      text-align: center;
+      font-weight: 900;
+    }
+
+    .big-o {
+      color: var(--red);
+      font-weight: 950;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    }
+
+    .summary-text {
+      margin: 0;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1.55;
+    }
+
+    .formula-strip {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 9px;
+      margin-top: 10px;
+    }
+
+    .formula {
+      border: 1.5px solid #b9cef0;
+      border-radius: 10px;
+      padding: 8px 9px;
+      background: white;
+      text-align: center;
+      font-weight: 900;
+      color: #263445;
+    }
+
+    .formula strong {
+      color: var(--blue);
+      display: block;
+      font-size: 13px;
+      margin-bottom: 3px;
+    }
+
+    .formula code {
+      font-family: "SFMono-Regular", Consolas, monospace;
+      color: var(--red);
+      background: transparent;
+      font-size: 14px;
+      padding: 0;
+    }
+
+    @page {
+      size: A4 portrait;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        box-shadow: none;
+        page-break-after: always;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="title">
+      <div class="title-icon">📚</div>
+      <h1>121. 买卖股票的最佳时机 <span>—— 一次遍历解法</span></h1>
+    </header>
+
+    <section class="section problem">
+      <h2 class="section-title">🎯 问题本质</h2>
+      <p class="lead">给定一个数组 <code>prices</code>，只能买卖一次，求最大利润。</p>
+    </section>
+
+    <section class="section idea">
+      <h2 class="section-title">🔍 核心思想</h2>
+      <p class="idea-text"><strong>一次遍历，记录历史最低价。</strong><br />遍历过程中，假设在历史最低点买入，当前价格卖出，计算利润并更新最大值。</p>
+      <div class="formula-strip">
+        <div class="formula"><strong>维护买入价</strong><code>min_price</code></div>
+        <div class="formula"><strong>当前卖出利润</strong><code>price - min_price</code></div>
+        <div class="formula"><strong>答案更新</strong><code>max_profit</code></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">📊 算法流程</h2>
+      <table>
+        <thead>
+          <tr>
+            <th style="width: 13%;">步骤</th>
+            <th style="width: 48%;">操作</th>
+            <th>变量变化</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align:center;"><span class="step-badge">1</span></td>
+            <td>初始化 <code>min_price</code> 为第一个元素，<code>max_profit = 0</code></td>
+            <td>记录最低买入价</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><span class="step-badge">2</span></td>
+            <td>遍历每个 <code>price</code></td>
+            <td>逐个判断</td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><span class="step-badge">3</span></td>
+            <td>若 <code>price ≥ min_price</code></td>
+            <td>计算利润 <code>profit = price - min_price</code>，更新 <code>max_profit</code></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><span class="step-badge">4</span></td>
+            <td>否则（<code>price &lt; min_price</code>）</td>
+            <td>更新 <code>min_price = price</code></td>
+          </tr>
+          <tr>
+            <td style="text-align:center;"><span class="step-badge">5</span></td>
+            <td>返回 <code>max_profit</code></td>
+            <td>最终结果</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="code-section">
+      <h2 class="section-title">💻 关键代码</h2>
+      <div class="code-card">
+        <div class="code-head">
+          <span>Python</span>
+          <div class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        </div>
+<pre><span class="kw">def</span> <span class="fn">maxProfit</span>(<span class="var">self</span>, <span class="var">prices</span>: <span class="type">List</span>[<span class="type">int</span>]) <span class="op">-&gt;</span> <span class="type">int</span>:
+    <span class="var">min_price</span> <span class="op">=</span> <span class="var">prices</span>[<span class="num">0</span>]      <span class="comment"># 当前最低买入价</span>
+    <span class="var">max_profit</span> <span class="op">=</span> <span class="num">0</span>             <span class="comment"># 最大利润</span>
+
+    <span class="kw">for</span> <span class="var">price</span> <span class="kw">in</span> <span class="var">prices</span>:
+        <span class="kw">if</span> <span class="var">price</span> <span class="op">&gt;=</span> <span class="var">min_price</span>:
+            <span class="comment"># 尝试卖出，更新最大利润</span>
+            <span class="var">profit</span> <span class="op">=</span> <span class="var">price</span> <span class="op">-</span> <span class="var">min_price</span>
+            <span class="var">max_profit</span> <span class="op">=</span> <span class="fn">max</span>(<span class="var">max_profit</span>, <span class="var">profit</span>)
+        <span class="kw">else</span>:
+            <span class="comment"># 遇到更低价格，更新最低买入价</span>
+            <span class="var">min_price</span> <span class="op">=</span> <span class="var">price</span>
+
+    <span class="kw">return</span> <span class="var">max_profit</span></pre>
+      </div>
+    </section>
+
+    <div class="two-col">
+      <section class="mini-card complexity">
+        <h3>⚙️ 复杂度分析</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>维度</th>
+              <th>性能</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>时间复杂度</td>
+              <td><span class="big-o">O(n)</span>（一次遍历）</td>
+            </tr>
+            <tr>
+              <td>空间复杂度</td>
+              <td><span class="big-o">O(1)</span>（常数变量）</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="mini-card">
+        <h3>🧠 变量含义</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>变量</th>
+              <th>含义</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>min_price</code></td>
+              <td>到当前为止的历史最低价</td>
+            </tr>
+            <tr>
+              <td><code>max_profit</code></td>
+              <td>到当前为止可获得的最大利润</td>
+            </tr>
+            <tr>
+              <td><code>profit</code></td>
+              <td>当前价格卖出的临时利润</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </div>
+
+    <section class="section summary">
+      <h2 class="section-title">💎 一句话总结</h2>
+      <p class="summary-text">遍历数组，维护历史最低价，计算当前卖出利润，取最大值即得最佳时机。</p>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,0 +1,711 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>字节·机器学习｜HTML完整笔记</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --paper: #ffffff;
+      --text: #152033;
+      --muted: #5e6b80;
+      --line: #dce3ee;
+      --accent: #2463eb;
+      --accent-soft: #e8efff;
+      --code: #111827;
+      --warn: #7c2d12;
+      --warn-bg: #fff7ed;
+      --green: #116149;
+      --green-bg: #ecfdf5;
+      --shadow: 0 16px 40px rgba(20, 32, 51, 0.08);
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 280px);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.72;
+    }
+    .page {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 38px 20px 80px;
+    }
+    .hero {
+      background: rgba(255, 255, 255, 0.92);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      border-radius: 28px;
+      padding: 38px;
+      margin-bottom: 22px;
+    }
+    .kicker {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      color: var(--accent);
+      background: var(--accent-soft);
+      border: 1px solid #cddcff;
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: .04em;
+    }
+    h1 {
+      margin: 18px 0 8px;
+      font-size: clamp(32px, 6vw, 56px);
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 18px;
+      margin: 0 0 24px;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(120px, 1fr));
+      gap: 12px;
+      margin-top: 22px;
+    }
+    .stat {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+    .stat b {
+      display: block;
+      font-size: 22px;
+      line-height: 1.1;
+    }
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 22px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky;
+      top: 18px;
+      background: rgba(255, 255, 255, .94);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .toc h2 {
+      font-size: 15px;
+      margin: 0 0 12px;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: .08em;
+    }
+    .toc a {
+      display: block;
+      color: var(--text);
+      text-decoration: none;
+      padding: 9px 10px;
+      border-radius: 12px;
+      font-size: 14px;
+    }
+    .toc a:hover {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .main {
+      min-width: 0;
+    }
+    .section {
+      margin-bottom: 28px;
+      scroll-margin-top: 20px;
+    }
+    .section > h2 {
+      margin: 0 0 14px;
+      font-size: 25px;
+      letter-spacing: -0.02em;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+    .section > h2 span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      background: var(--code);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .cards {
+      display: grid;
+      gap: 16px;
+    }
+    .card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 10px 26px rgba(20, 32, 51, 0.055);
+    }
+    .card h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+    .summary {
+      margin: 0 0 16px;
+      color: var(--text);
+      font-size: 16px;
+      background: #f8fafc;
+      border-left: 4px solid var(--accent);
+      padding: 12px 14px;
+      border-radius: 0 14px 14px 0;
+    }
+    .label {
+      color: var(--accent);
+      font-weight: 800;
+      font-size: 14px;
+      margin: 14px 0 8px;
+      letter-spacing: .02em;
+    }
+    ul {
+      padding-left: 21px;
+      margin: 6px 0 16px;
+    }
+    li {
+      margin: 6px 0;
+    }
+    .understanding {
+      background: var(--green-bg);
+      border: 1px solid #bbf7d0;
+      border-radius: 18px;
+      padding: 14px 16px;
+      margin: 16px 0;
+    }
+    .understanding .label {
+      color: var(--green);
+      margin: 0 0 6px;
+    }
+    .understanding p {
+      margin: 0;
+    }
+    .qa-wrap {
+      display: grid;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .qa {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+    }
+    .q, .a {
+      padding: 12px 14px;
+    }
+    .q {
+      background: var(--warn-bg);
+      color: var(--warn);
+      font-weight: 700;
+      border-bottom: 1px solid #fed7aa;
+    }
+    .a {
+      color: var(--text);
+    }
+    .q span, .a span {
+      display: inline-flex;
+      width: 26px;
+      height: 26px;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      margin-right: 8px;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .q span {
+      background: #fed7aa;
+    }
+    .a span {
+      background: var(--accent-soft);
+      color: var(--accent);
+    }
+    .coverage, .appendix {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 22px;
+    }
+    .coverage h2, .appendix h2 {
+      margin: 0 0 12px;
+      font-size: 22px;
+    }
+    .coverage ul {
+      columns: 2;
+      column-gap: 34px;
+    }
+    details {
+      background: #f8fafc;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 14px 16px;
+    }
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--accent);
+    }
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: #111827;
+      color: #f9fafb;
+      border-radius: 16px;
+      padding: 18px;
+      overflow: auto;
+      line-height: 1.75;
+      font-size: 13px;
+    }
+    .footer {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+      margin-top: 34px;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      .toc { position: static; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .coverage ul { columns: 1; }
+      .hero { padding: 26px; }
+    }
+    @media print {
+      body { background: white; }
+      .page { max-width: none; padding: 0; }
+      .toc { display: none; }
+      .hero, .card, .coverage, .appendix { box-shadow: none; break-inside: avoid; }
+      .layout { display: block; }
+      a { color: inherit; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="hero">
+      <div class="kicker">HTML完整笔记</div>
+      <h1>字节·机器学习</h1>
+      <p class="subtitle">基础概念 → 经典模型 → 大模型工程</p>
+      <div class="stats">
+        <div class="stat"><b>8</b><span>大章节</span></div>
+        <div class="stat"><b>14</b><span>核心主题</span></div>
+        <div class="stat"><b>24</b><span>高频追问</span></div>
+        <div class="stat"><b>完整</b><span>保留原文要点</span></div>
+      </div>
+    </header>
+
+    <section class="coverage">
+      <h2>覆盖范围检查</h2>
+      <ul><li>NLP大模型 / CV大模型</li>
+<li>Transformer 注意力机制</li>
+<li>位置编码与 QKV</li>
+<li>ResNet 与残差连接</li>
+<li>U-Net</li>
+<li>YOLO</li>
+<li>LSTM</li>
+<li>XGBoost</li>
+<li>决策树回归</li>
+<li>无监督学习</li>
+<li>GPT API 调用、问题与趋势</li>
+<li>RAG</li>
+<li>工具调用</li>
+<li>大模型部署</li>
+<li>微调、LoRA、PEFT</li>
+<li>整体三层框架</li>
+<li>面试总结回答</li></ul>
+    </section>
+
+    <div class="layout">
+      <nav class="toc" aria-label="目录">
+        <h2>目录</h2>
+        <a href="#nlp-cv">一、NLP大模型 / CV大模型</a>
+<a href="#transformer-attention">二、Transformer / Attention</a>
+<a href="#deep-learning-models">三、经典深度学习模型</a>
+<a href="#traditional-ml">四、传统机器学习</a>
+<a href="#llm-api-engineering">五、大模型与API工程</a>
+<a href="#deployment-finetuning">六、大模型部署 / 微调</a>
+<a href="#overall-framework">七、整体串联理解</a>
+<a href="#interview-summary">八、面试高频总结版（适合结尾）</a>
+      </nav>
+      <main class="main">
+        
+    <section id="nlp-cv" class="section">
+      <h2><span>01</span>一、NLP大模型 / CV大模型</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>NLP大模型、CV大模型</h3>
+          <p class="summary">NLP大模型主要建模语言序列中的语义关系，CV大模型主要建模图像中的空间结构和视觉模式。</p>
+          <div class="label">关键要点</div>
+          <ul><li>数据类型：NLP 处理文本 token 序列；CV 处理图像/视频像素。</li>
+<li>核心任务：NLP 用于对话、翻译、摘要；CV 用于分类、检测、分割。</li>
+<li>模型结构：NLP 现在基本以 Transformer 为主；CV 早期以 CNN 为主，后来也大量使用 Transformer（如 ViT）。</li>
+<li>发展趋势：两者逐渐融合，演进为多模态大模型。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>本质区别是序列建模 vs 空间建模，但底层方法正在统一，尤其是在 Transformer 和 Attention 出现以后，文本和图像都可以转成 token 来处理。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>NLP和CV大模型的根本区别是什么？</div>
+          <div class="a"><span>答</span>根本区别在于输入结构不同。NLP 更关注上下文语义依赖，CV 更关注局部纹理和空间关系。但从发展趋势看，两者正在被统一到同一种建模框架里。</div>
+        </div></div>
+        </article>
+      </div>
+    </section>
+    <section id="transformer-attention" class="section">
+      <h2><span>02</span>二、Transformer / Attention</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>Transformer 的注意力机制</h3>
+          <p class="summary">Transformer 通过自注意力机制（Attention）实现序列中全局信息交互，是其核心创新。</p>
+          <div class="label">关键要点</div>
+          <ul><li>核心思想：每个 token 都与其他 token 计算相关性，然后加权汇总信息。</li>
+<li>优势：能捕捉长距离依赖，不像 RNN 那样必须按顺序传递。</li>
+<li>并行能力：可并行处理整个序列，训练效率高。</li>
+<li>多头注意力：让模型从不同子空间学习不同关系。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>可以把它理解成：每个词在编码时，都会“看一遍”句子里其他所有词，判断哪些信息更重要，再决定如何更新自己的表示。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>为什么 Transformer 比 RNN 更好？</div>
+          <div class="a"><span>答</span>RNN 是顺序传递信息，长距离依赖容易丢失，而且不能高效并行；Transformer 用 Attention 直接建立全局依赖，既提升了效果，也提升了训练效率。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>多头注意力有什么意义？</div>
+          <div class="a"><span>答</span>多头注意力相当于让模型从多个视角同时建模，比如有的头关注语法关系，有的头关注语义相关性，能提升表达能力。</div>
+        </div></div>
+        </article>
+        <article class="card">
+          <h3>Transformer 的位置编码、QKV 实现计算</h3>
+          <p class="summary">Transformer 通过自注意力机制（Attention）+ 位置编码（Positional Encoding）+ QKV计算来建模序列关系。</p>
+          <div class="label">关键要点</div>
+          <ul><li>注意力机制（Self-Attention）：每个 token 与其他 token 计算相关性，加权汇总信息，捕捉全局依赖。</li>
+<li>公式：Attention(Q,K,V)=softmax((QKᵀ)/√dₖ)V。</li>
+<li>QKV计算：输入向量经过三组线性变换，得到 Q（Query）、K（Key）、V（Value）。Q 表示“我要找什么”，K 表示“我有什么”，V 表示“我的内容是什么”。</li>
+<li>位置编码（Positional Encoding）：由于 Attention 本身不包含顺序信息，所以需要显式加入位置信息，常见方式是正弦余弦编码或可学习位置编码。</li>
+<li>整体作用：Attention 负责“信息交互”，QKV 是具体实现方式，位置编码补充“顺序信息”。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>QKV 本质上是在做一种“查询-匹配-取值”机制，位置编码则是告诉模型“词的内容之外，它还处在句子的什么位置”。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>为什么 Attention 里要除以 √dk？</div>
+          <div class="a"><span>答</span>因为 Q 和 K 点积后数值可能很大，会让 softmax 过于尖锐，导致梯度不稳定。除以 √dk 是为了做缩放，保证训练更稳定。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>位置编码为什么重要？</div>
+          <div class="a"><span>答</span>因为自注意力本身不区分先后顺序，如果没有位置编码，模型只知道“有哪些词”，不知道“谁在前谁在后”。</div>
+        </div></div>
+        </article>
+      </div>
+    </section>
+    <section id="deep-learning-models" class="section">
+      <h2><span>03</span>三、经典深度学习模型</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>ResNet 及跳跃连接</h3>
+          <p class="summary">ResNet 通过残差连接（skip connection）解决深层网络训练中的退化问题。</p>
+          <div class="label">关键要点</div>
+          <ul><li>残差思想：网络不直接学习目标映射，而是学习残差 F(x)，输出为 F(x)+x。</li>
+<li>跳跃连接作用：保留原始输入信息，缓解梯度消失。</li>
+<li>优势：使网络能训练得更深，同时保持稳定。</li>
+<li>应用：图像分类、检测、分割中都很常见。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>ResNet 不是让网络“从零学一个完整映射”，而是让它在原输入基础上学“修正量”，这样更容易优化。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>ResNet 为什么能训练更深？</div>
+          <div class="a"><span>答</span>因为跳跃连接让梯度可以直接回传，同时保留了原始特征信息，网络只需要学习增量部分，所以更容易优化。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>跳跃连接和 U-Net 里的跳跃连接一样吗？</div>
+          <div class="a"><span>答</span>不完全一样。ResNet 的跳跃连接主要是为了优化训练、缓解梯度问题；U-Net 的跳跃连接更多是为了融合浅层细节和深层语义。</div>
+        </div></div>
+        </article>
+        <article class="card">
+          <h3>U-Net</h3>
+          <p class="summary">U-Net 是一种典型的编码器-解码器结构的图像分割模型，特别适合像素级预测任务。</p>
+          <div class="label">关键要点</div>
+          <ul><li>结构特点：左侧编码器负责提取语义特征，右侧解码器负责恢复分辨率。</li>
+<li>跳跃连接：将浅层细节特征与深层语义特征融合。</li>
+<li>核心优势：既能理解“图里是什么”，又能精确定位“它在哪”。</li>
+<li>应用场景：医学图像分割、遥感分割等。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>U-Net 的价值在于把“高层语义”和“低层边界细节”结合起来，这正是分割任务最需要的能力。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>U-Net 为什么适合分割？</div>
+          <div class="a"><span>答</span>因为分割不仅要知道目标是什么，还要知道每个像素属于哪里。U-Net 同时保留了语义信息和空间细节，所以效果好。</div>
+        </div></div>
+        </article>
+        <article class="card">
+          <h3>YOLO</h3>
+          <p class="summary">YOLO（You Only Look Once）是一种单阶段目标检测模型，特点是速度快、适合实时场景。</p>
+          <div class="label">关键要点</div>
+          <ul><li>核心思想：把目标检测统一成一个回归问题，同时预测边框和类别。</li>
+<li>单阶段特点：不需要先生成候选框，再分类。</li>
+<li>优势：端到端、推理速度快。</li>
+<li>典型应用：实时监控、自动驾驶、工业检测。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>YOLO 的核心价值在于“快”，适合对时延敏感的场景。它不是一步一步找目标，而是一次前向传播直接把目标框和类别都预测出来。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>YOLO 为什么快？</div>
+          <div class="a"><span>答</span>因为它是单阶段方法，一次前向计算就完成检测，不像两阶段方法那样还要生成候选区域再分类。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>YOLO 和 Faster R-CNN 的区别？</div>
+          <div class="a"><span>答</span>YOLO 更快，适合实时；Faster R-CNN 通常精度更高，但推理较慢。核心区别是单阶段 vs 两阶段。</div>
+        </div></div>
+        </article>
+        <article class="card">
+          <h3>LSTM</h3>
+          <p class="summary">LSTM 是一种改进的 RNN，专门为了解决长序列建模中的梯度消失问题。</p>
+          <div class="label">关键要点</div>
+          <ul><li>核心结构：输入门、遗忘门、输出门。</li>
+<li>作用：控制信息的写入、保留和输出。</li>
+<li>优势：相比普通 RNN，更能保留长期依赖信息。</li>
+<li>应用：时间序列预测、语音识别、早期 NLP 任务。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>LSTM 的本质是给网络加了一个“记忆管理系统”，让它知道哪些信息该记住，哪些信息该忘记。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>LSTM 解决了 RNN 的什么问题？</div>
+          <div class="a"><span>答</span>主要解决梯度消失问题。普通 RNN 在长序列上很难保留早期信息，LSTM 通过门控机制增强了长期记忆能力。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>LSTM 和 Transformer 的区别？</div>
+          <div class="a"><span>答</span>LSTM 是递归式顺序建模，擅长时间依赖但难并行；Transformer 是全局并行建模，效果和效率通常更好，所以现在主流 NLP 多采用 Transformer。</div>
+        </div></div>
+        </article>
+      </div>
+    </section>
+    <section id="traditional-ml" class="section">
+      <h2><span>04</span>四、传统机器学习</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>XGBoost</h3>
+          <p class="summary">XGBoost 是一种基于梯度提升树（Gradient Boosting Tree）的集成学习算法，在结构化数据上表现非常强。</p>
+          <div class="label">关键要点</div>
+          <ul><li>核心思想：一棵树一棵树地学，每一轮拟合前一轮的残差。</li>
+<li>优化能力：加入正则化，支持二阶导优化，训练更稳定。</li>
+<li>优点：精度高、鲁棒性强、可解释性较好。</li>
+<li>适用场景：风控、推荐、用户画像、表格数据建模。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>如果说深度学习擅长非结构化数据，那 XGBoost 可以说是表格数据领域的“强基线”。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>XGBoost 为什么效果好？</div>
+          <div class="a"><span>答</span>因为它结合了 boosting 的逐步纠错思想、正则化控制复杂度以及高效工程实现，所以在很多结构化数据任务里表现非常稳定。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>XGBoost 和随机森林的区别？</div>
+          <div class="a"><span>答</span>随机森林是并行建多棵树再投票，强调“降低方差”；XGBoost 是串行建树、逐步拟合误差，强调“降低偏差”，通常精度更高。</div>
+        </div></div>
+        </article>
+        <article class="card">
+          <h3>决策树原理、如何用于回归</h3>
+          <p class="summary">决策树通过不断选择特征切分数据空间，最终形成树状结构进行预测。用于回归时，本质是做分段函数拟合。</p>
+          <div class="label">关键要点</div>
+          <ul><li>基本原理：每次选择一个特征和阈值，把数据划分成更纯的子集。</li>
+<li>分类任务：通常用信息增益、基尼指数等指标。</li>
+<li>回归任务：通常以最小化均方误差（MSE）为目标。</li>
+<li>回归输出：叶子节点通常输出该区域样本的均值。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>决策树本质是在特征空间里不断“切块”，分类时输出类别，回归时输出一个连续值。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>决策树为什么能做回归？</div>
+          <div class="a"><span>答</span>因为它并不要求输出一定是类别，只要把样本划分到某个叶子节点，就可以用该节点样本的均值来表示预测值。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>决策树有哪些缺点？</div>
+          <div class="a"><span>答</span>容易过拟合，对数据扰动敏感，单棵树泛化能力有限，所以实际中常与集成方法结合使用。</div>
+        </div></div>
+        </article>
+        <article class="card">
+          <h3>无监督学习</h3>
+          <p class="summary">无监督学习是在没有标签的数据上发现数据内在结构或规律的方法。</p>
+          <div class="label">关键要点</div>
+          <ul><li>典型任务：聚类、降维、密度估计、异常检测。</li>
+<li>常见方法：K-Means、PCA、自编码器。</li>
+<li>作用：做数据探索、特征学习、数据预处理。</li>
+<li>特点：没有人工标签，依赖数据本身结构。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>它更像是在问：“这些数据自己能不能分出规律？”而不是“给定标签后怎么预测”。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>无监督学习的核心价值是什么？</div>
+          <div class="a"><span>答</span>核心价值是从无标签数据中提取结构信息，特别适合真实场景中标签昂贵或难获取的任务。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>PCA 的本质是什么？</div>
+          <div class="a"><span>答</span>PCA 是寻找数据方差最大的方向，把高维数据投影到更低维空间，本质是一种线性降维方法。</div>
+        </div></div>
+        </article>
+      </div>
+    </section>
+    <section id="llm-api-engineering" class="section">
+      <h2><span>05</span>五、大模型与API工程</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>GPT API调用、有哪些问题、未来发展前景</h3>
+          <p class="summary">GPT API 调用本质上是把大模型能力通过接口方式集成到具体业务系统中。</p>
+          <div class="label">关键要点</div>
+          <ul><li>调用方式：输入 prompt 或消息列表，请求模型生成回复。</li>
+<li>常见问题：幻觉——可能生成看似合理但不准确的内容；成本——高频调用会带来较高 token 成本；延迟——模型越大、上下文越长，响应越慢；上下文限制——模型虽然可处理长上下文，但并不等于记忆稳定。</li>
+<li>常见优化方式：Prompt工程、RAG、函数调用/工具调用、缓存。</li>
+<li>未来趋势：从“单轮问答”走向“Agent执行”；从“纯文本”走向“多模态交互”；从“云端依赖”走向“低成本、小型化、本地部署”。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>GPT API 已经不是单纯聊天接口，而是在向“通用智能能力接口”发展。未来重点不只是模型更强，而是更稳定、更便宜、更容易接入业务。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>GPT API 最大的问题是什么？</div>
+          <div class="a"><span>答</span>我认为主要是三点：准确性、成本和可控性。模型很强，但并不天然可靠，所以业务中往往需要检索增强、输出约束和人工兜底。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>RAG 是什么，解决什么问题？</div>
+          <div class="a"><span>答</span>RAG 是检索增强生成，即先从外部知识库检索相关内容，再把结果提供给模型生成答案。主要解决知识过时和幻觉问题。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>为什么大模型还需要工具调用？</div>
+          <div class="a"><span>答</span>因为模型擅长生成和推理，但不擅长直接访问外部世界。工具调用让模型能查数据、算结果、执行操作，能力会更完整。</div>
+        </div></div>
+        </article>
+      </div>
+    </section>
+    <section id="deployment-finetuning" class="section">
+      <h2><span>06</span>六、大模型部署 / 微调</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>大模型部署、微调</h3>
+          <p class="summary">大模型部署是把模型真正落地到可用环境中，微调是让模型更贴合具体场景和任务。</p>
+          <div class="label">关键要点</div>
+          <ul><li>部署目标：让模型在云端或本地稳定提供推理服务。</li>
+<li>部署方式：云端部署——统一管理、扩展方便；本地部署——适合隐私敏感、低延迟场景。</li>
+<li>常见挑战：显存占用大、推理延迟高、并发压力大。</li>
+<li>优化手段：量化、蒸馏、KV Cache、推理加速框架。</li>
+<li>微调方式：全量微调——更新全部参数，效果强但成本高；参数高效微调——如 LoRA、PEFT，只训练少量参数。</li>
+<li>微调价值：让模型更适应行业术语、风格、任务逻辑。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>部署解决的是“模型能不能跑得起来、扛得住业务压力”，微调解决的是“模型是不是更懂我的场景”。</p>
+        </div>
+          <div class="qa-wrap">
+        <div class="qa">
+          <div class="q"><span>问</span>Prompt工程和微调怎么选？</div>
+          <div class="a"><span>答</span>如果需求偏轻、变化快、预算有限，优先 Prompt；如果任务固定、数据明确、对稳定性要求高，可以考虑微调。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>LoRA 为什么高效？</div>
+          <div class="a"><span>答</span>因为它不直接更新整个大模型参数，而是只在某些层上增加低秩矩阵，训练参数量和显存占用都更低。</div>
+        </div>
+        <div class="qa">
+          <div class="q"><span>问</span>大模型部署的难点有哪些？</div>
+          <div class="a"><span>答</span>主要是算力成本、推理时延、并发吞吐、稳定性和安全控制。模型能力强，但工程代价也很高。</div>
+        </div></div>
+        </article>
+      </div>
+    </section>
+    <section id="overall-framework" class="section">
+      <h2><span>07</span>七、整体串联理解</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>如何把这些知识点串起来理解？</h3>
+          <p class="summary">可以把这些知识点分成三层：基础模型层、统一建模层、应用工程层。</p>
+          <div class="label">关键要点</div>
+          <ul><li>基础模型层：包括决策树、XGBoost、LSTM、ResNet、U-Net、YOLO。这一层主要解决具体任务，比如分类、回归、检测、分割、序列建模。</li>
+<li>统一建模层：Transformer 和 Attention 是核心。它们把文本、图像等不同模态逐步统一到一个共同框架中。</li>
+<li>应用工程层：包括 GPT API、RAG、部署、微调。这一层重点不是“模型原理”，而是“怎么把模型真正用起来，并稳定落地业务”。</li></ul>
+          
+        <div class="understanding">
+          <div class="label">我的理解</div>
+          <p>面试里如果能体现这种分层认知，通常会比单独背概念更有说服力。因为这说明你不是在记术语，而是知道它们在整个 AI 技术体系里的位置。</p>
+        </div>
+          
+        </article>
+      </div>
+    </section>
+    <section id="interview-summary" class="section">
+      <h2><span>08</span>八、面试高频总结版（适合结尾）</h2>
+      <div class="cards">
+        
+        <article class="card">
+          <h3>AI 技术发展路线总结回答</h3>
+          <p class="summary">如果面试官问“你怎么理解现在 AI 技术的发展路线”，可以用一段从专用模型到完整系统的回答。</p>
+          <div class="label">关键要点</div>
+          <ul><li>总结回答：我理解现在 AI 技术的发展，大致是从“针对单任务的专用模型”，走向“基于 Transformer 的统一大模型”，再走向“结合检索、工具调用和工程部署的完整系统”。</li>
+<li>也就是说，前几年更关注模型结构本身，现在越来越关注模型如何落地，包括多模态、Agent、低成本部署和业务稳定性。</li></ul>
+          
+          
+        </article>
+      </div>
+    </section>
+      </main>
+    </div>
+
+    <div class="footer">根据上传文本整理为 HTML 单页笔记；结构化整理不改变原始知识点含义。</div>
+  </div>
+</body>
+</html>

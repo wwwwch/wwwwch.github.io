@@ -1,0 +1,1255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大模型部署与微调：完整面试笔记</title>
+  <style>
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --primary: #1d4ed8;
+      --primary-light: #eff6ff;
+      --accent: #0f766e;
+      --accent-light: #ecfdf5;
+      --warn: #92400e;
+      --warn-light: #fffbeb;
+      --code-bg: #f3f4f6;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.75;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .page {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 32px 20px 80px;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1e3a8a, #0f766e);
+      color: white;
+      border-radius: 24px;
+      padding: 40px 36px;
+      margin-bottom: 28px;
+      box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+    }
+
+    header h1 {
+      margin: 0 0 12px;
+      font-size: 34px;
+      line-height: 1.25;
+      letter-spacing: 0.02em;
+    }
+
+    header p {
+      margin: 0;
+      font-size: 16px;
+      opacity: 0.92;
+    }
+
+    nav.toc {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+    }
+
+    nav.toc h2 {
+      margin-top: 0;
+      font-size: 22px;
+    }
+
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px 22px;
+      padding-left: 0;
+      list-style: none;
+      margin: 0;
+    }
+
+    .toc-grid a {
+      color: var(--primary);
+      text-decoration: none;
+      display: inline-block;
+      padding: 4px 0;
+    }
+
+    .toc-grid a:hover {
+      text-decoration: underline;
+    }
+
+    section.chapter {
+      margin: 36px 0;
+    }
+
+    .chapter-title {
+      font-size: 28px;
+      border-left: 8px solid var(--primary);
+      padding-left: 14px;
+      margin: 0 0 22px;
+    }
+
+    article.qa-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 26px;
+      margin: 22px 0;
+      box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+    }
+
+    article.qa-card h3 {
+      margin-top: 0;
+      font-size: 22px;
+      line-height: 1.45;
+      color: #111827;
+    }
+
+    .label {
+      display: inline-block;
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 10px;
+      border-radius: 999px;
+      margin: 18px 0 10px;
+      font-size: 14px;
+    }
+
+    .label.green {
+      color: var(--accent);
+      background: var(--accent-light);
+    }
+
+    .label.orange {
+      color: var(--warn);
+      background: var(--warn-light);
+    }
+
+    ul, ol {
+      padding-left: 1.45em;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    .note {
+      background: #f9fafb;
+      border-left: 5px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 10px;
+      margin: 12px 0;
+    }
+
+    .subblock {
+      margin: 14px 0;
+      padding: 14px 16px;
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+
+    .subblock strong {
+      color: #111827;
+    }
+
+    .formula {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 14px;
+    }
+
+    .summary-box {
+      background: #f8fafc;
+      border: 1px solid #dbeafe;
+      border-radius: 16px;
+      padding: 18px 20px;
+      margin: 18px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 14px 0;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 11px 12px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    .back-top {
+      text-align: right;
+      margin-top: 14px;
+      font-size: 14px;
+    }
+
+    .back-top a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .back-top a:hover {
+      text-decoration: underline;
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .page {
+        max-width: none;
+        padding: 0;
+      }
+
+      header, nav.toc, article.qa-card {
+        box-shadow: none;
+      }
+
+      article.qa-card {
+        break-inside: avoid;
+      }
+
+      .back-top {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="page" id="top">
+    <header>
+      <h1>大模型部署与微调：完整面试笔记</h1>
+      <p>覆盖大模型部署、Docker、本地/云端部署、显存并发延迟、微调、LoRA/QLoRA、量化、蒸馏、KV Cache、推理加速框架与整体串联理解。</p>
+    </header>
+
+    <nav class="toc">
+      <h2>目录</h2>
+      <ul class="toc-grid">
+        <li><a href="#chapter-1">一、大模型部署</a></li>
+        <li><a href="#q1">1. 大模型如何部署？核心流程是什么？</a></li>
+        <li><a href="#q2">2. 大模型常见部署方式有哪些？</a></li>
+        <li><a href="#q3">3. 如何用 Docker 做大模型本地部署？</a></li>
+        <li><a href="#q4">4. 部署中如何考虑显存、并发和延迟？</a></li>
+        <li><a href="#chapter-2">二、大模型微调</a></li>
+        <li><a href="#q5">5. 大模型如何微调？基本流程是什么？</a></li>
+        <li><a href="#q6">6. 常用微调方法有哪些？如何选择？</a></li>
+        <li><a href="#q7">7. 常用微调框架有哪些？</a></li>
+        <li><a href="#q8">8. 微调的应用场景有哪些？</a></li>
+        <li><a href="#chapter-3">三、量化</a></li>
+        <li><a href="#q9">9. 什么是量化？量化精度有哪些？显存如何计算？</a></li>
+        <li><a href="#q10">10. 常见量化方式有哪些？如何选择？</a></li>
+        <li><a href="#chapter-4">四、蒸馏</a></li>
+        <li><a href="#q11">11. 什么是蒸馏？原理是什么？</a></li>
+        <li><a href="#q12">12. 蒸馏如何实现？</a></li>
+        <li><a href="#chapter-5">五、KV Cache</a></li>
+        <li><a href="#q13">13. 什么是 KV Cache？用在哪？怎么用？</a></li>
+        <li><a href="#q14">14. KV Cache 在工程上如何使用和优化？</a></li>
+        <li><a href="#chapter-6">六、推理加速框架</a></li>
+        <li><a href="#q15">15. 常见推理加速框架有哪些？适合什么场景？</a></li>
+        <li><a href="#q16">16. 推理加速框架如何实现加速？</a></li>
+        <li><a href="#chapter-7">七、整体串联理解</a></li>
+        <li><a href="#q17">17. 如何串成一套体系？</a></li>
+        <li><a href="#chapter-8">八、面试收尾总结</a></li>
+        <li><a href="#q18">18. 如何整体概括大模型部署和优化？</a></li>
+      </ul>
+    </nav>
+
+    <section class="chapter" id="chapter-1">
+      <h2 class="chapter-title">一、大模型部署</h2>
+
+      <article class="qa-card" id="q1">
+        <h3>1. 问题：大模型如何部署？核心流程是什么？</h3>
+
+        <div class="label">标准回答</div>
+        <p>大模型部署的本质，是把训练好或微调好的模型，封装成一个稳定、可访问、可扩展的推理服务。</p>
+        <p>一般流程包括：</p>
+        <ul>
+          <li><strong>选择模型：</strong>确定模型规模、权重格式、是否量化。</li>
+          <li><strong>准备运行环境：</strong>配置 Python、CUDA、PyTorch、推理框架等依赖。</li>
+          <li><strong>加载模型：</strong>把模型权重和 tokenizer 加载到 GPU 或 CPU。</li>
+          <li><strong>封装服务接口：</strong>通常提供 HTTP API 或 OpenAI-compatible API。</li>
+          <li><strong>部署运行：</strong>可以本地运行，也可以用 Docker 容器化部署。</li>
+          <li><strong>监控和优化：</strong>关注显存、延迟、吞吐、并发、错误率等指标。</li>
+        </ul>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          大模型部署不是简单地“把模型跑起来”，而是要让模型在真实业务中稳定、低成本、可维护地提供服务。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>大模型部署和普通模型部署有什么区别？</li>
+          <li>部署时最先考虑什么？</li>
+          <li>部署中常见问题有哪些？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>大模型部署和普通模型部署的区别：</strong>
+          <p>大模型参数量大、显存占用高、推理延迟高，并且生成过程是逐 token 输出，所以比普通分类模型更依赖显存管理、并发控制和推理加速。</p>
+        </div>
+        <div class="subblock">
+          <strong>部署时最先考虑什么：</strong>
+          <p>先明确业务目标：是更看重低延迟、高并发、低成本，还是数据安全。目标不同，模型规模、部署方式和优化手段都会不同。</p>
+        </div>
+        <div class="subblock">
+          <strong>常见问题：</strong>
+          <p>显存不足、模型加载慢、响应延迟高、并发能力不足、CUDA 和依赖版本不匹配、长上下文导致显存上涨。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q2">
+        <h3>2. 问题：大模型常见部署方式有哪些？</h3>
+
+        <div class="label">标准回答</div>
+        <p>大模型部署方式主要有三类：</p>
+        <ul>
+          <li><strong>云端部署：</strong>模型部署在云服务器或云 GPU 上，通过 API 调用。</li>
+          <li><strong>本地部署：</strong>模型运行在本地服务器或工作站上。</li>
+          <li><strong>容器化部署：</strong>使用 Docker 把模型服务和依赖环境打包，方便迁移和复现。</li>
+        </ul>
+
+        <p>从资源规模看，也可以分为：</p>
+        <ul>
+          <li><strong>单机单卡部署：</strong>适合小模型、测试环境或量化模型。</li>
+          <li><strong>单机多卡部署：</strong>适合模型较大、单卡显存放不下的情况。</li>
+          <li><strong>多机部署：</strong>适合超大模型或高并发生产场景，但工程复杂度更高。</li>
+        </ul>
+
+        <div class="label green">我的判断</div>
+        <div class="note">
+          如果是快速验证，优先本地或单机部署；如果是生产环境，通常要考虑容器化、监控和扩展能力；如果涉及敏感数据，私有化或本地部署更合适。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>云端部署和本地部署怎么选？</li>
+          <li>什么场景适合本地部署？</li>
+          <li>单卡和多卡部署怎么判断？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>云端部署和本地部署怎么选：</strong>
+          <p>云端部署扩展方便、维护成本低；本地部署数据更可控、适合内网和隐私场景。选择时主要看数据安全、成本、延迟和运维能力。</p>
+        </div>
+        <div class="subblock">
+          <strong>适合本地部署的场景：</strong>
+          <p>企业内部知识库、金融医疗数据、代码助手、内网问答系统等对数据安全要求高的场景。</p>
+        </div>
+        <div class="subblock">
+          <strong>单卡和多卡怎么判断：</strong>
+          <p>如果模型和 KV Cache 能放进单卡显存，优先单卡，简单稳定；如果模型权重或上下文缓存放不下，就需要多卡或量化。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q3">
+        <h3>3. 问题：如何用 Docker 做大模型本地部署？</h3>
+
+        <div class="label">标准回答</div>
+        <p>Docker 部署大模型的核心价值是：环境隔离、依赖固定、部署可复现。</p>
+        <p>一般步骤是：</p>
+        <ol>
+          <li>准备 Docker 镜像，包含 Python、CUDA、PyTorch 和推理服务代码。</li>
+          <li>将模型权重放在宿主机目录中，通过 volume 挂载到容器内。</li>
+          <li>配置 GPU 访问，让容器可以使用显卡。</li>
+          <li>启动模型服务，暴露 API 端口。</li>
+          <li>通过接口调用模型。</li>
+        </ol>
+        <p>实际中不会把大模型权重直接打进镜像里，因为模型文件很大，通常采用镜像放代码和依赖，模型权重外部挂载的方式。</p>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          Docker 解决的不是模型效果问题，而是工程交付问题。它让部署环境从“手工配置”变成“可复制的运行单元”。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>Docker 部署大模型最常见的问题是什么？</li>
+          <li>为什么模型权重通常不放进镜像？</li>
+          <li>Docker 部署的优势是什么？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>最常见问题：</strong>
+          <p>CUDA、显卡驱动、PyTorch 版本不匹配；容器无法访问 GPU；模型路径挂载错误；端口没有正确暴露。</p>
+        </div>
+        <div class="subblock">
+          <strong>为什么权重不放进镜像：</strong>
+          <p>因为模型权重通常很大，放进镜像会导致镜像臃肿，不方便更新和迁移。外部挂载更灵活。</p>
+        </div>
+        <div class="subblock">
+          <strong>Docker 的优势：</strong>
+          <p>可以统一运行环境，减少部署差异，方便在不同机器上复现同一套服务。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q4">
+        <h3>4. 问题：大模型部署中如何考虑显存、并发和延迟？</h3>
+
+        <div class="label">标准回答</div>
+        <p>大模型部署中，显存、并发和延迟是核心约束。</p>
+        <ul>
+          <li><strong>显存：</strong>主要由模型权重、KV Cache 和运行开销组成。</li>
+          <li><strong>延迟：</strong>主要受模型大小、输入长度、输出长度和推理框架影响。</li>
+          <li><strong>并发：</strong>受 GPU 资源、batch 策略、KV Cache 管理能力影响。</li>
+        </ul>
+        <p>实际部署时，要先判断模型是否能稳定放入显存。</p>
+        <p>如果显存不足，可以考虑：</p>
+        <ul>
+          <li>换更小模型</li>
+          <li>使用量化</li>
+          <li>缩短上下文长度</li>
+          <li>降低并发</li>
+          <li>使用更高效的推理框架</li>
+        </ul>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          部署优化不是单点优化，而是在效果、速度、成本、显存之间做取舍。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>显存主要被哪些部分占用？</li>
+          <li>为什么输入越长显存越高？</li>
+          <li>如何提升并发能力？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>显存占用来源：</strong>
+          <p>主要包括模型权重、KV Cache、临时计算开销。推理时 KV Cache 在长上下文和高并发下会占很大比例。</p>
+        </div>
+        <div class="subblock">
+          <strong>输入越长显存越高的原因：</strong>
+          <p>因为每个历史 token 都会保存对应的 Key 和 Value，序列越长，KV Cache 越大。</p>
+        </div>
+        <div class="subblock">
+          <strong>提升并发能力的方法：</strong>
+          <p>可以使用更小模型、量化、控制上下文长度、优化 batch、使用支持高效 KV Cache 管理的推理框架。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-2">
+      <h2 class="chapter-title">二、大模型微调</h2>
+
+      <article class="qa-card" id="q5">
+        <h3>5. 问题：大模型如何微调？基本流程是什么？</h3>
+
+        <div class="label">标准回答</div>
+        <p>大模型微调是指在预训练模型基础上，用特定任务或领域数据继续训练，让模型更适应业务场景。</p>
+        <p>基本流程包括：</p>
+        <ol>
+          <li><strong>明确目标：</strong>例如客服问答、文本分类、信息抽取、代码生成。</li>
+          <li><strong>准备数据：</strong>整理成指令、问答或输入输出样本。</li>
+          <li><strong>选择微调方法：</strong>全量微调、LoRA、QLoRA 等。</li>
+          <li><strong>训练模型：</strong>设置学习率、batch size、训练轮数等参数。</li>
+          <li><strong>评估效果：</strong>检查准确率、稳定性、格式符合度、人工评价。</li>
+          <li><strong>部署上线：</strong>导出模型或 adapter，接入推理服务。</li>
+        </ol>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          微调主要解决“模型是否更适合某个任务或风格”的问题，不适合单纯用来记大量动态知识。动态知识更适合通过检索系统补充。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>什么时候需要微调？</li>
+          <li>微调和 Prompt 的区别是什么？</li>
+          <li>微调数据最重要的是什么？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>什么时候需要微调：</strong>
+          <p>当任务比较固定、输出格式要求稳定、行业术语较多、模型原始表现不够一致时，适合微调。</p>
+        </div>
+        <div class="subblock">
+          <strong>微调和 Prompt 的区别：</strong>
+          <p>Prompt 是通过输入引导模型，不改参数；微调会改变部分或全部参数，使模型行为更稳定，但成本更高。</p>
+        </div>
+        <div class="subblock">
+          <strong>微调数据最重要的是什么：</strong>
+          <p>数据质量和任务一致性最重要。低质量数据会让模型学到错误模式，数据不是越多越好，而是越贴近真实业务越好。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q6">
+        <h3>6. 问题：常用微调方法有哪些？如何选择？</h3>
+
+        <div class="label">标准回答</div>
+
+        <div class="subblock">
+          <strong>1）全量微调</strong>
+          <p>更新模型全部参数。效果潜力强，但显存、算力和数据要求高，适合资源充足、任务改造较大的场景。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>2）LoRA</strong>
+          <p>只在部分网络层加入小规模可训练参数，原模型主体参数冻结。优点是成本低、显存省、训练快，是目前最常用的参数高效微调方法。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>3）QLoRA</strong>
+          <p>在量化后的基础模型上进行 LoRA 微调。优点是进一步节省显存，适合单卡或资源有限环境。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>4）Prefix / Prompt Tuning</strong>
+          <p>学习一段可训练的提示向量，不大规模更新模型参数。更轻量，但适配能力通常不如 LoRA 稳定。</p>
+        </div>
+
+        <p>选择上可以这样判断：</p>
+        <ul>
+          <li><strong>资源充足、任务变化大：</strong>全量微调</li>
+          <li><strong>资源有限、工程落地：</strong>LoRA / QLoRA</li>
+          <li><strong>轻量实验或简单适配：</strong>Prefix / Prompt Tuning</li>
+        </ul>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>LoRA 为什么高效？</li>
+          <li>LoRA 和 QLoRA 区别是什么？</li>
+          <li>全量微调是不是一定效果最好？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>LoRA 为什么高效：</strong>
+          <p>因为它不训练全部参数，只训练新增的小矩阵，参数量和显存占用都明显降低，但仍能有效调整模型行为。</p>
+        </div>
+        <div class="subblock">
+          <strong>LoRA 和 QLoRA 区别：</strong>
+          <p>LoRA 通常在半精度模型上训练；QLoRA 先把基础模型量化，再训练 LoRA 参数，因此更省显存。</p>
+        </div>
+        <div class="subblock">
+          <strong>全量微调是否一定最好：</strong>
+          <p>不一定。全量微调表达能力强，但成本高、容易过拟合，对数据质量要求更高。很多业务场景 LoRA 已经足够。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q7">
+        <h3>7. 问题：常用微调框架有哪些？</h3>
+
+        <div class="label">标准回答</div>
+        <p>常用微调框架主要有：</p>
+        <ul>
+          <li><strong>Transformers：</strong>基础模型加载、训练、推理生态成熟。</li>
+          <li><strong>PEFT：</strong>专门支持 LoRA、Prefix Tuning 等参数高效微调。</li>
+          <li><strong>TRL：</strong>常用于 SFT、偏好优化等训练流程。</li>
+          <li><strong>DeepSpeed：</strong>用于大模型训练加速和显存优化。</li>
+          <li><strong>LLaMA-Factory / Axolotl：</strong>更偏配置化，适合快速微调实验和落地。</li>
+        </ul>
+
+        <p>实际项目中，常见组合是：</p>
+        <div class="formula">Transformers + PEFT + DeepSpeed/Accelerate</div>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          选框架不是看概念多，而是看它是否稳定、是否支持目标模型、是否方便训练和部署。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>PEFT 主要解决什么问题？</li>
+          <li>DeepSpeed 在微调中有什么作用？</li>
+          <li>为什么很多项目用 LLaMA-Factory？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>PEFT 解决的问题：</strong>
+          <p>它把参数高效微调方法封装好，让 LoRA 等方法更容易训练、保存和加载。</p>
+        </div>
+        <div class="subblock">
+          <strong>DeepSpeed 的作用：</strong>
+          <p>它主要优化大模型训练中的显存和计算效率，使更大的模型能在有限 GPU 上训练。</p>
+        </div>
+        <div class="subblock">
+          <strong>为什么用 LLaMA-Factory：</strong>
+          <p>因为它配置化程度高，对常见模型和微调方法支持较好，适合快速实验和工程落地。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q8">
+        <h3>8. 问题：微调的应用场景有哪些？</h3>
+
+        <div class="label">标准回答</div>
+        <p>微调常见应用场景包括：</p>
+        <ul>
+          <li><strong>领域适配：</strong>让模型熟悉金融、医疗、法律、制造等专业表达。</li>
+          <li><strong>任务适配：</strong>如信息抽取、文本分类、客服问答、工单总结。</li>
+          <li><strong>格式约束：</strong>让模型稳定输出 JSON、表格、固定模板。</li>
+          <li><strong>风格对齐：</strong>让回答更符合企业语气、客服规范或产品要求。</li>
+        </ul>
+
+        <div class="label green">我的判断</div>
+        <div class="note">
+          微调适合解决“模型行为不稳定、输出风格不一致、任务模式固定”的问题。<br>
+          如果问题是知识库更新频繁，更适合用检索增强，而不是频繁微调。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>微调能不能替代知识库检索？</li>
+          <li>什么场景微调收益不明显？</li>
+          <li>微调后一定要重新部署吗？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>能不能替代知识库检索：</strong>
+          <p>通常不能。微调适合学习任务模式和表达风格，知识库检索适合补充可更新事实，两者更常是互补关系。</p>
+        </div>
+        <div class="subblock">
+          <strong>收益不明显的场景：</strong>
+          <p>任务变化快、数据少、知识更新频繁、原模型已经表现很好的场景，微调收益可能有限。</p>
+        </div>
+        <div class="subblock">
+          <strong>是否要重新部署：</strong>
+          <p>如果是全量微调，需要部署新模型；如果是 LoRA，可以加载 adapter，也可以合并权重后部署。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-3">
+      <h2 class="chapter-title">三、量化</h2>
+
+      <article class="qa-card" id="q9">
+        <h3>9. 问题：什么是量化？量化精度有哪些？显存占用如何计算？</h3>
+
+        <div class="label">标准回答</div>
+        <p>量化是把模型中的参数从高精度表示转换成低精度表示，从而降低显存占用和推理成本。</p>
+
+        <p>常见精度包括：</p>
+        <ul>
+          <li><strong>FP32：</strong>32 位，每个参数约 4 字节。</li>
+          <li><strong>FP16 / BF16：</strong>16 位，每个参数约 2 字节。</li>
+          <li><strong>INT8：</strong>8 位，每个参数约 1 字节。</li>
+          <li><strong>INT4 / NF4：</strong>4 位，每个参数约 0.5 字节。</li>
+        </ul>
+
+        <p>以 7B 参数模型为例，只看模型权重时大致为：</p>
+        <table>
+          <thead>
+            <tr>
+              <th>精度</th>
+              <th>计算方式</th>
+              <th>理论权重显存</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>FP32</td>
+              <td>7B × 4 字节</td>
+              <td>≈ 28GB</td>
+            </tr>
+            <tr>
+              <td>FP16 / BF16</td>
+              <td>7B × 2 字节</td>
+              <td>≈ 14GB</td>
+            </tr>
+            <tr>
+              <td>INT8</td>
+              <td>7B × 1 字节</td>
+              <td>≈ 7GB</td>
+            </tr>
+            <tr>
+              <td>INT4</td>
+              <td>7B × 0.5 字节</td>
+              <td>≈ 3.5GB</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <p>但实际部署显存会更高，因为还要考虑：</p>
+        <ul>
+          <li>KV Cache</li>
+          <li>临时计算开销</li>
+          <li>框架运行开销</li>
+          <li>量化元信息</li>
+        </ul>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          量化的核心是在可接受精度损失下，降低模型部署门槛，让更大的模型能跑在更有限的硬件上。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>FP16 和 BF16 有什么区别？</li>
+          <li>INT4 会不会损失效果？</li>
+          <li>为什么量化后显存不是严格等于理论值？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>FP16 和 BF16 的区别：</strong>
+          <p>两者都是 16 位。BF16 动态范围更大，训练更稳定；FP16 在部分硬件上速度更好，但更容易出现数值溢出。</p>
+        </div>
+        <div class="subblock">
+          <strong>INT4 是否损失效果：</strong>
+          <p>一般会有一定损失，尤其是对数学推理、代码生成或小模型更明显。但高质量量化方法可以让多数通用任务损失可控。</p>
+        </div>
+        <div class="subblock">
+          <strong>为什么不等于理论值：</strong>
+          <p>理论值只算了权重，实际还包括 KV Cache、运行缓存、框架开销和量化参数，所以真实显存会更高。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q10">
+        <h3>10. 问题：常见量化方式有哪些？如何选择？</h3>
+
+        <div class="label">标准回答</div>
+        <p>常见量化方式主要有两类：</p>
+
+        <div class="subblock">
+          <strong>1）PTQ：训练后量化</strong>
+          <p>模型训练完成后再量化。优点是简单、成本低、落地快，是推理部署中最常见的方式。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>2）QAT：量化感知训练</strong>
+          <p>训练时就模拟量化误差，让模型提前适应低精度。优点是精度通常更好，但训练成本更高。</p>
+        </div>
+
+        <p>从量化对象看，还可以分为：</p>
+        <ul>
+          <li><strong>权重量化：</strong>主要压缩模型参数。</li>
+          <li><strong>激活量化：</strong>压缩中间计算结果。</li>
+          <li><strong>权重 + 激活量化：</strong>压缩更彻底，但难度更高。</li>
+        </ul>
+
+        <p>实际项目中，通常先尝试 PTQ 和权重量化，因为成本最低；如果精度损失明显，再考虑 QAT。</p>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>PTQ 和 QAT 怎么选？</li>
+          <li>什么是校准数据？</li>
+          <li>为什么很多项目优先做权重量化？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>PTQ 和 QAT 怎么选：</strong>
+          <p>先用 PTQ，因为实现简单；如果精度损失不能接受，再考虑 QAT。</p>
+        </div>
+        <div class="subblock">
+          <strong>校准数据是什么：</strong>
+          <p>校准数据是一小批接近真实业务分布的数据，用于估计量化范围，减少量化误差。</p>
+        </div>
+        <div class="subblock">
+          <strong>为什么优先权重量化：</strong>
+          <p>权重量化收益明显、实现相对简单，对框架和算子的要求较低，因此更适合快速部署。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-4">
+      <h2 class="chapter-title">四、蒸馏</h2>
+
+      <article class="qa-card" id="q11">
+        <h3>11. 问题：什么是蒸馏？原理是什么？</h3>
+
+        <div class="label">标准回答</div>
+        <p>蒸馏是把大模型的能力迁移到小模型上，让小模型在更低资源消耗下尽量接近大模型效果。</p>
+        <p>它的核心思想是：学生模型不仅学习真实标签，还学习教师模型的输出结果和行为模式。</p>
+
+        <p>常见蒸馏内容包括：</p>
+        <ul>
+          <li>教师模型的输出答案</li>
+          <li>输出概率分布</li>
+          <li>中间特征表示</li>
+          <li>推理过程或回答风格</li>
+        </ul>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          量化是在不改变模型结构的情况下压缩参数精度；<br>
+          蒸馏是训练一个更小的模型去模仿大模型能力。<br>
+          所以量化偏“压缩表示”，蒸馏偏“压缩能力”。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>蒸馏和微调有什么区别？</li>
+          <li>蒸馏和量化有什么区别？</li>
+          <li>蒸馏适合什么场景？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>蒸馏和微调区别：</strong>
+          <p>微调是让模型适应某个任务；蒸馏是让小模型学习大模型的能力。两者可以结合。</p>
+        </div>
+        <div class="subblock">
+          <strong>蒸馏和量化区别：</strong>
+          <p>量化通常不改变模型结构，只降低数值精度；蒸馏通常训练一个更小的学生模型，改变模型规模。</p>
+        </div>
+        <div class="subblock">
+          <strong>适合场景：</strong>
+          <p>适合资源有限、低延迟、端侧部署、私有化部署等场景，用小模型替代大模型降低成本。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q12">
+        <h3>12. 问题：蒸馏如何实现？</h3>
+
+        <div class="label">标准回答</div>
+        <p>蒸馏的一般实现流程是：</p>
+        <ol>
+          <li><strong>选择教师模型：</strong>通常是效果较好的大模型。</li>
+          <li><strong>选择学生模型：</strong>通常是更小、更快的模型。</li>
+          <li><strong>准备数据：</strong>可以是真实业务数据，也可以由教师模型生成训练样本。</li>
+          <li><strong>生成教师输出：</strong>让教师模型给出答案或概率分布。</li>
+          <li><strong>训练学生模型：</strong>让学生模型模仿教师输出。</li>
+          <li><strong>评估对比：</strong>比较学生模型和教师模型在效果、速度、成本上的差异。</li>
+        </ol>
+
+        <p>在大模型场景里，常见做法是：</p>
+        <div class="summary-box">
+          用强模型生成高质量问答数据，再用这些数据训练小模型。<br>
+          这可以看作一种行为蒸馏，让小模型学习大模型的回答方式。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>为什么教师模型输出比硬标签更有价值？</li>
+          <li>学生模型是不是越小越好？</li>
+          <li>蒸馏失败的原因有哪些？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>为什么教师输出更有价值：</strong>
+          <p>教师输出往往包含更丰富的判断逻辑和表达方式，不只是简单标签，能给学生模型更细的学习信号。</p>
+        </div>
+        <div class="subblock">
+          <strong>学生模型是否越小越好：</strong>
+          <p>不是。太小的学生模型可能承载不了教师模型能力，需要在速度、显存和效果之间平衡。</p>
+        </div>
+        <div class="subblock">
+          <strong>失败原因：</strong>
+          <p>数据质量差、教师输出不稳定、学生模型太弱、训练目标设计不合理，都会导致蒸馏效果不好。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-5">
+      <h2 class="chapter-title">五、KV Cache</h2>
+
+      <article class="qa-card" id="q13">
+        <h3>13. 问题：什么是 KV Cache？用在哪？怎么用？</h3>
+
+        <div class="label">标准回答</div>
+        <p>KV Cache 是大语言模型推理阶段的一种缓存机制，用来保存历史 token 对应的 Key 和 Value。</p>
+        <p>在自回归生成中，模型每次只生成一个新 token。</p>
+        <p>如果没有 KV Cache，每生成一个新 token，都要重新计算前面所有 token 的 Key 和 Value，效率很低。</p>
+        <p>使用 KV Cache 后，历史 token 的 K/V 会被缓存下来，后续只需要计算新 token 的 K/V，再和历史缓存一起参与注意力计算。</p>
+
+        <p>它主要用在：</p>
+        <ul>
+          <li>文本生成</li>
+          <li>多轮对话</li>
+          <li>长上下文推理</li>
+          <li>高并发推理服务</li>
+        </ul>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          KV Cache 是典型的空间换时间。<br>
+          它额外占用显存保存历史 K/V，但能减少重复计算，加快生成速度。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>KV Cache 为什么能加速？</li>
+          <li>KV Cache 的代价是什么？</li>
+          <li>为什么长上下文会让 KV Cache 成为瓶颈？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>为什么能加速：</strong>
+          <p>因为历史 token 的 K/V 不会变化，缓存后不用反复计算，只计算新 token，大幅减少重复计算。</p>
+        </div>
+        <div class="subblock">
+          <strong>代价是什么：</strong>
+          <p>代价是显存占用增加。上下文越长、batch 越大、模型层数越多，KV Cache 占用越高。</p>
+        </div>
+        <div class="subblock">
+          <strong>为什么长上下文会成为瓶颈：</strong>
+          <p>因为每个历史 token 都要保存 K/V，序列长度增加时，缓存也线性增长，可能导致显存不足或并发下降。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q14">
+        <h3>14. 问题：KV Cache 在工程上如何使用和优化？</h3>
+
+        <div class="label">标准回答</div>
+        <p>KV Cache 通常由推理框架自动管理，业务侧一般不需要手动维护每层的 K/V。</p>
+
+        <p>典型过程是：</p>
+        <ol>
+          <li>用户输入 prompt。</li>
+          <li>模型先处理完整输入，生成并保存历史 K/V。</li>
+          <li>后续逐 token 生成时，只计算新 token 的 K/V。</li>
+          <li>请求结束后释放对应缓存。</li>
+        </ol>
+
+        <p>优化方向主要有：</p>
+        <ul>
+          <li>控制最大上下文长度</li>
+          <li>控制并发和 batch size</li>
+          <li>复用相同系统提示词的缓存</li>
+          <li>使用支持高效缓存管理的推理框架</li>
+          <li>必要时对 KV Cache 做低精度存储</li>
+        </ul>
+
+        <div class="label green">我的判断</div>
+        <div class="note">
+          在大模型服务中，KV Cache 经常是影响吞吐和显存的关键因素。<br>
+          它不是简单“开不开”的问题，而是要根据上下文长度、并发量和显存预算来管理。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>为什么 KV Cache 会影响并发？</li>
+          <li>多轮对话中 KV Cache 怎么处理？</li>
+          <li>什么时候需要限制上下文长度？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>为什么影响并发：</strong>
+          <p>每个请求都要占用一份 KV Cache，并发越高，同时存在的缓存越多，显存压力越大。</p>
+        </div>
+        <div class="subblock">
+          <strong>多轮对话怎么处理：</strong>
+          <p>多轮对话通常会把历史上下文一起输入，模型缓存这些历史 token 的 K/V。为了控制显存，会对历史内容做截断或摘要。</p>
+        </div>
+        <div class="subblock">
+          <strong>什么时候限制上下文长度：</strong>
+          <p>当长上下文导致显存不足、延迟过高、并发下降时，需要限制最大输入长度或对历史内容压缩。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-6">
+      <h2 class="chapter-title">六、推理加速框架</h2>
+
+      <article class="qa-card" id="q15">
+        <h3>15. 问题：常见推理加速框架有哪些？各自适合什么场景？</h3>
+
+        <div class="label">标准回答</div>
+        <p>常见推理框架包括：</p>
+
+        <div class="subblock">
+          <strong>1）vLLM</strong>
+          <p>适合高并发在线服务。它的优势是高效管理 KV Cache，提高吞吐。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>2）TensorRT-LLM</strong>
+          <p>适合 NVIDIA GPU 上追求高性能和低延迟的生产部署。它对推理计算做了深度优化，但接入复杂度相对更高。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>3）Text Generation Inference（TGI）</strong>
+          <p>Hugging Face 生态中的推理服务框架。适合 Hugging Face 模型部署，服务化能力比较成熟。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>4）llama.cpp</strong>
+          <p>适合本地轻量部署，尤其是 CPU、Mac 或资源较有限的环境。常用于本地运行量化模型。</p>
+        </div>
+
+        <div class="subblock">
+          <strong>5）Ollama</strong>
+          <p>适合个人和本地开发环境，使用简单，便于快速运行本地模型。</p>
+        </div>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          选推理框架时，不应该只看“谁最快”，而要看模型兼容性、硬件环境、部署复杂度、服务能力和团队维护成本。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>vLLM 为什么常用于线上服务？</li>
+          <li>TensorRT-LLM 适合什么场景？</li>
+          <li>本地部署为什么常用 llama.cpp 或 Ollama？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>vLLM 为什么常用：</strong>
+          <p>因为它对 KV Cache 和并发请求管理较好，适合多用户同时请求的在线推理服务。</p>
+        </div>
+        <div class="subblock">
+          <strong>TensorRT-LLM 适合什么场景：</strong>
+          <p>适合 NVIDIA GPU 生产环境，尤其是对延迟和吞吐要求较高的场景。</p>
+        </div>
+        <div class="subblock">
+          <strong>为什么用 llama.cpp 或 Ollama：</strong>
+          <p>它们轻量、易用，对本地环境友好，适合开发验证、个人部署和小规模服务。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+
+      <article class="qa-card" id="q16">
+        <h3>16. 问题：推理加速框架是如何实现加速的？</h3>
+
+        <div class="label">标准回答</div>
+        <p>推理加速框架主要从以下几个方面提升性能：</p>
+        <ul>
+          <li><strong>低精度计算：</strong>使用 FP16、BF16、INT8、INT4 等减少计算和显存压力。</li>
+          <li><strong>KV Cache 管理：</strong>减少重复计算，提高生成效率。</li>
+          <li><strong>动态批处理：</strong>把多个请求合并处理，提高 GPU 利用率。</li>
+          <li><strong>算子优化：</strong>优化矩阵乘法、Attention 等核心计算。</li>
+          <li><strong>多卡并行：</strong>当模型太大时，把模型分布到多张 GPU 上。</li>
+        </ul>
+
+        <div class="label green">我的理解</div>
+        <div class="note">
+          推理加速不是单一技术，而是把计算、显存、缓存、并发调度一起优化。<br>
+          其中 KV Cache 主要解决重复计算，量化主要解决显存和计算成本，推理框架负责把这些能力工程化整合。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>动态批处理为什么重要？</li>
+          <li>低精度计算一定会加速吗？</li>
+          <li>推理性能一般看哪些指标？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>动态批处理为什么重要：</strong>
+          <p>在线请求通常是不规律到达的，动态批处理可以把多个请求合并，提高 GPU 利用率，从而提升吞吐。</p>
+        </div>
+        <div class="subblock">
+          <strong>低精度计算是否一定加速：</strong>
+          <p>不一定。是否加速取决于硬件是否支持、推理框架是否优化、量化和反量化开销是否可控。</p>
+        </div>
+        <div class="subblock">
+          <strong>性能指标看什么：</strong>
+          <p>通常看首 token 延迟、总响应延迟、每秒生成 token 数、并发能力、显存占用和单位请求成本。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-7">
+      <h2 class="chapter-title">七、整体串联理解</h2>
+
+      <article class="qa-card" id="q17">
+        <h3>17. 问题：如何把部署、微调、量化、蒸馏、KV Cache、推理框架串成一套体系？</h3>
+
+        <div class="label">标准回答</div>
+        <p>可以从三层理解：</p>
+
+        <div class="summary-box">
+          <strong>第一层：模型适配</strong>
+          <p>解决“模型是否适合业务”。</p>
+          <ul>
+            <li><strong>微调：</strong>让模型更适合特定任务、领域和输出风格。</li>
+            <li><strong>蒸馏：</strong>把大模型能力迁移到小模型，降低部署成本。</li>
+          </ul>
+        </div>
+
+        <div class="summary-box">
+          <strong>第二层：模型压缩与推理优化</strong>
+          <p>解决“模型能否高效运行”。</p>
+          <ul>
+            <li><strong>量化：</strong>降低参数精度，减少显存和计算成本。</li>
+            <li><strong>KV Cache：</strong>缓存历史 K/V，用空间换时间，加快生成。</li>
+          </ul>
+        </div>
+
+        <div class="summary-box">
+          <strong>第三层：工程部署</strong>
+          <p>解决“模型能否稳定上线”。</p>
+          <ul>
+            <li><strong>Docker：</strong>保证环境可复现。</li>
+            <li><strong>推理框架：</strong>提升吞吐、降低延迟、管理显存。</li>
+            <li><strong>云端/本地部署：</strong>根据成本、数据安全和业务规模选择。</li>
+          </ul>
+        </div>
+
+        <div class="label green">我的整体理解</div>
+        <div class="note">
+          微调和蒸馏解决“效果和模型适配”；<br>
+          量化和 KV Cache 解决“显存和速度”；<br>
+          Docker 和推理框架解决“稳定部署和服务化”。<br>
+          真实项目中要综合考虑效果、成本、延迟、吞吐和可维护性。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>实际项目中一般先优化哪一步？</li>
+          <li>微调、量化、蒸馏能不能一起用？</li>
+          <li>如果显存不够，应该怎么处理？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>一般先优化哪一步：</strong>
+          <p>先选合适规模的模型并跑通基线，再看瓶颈。如果显存不足先量化；如果效果不足再考虑微调；如果成本太高再考虑蒸馏或换小模型。</p>
+        </div>
+        <div class="subblock">
+          <strong>能不能一起用：</strong>
+          <p>可以。常见做法是先微调或蒸馏得到适合业务的模型，再做量化部署。KV Cache 和推理框架通常是推理阶段默认要考虑的。</p>
+        </div>
+        <div class="subblock">
+          <strong>显存不够怎么处理：</strong>
+          <p>可以换小模型、做 INT8/INT4 量化、缩短上下文、降低并发、使用更高效的推理框架，必要时多卡部署。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+
+    <section class="chapter" id="chapter-8">
+      <h2 class="chapter-title">八、面试收尾总结</h2>
+
+      <article class="qa-card" id="q18">
+        <h3>18. 问题：如果面试官让你整体概括大模型部署和优化，你怎么回答？</h3>
+
+        <div class="label">标准回答</div>
+        <p>我会从三个角度概括：</p>
+
+        <ol>
+          <li>
+            <strong>模型适配：</strong>
+            通过微调让模型更符合业务任务，通过蒸馏把大模型能力迁移到更小模型。
+          </li>
+          <li>
+            <strong>推理优化：</strong>
+            通过量化降低显存和计算成本，通过 KV Cache 用空间换时间减少重复计算，通过推理框架提升吞吐和延迟表现。
+          </li>
+          <li>
+            <strong>工程部署：</strong>
+            通过 Docker、本地或云端部署，把模型封装成稳定可调用的服务。
+          </li>
+        </ol>
+
+        <p>所以大模型落地不是单纯看模型效果，而是要综合平衡：</p>
+        <ul>
+          <li>效果</li>
+          <li>显存</li>
+          <li>延迟</li>
+          <li>吞吐</li>
+          <li>成本</li>
+          <li>安全性</li>
+          <li>可维护性</li>
+        </ul>
+
+        <div class="summary-box">
+          一个成熟的大模型系统，核心不是某个单点技术最强，而是这些因素组合后的整体最优。
+        </div>
+
+        <div class="label orange">高频追问</div>
+        <ol>
+          <li>你认为大模型落地最关键的挑战是什么？</li>
+          <li>如果只能选三个优化点，你会优先选什么？</li>
+          <li>你如何判断一个部署方案是否成熟？</li>
+        </ol>
+
+        <div class="label">追问回答要点</div>
+        <div class="subblock">
+          <strong>最关键挑战：</strong>
+          <p>我认为是把模型能力变成稳定、可控、可负担的服务。很多项目不是模型不能用，而是延迟、成本、稳定性和数据安全无法满足生产要求。</p>
+        </div>
+        <div class="subblock">
+          <strong>优先三个优化点：</strong>
+          <p>我会优先考虑合适的模型规模、量化、推理框架。因为这三点直接影响显存、成本和服务性能。</p>
+        </div>
+        <div class="subblock">
+          <strong>如何判断部署方案成熟：</strong>
+          <p>要看它是否能稳定运行、是否有监控、是否能处理并发、是否能控制成本、是否方便升级和回滚，而不是只看单次推理能否成功。</p>
+        </div>
+
+        <div class="back-top"><a href="#top">返回目录 ↑</a></div>
+      </article>
+    </section>
+  </div>
+</body>
+</html>

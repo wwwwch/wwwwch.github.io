@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>大模型与 Agent 面试知识体系笔记</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --ink: #172033;
+      --muted: #5b6578;
+      --line: #dde3ee;
+      --accent: #244b8f;
+      --accent-soft: #e9effb;
+      --tag: #eef4ff;
+      --warn: #fff6df;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.72;
+      background: var(--bg);
+      color: var(--ink);
+    }
+    header {
+      padding: 56px 24px 34px;
+      background: linear-gradient(135deg, #172033, #244b8f);
+      color: white;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+    h1 { margin: 0 0 12px; font-size: 34px; line-height: 1.25; }
+    .subtitle { margin: 0; color: #dce7ff; font-size: 16px; }
+    main { padding: 28px 24px 64px; }
+    nav, section, .overview {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(20, 35, 65, 0.06);
+    }
+    nav { padding: 22px 26px; margin-bottom: 22px; }
+    nav h2 { margin-top: 0; font-size: 20px; }
+    nav ol { margin: 0; columns: 2; padding-left: 22px; }
+    nav a { color: var(--accent); text-decoration: none; }
+    nav a:hover { text-decoration: underline; }
+    .overview { padding: 22px 26px; margin-bottom: 22px; }
+    .overview h2 { margin-top: 0; }
+    section { padding: 26px; margin-bottom: 22px; }
+    h2 { color: var(--accent); border-bottom: 1px solid var(--line); padding-bottom: 10px; }
+    h3 { margin-top: 24px; font-size: 21px; }
+    h4 { margin: 20px 0 8px; font-size: 17px; color: #25334d; }
+    p { margin: 8px 0; }
+    ul { margin-top: 8px; padding-left: 22px; }
+    li { margin: 5px 0; }
+    .question {
+      padding: 14px 16px;
+      background: var(--accent-soft);
+      border-left: 5px solid var(--accent);
+      border-radius: 10px;
+      font-weight: 700;
+      margin: 18px 0 14px;
+    }
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      margin: 14px 0;
+      background: #fff;
+    }
+    .tag {
+      display: inline-block;
+      padding: 3px 10px;
+      margin: 2px 4px 2px 0;
+      border-radius: 999px;
+      background: var(--tag);
+      color: var(--accent);
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .formula {
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      overflow-x: auto;
+      padding: 13px 15px;
+      border-radius: 10px;
+      background: #111827;
+      color: #f9fafb;
+      margin: 12px 0;
+      white-space: nowrap;
+    }
+    .note {
+      background: var(--warn);
+      border: 1px solid #f0d68b;
+      padding: 14px 16px;
+      border-radius: 12px;
+      margin: 12px 0;
+    }
+    table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+    th, td { border: 1px solid var(--line); padding: 10px 12px; vertical-align: top; }
+    th { background: #f1f5fb; text-align: left; }
+    footer { color: var(--muted); font-size: 13px; text-align: center; padding: 24px; }
+    @media (max-width: 760px) {
+      nav ol { columns: 1; }
+      h1 { font-size: 27px; }
+      main { padding: 18px 14px 42px; }
+      section, nav, .overview { padding: 18px; }
+    }
+    @media print {
+      body { background: white; }
+      header { background: white; color: black; padding: 20px 0; }
+      .subtitle { color: #333; }
+      main { padding: 0; }
+      nav, section, .overview { box-shadow: none; page-break-inside: avoid; }
+      a { color: black; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap">
+      <h1>大模型与 Agent 面试知识体系笔记</h1>
+      <p class="subtitle">主线：模型基础 → 多模态与训练范式 → Agent 基础范式 → Agent 工程体系 → 体系化表达与面试收尾</p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <nav>
+      <h2>目录</h2>
+      <ol>
+        <li><a href="#q1">Transformer 注意力机制、位置编码、QKV</a></li>
+        <li><a href="#q2">多模态大模型</a></li>
+        <li><a href="#q3">强化学习</a></li>
+        <li><a href="#q4">ReAct</a></li>
+        <li><a href="#q5">Ask / Plan / Execute</a></li>
+        <li><a href="#q6">多智能体实现</a></li>
+        <li><a href="#q7">LangChain 与 LangGraph</a></li>
+        <li><a href="#q8">Agent Harness</a></li>
+        <li><a href="#q9">Skill 与 MCP</a></li>
+        <li><a href="#q10">问题之间的体系化联系</a></li>
+        <li><a href="#q11">面试整体概括表达</a></li>
+      </ol>
+    </nav>
+
+    <div class="overview">
+      <h2>整体框架</h2>
+      <p>这组问题可以按“问题 → 标准回答 → 高频追问 → 追问回答要点”的面试结构组织。知识体系从底层模型机制开始，逐步扩展到多模态、强化学习，再进入 Agent 的交互范式、工程框架、评测运行体系和工具协议。</p>
+      <table>
+        <tr><th>层级</th><th>核心主题</th><th>解决的问题</th></tr>
+        <tr><td>模型机制层</td><td>Transformer、QKV、位置编码</td><td>模型如何理解序列、建立全局依赖、表示输入顺序。</td></tr>
+        <tr><td>能力扩展层</td><td>多模态大模型、强化学习</td><td>模型如何处理更丰富的输入，并通过奖励优化行为。</td></tr>
+        <tr><td>系统工程层</td><td>ReAct、Ask/Plan/Execute、多智能体、LangChain/LangGraph、Agent Harness、Skill/MCP</td><td>模型如何接入工具、执行任务、被编排、被评估和被治理。</td></tr>
+      </table>
+    </div>
+
+    <section id="q1">
+      <h2>一、Transformer 与序列建模基础</h2>
+      <div class="question">1. Transformer 的注意力机制、位置编码、QKV 是怎么实现计算的？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>Transformer 通过自注意力机制（Self-Attention）、QKV 线性映射和位置编码来建模序列关系。</p>
+        <ul>
+          <li><strong>自注意力机制：</strong>让每个 token 与其他 token 建立全局依赖。</li>
+          <li><strong>Q、K、V：</strong>把输入映射到“查询、匹配、取值”三个空间。</li>
+          <li><strong>位置编码：</strong>弥补 Attention 本身不具备顺序感知的问题。</li>
+        </ul>
+        <div class="formula">Attention(Q, K, V) = softmax((QKᵀ) / √dₖ) V</div>
+        <p>可以这样理解：Q 表示“我现在想找什么信息”，K 表示“我这里有什么信息可供匹配”，V 表示“真正要被聚合的内容”。模型通过 Q 和 K 的相似度计算注意力权重，再对 V 加权求和，完成一次信息交互。</p>
+        <p>位置编码告诉模型“内容之外，顺序也重要”。否则模型只知道有哪些 token，却不知道谁在前、谁在后。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>为什么要除以 √dₖ？</li>
+          <li>多头注意力的意义是什么？</li>
+          <li>Transformer 为什么比 RNN 更适合长序列？</li>
+          <li>位置编码为什么必需？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>为什么除以 √dₖ</h4>
+        <p>Q 和 K 点积后，维度越大，数值越容易变大，softmax 会变得过于尖锐，导致训练不稳定。除以 √dₖ 是缩放操作，目的是让梯度更稳定。</p>
+        <h4>多头注意力的意义</h4>
+        <p>不同 head 可以在不同子空间学习不同关系。例如有的 head 关注局部搭配，有的关注长程依赖。本质是提升表达能力和建模多样性。</p>
+        <h4>为什么比 RNN 更适合长序列</h4>
+        <p>RNN 逐步传递信息，长距离依赖容易衰减；Transformer 通过全局交互让任意两个 token 的路径更短，并且支持并行计算。</p>
+        <h4>位置编码为什么必需</h4>
+        <p>Self-Attention 本身对输入顺序不敏感。没有位置编码时，模型无法区分“我打你”和“你打我”这类词集合相同但顺序不同的句子。</p>
+      </div>
+    </section>
+
+    <section id="q2">
+      <h2>二、多模态与训练范式</h2>
+      <div class="question">2. 什么是多模态大模型？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>多模态大模型是能够统一理解、对齐和生成多种模态信息的模型，例如文本、图像、音频、视频。</p>
+        <p>它的关键不只是“支持多输入”，而是能把不同模态映射到相对统一的语义空间，再在这个空间里进行推理和生成。</p>
+        <h4>核心理解三层</h4>
+        <ul>
+          <li><strong>多输入输出：</strong>支持图文问答、语音助手、视频理解等任务。</li>
+          <li><strong>统一表示：</strong>不同模态经过编码后进入共享语义空间。</li>
+          <li><strong>联合推理：</strong>模型不是分别处理文本和图像，而是跨模态融合信息。例如视觉问答中，模型既要理解图片内容，也要理解文本问题，最终生成答案。</li>
+        </ul>
+        <p>因此，多模态大模型不是单模态能力的简单叠加，而是跨模态协同。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>多模态大模型和传统图文模型的区别是什么？</li>
+          <li>多模态为什么是大模型的重要方向？</li>
+          <li>多模态训练的难点有哪些？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>和传统图文模型的区别</h4>
+        <p>传统图文模型很多是任务级拼接，例如图像特征加文本特征后用于分类；多模态大模型更强调统一表征和通用生成能力，泛化能力更强。</p>
+        <h4>为什么是重要方向</h4>
+        <p>真实世界信息天然是多模态的，人类交流也不是纯文本。要做更通用的智能体，必须同时理解语言、视觉、声音等信息。</p>
+        <h4>训练难点</h4>
+        <ul>
+          <li>不同模态的数据分布差异大。</li>
+          <li>不同模态的长度和表示形式不同。</li>
+          <li>跨模态对齐困难。</li>
+          <li>高质量标注数据昂贵。</li>
+          <li>训练和推理成本更高。</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="q3">
+      <h2>三、强化学习</h2>
+      <div class="question">3. 什么是强化学习？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>强化学习是让智能体通过与环境交互、接收奖励信号、不断调整策略，从而学习最优行为的方法。</p>
+        <p>它和监督学习最大的不同是：监督学习有明确标签，强化学习只有延迟奖励，模型需要自己探索什么行为更优。</p>
+        <h4>核心要素</h4>
+        <p><span class="tag">Agent</span><span class="tag">Environment</span><span class="tag">State</span><span class="tag">Action</span><span class="tag">Reward</span></p>
+        <p>强化学习的目标不是最大化单步收益，而是最大化长期累计回报。因此它本质上解决的是序列决策问题。</p>
+        <p>例如在游戏、机器人控制、推荐排序中，当前动作往往会影响后续状态，所以强化学习强调长期策略，而不是一次性的局部判断。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>强化学习和监督学习的本质区别是什么？</li>
+          <li>什么是延迟奖励问题？</li>
+          <li>强化学习在大模型里有什么应用？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>和监督学习的区别</h4>
+        <p>监督学习是已知输入和正确输出；强化学习没有明确标准答案，只能通过奖励信号判断行为是否好，核心是试错和策略优化。</p>
+        <h4>延迟奖励问题</h4>
+        <p>当前动作的好坏不一定立刻体现，可能要经过多步后才看到结果。这就是 credit assignment 问题，也就是“功劳如何分配”。</p>
+        <h4>在大模型中的应用</h4>
+        <p>典型应用是 RLHF。先让模型具备基础能力，再利用人类偏好反馈优化输出风格和行为边界，使回答更符合预期。</p>
+      </div>
+    </section>
+
+    <section id="q4">
+      <h2>四、Agent 基础范式</h2>
+      <div class="question">4. 什么是 ReAct？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>ReAct（Reasoning + Acting）是一种将推理能力和工具调用能力结合起来的 Agent 范式。</p>
+        <p>它不是让模型一次性直接给答案，而是按照以下循环逐步解决问题：</p>
+        <div class="formula">Thought → Action → Observation → Thought → ...</div>
+        <p>ReAct 的价值包括两方面：一方面，模型可以通过分步推理提高复杂任务完成率；另一方面，模型可以借助工具补足自身知识和执行能力的边界，例如搜索、数据库查询、调用 API。</p>
+        <p>可以把 ReAct 理解为：把“只会说”的模型推进为“会思考、会查、会做”的系统。这也是 Agent 与普通对话模型的关键区别之一。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>ReAct 和普通 Chain-of-Thought 的区别是什么？</li>
+          <li>ReAct 为什么能减少幻觉？</li>
+          <li>哪些任务适合 ReAct？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>和 Chain-of-Thought 的区别</h4>
+        <p>Chain-of-Thought 偏重内部推理；ReAct 不仅推理，还能执行动作，并根据外部反馈修正后续步骤。</p>
+        <h4>为什么能减少幻觉</h4>
+        <p>遇到不确定信息时，模型可以调用工具获取外部证据，而不是只依赖参数记忆硬答。</p>
+        <h4>适合的任务</h4>
+        <p>搜索问答、数据查询、多步决策、任务执行类场景都适合 ReAct，尤其是需要“边查边做”的问题。</p>
+      </div>
+    </section>
+
+    <section id="q5">
+      <h2>五、Ask / Plan / Execute 三种模式</h2>
+      <div class="question">5. Ask / Plan / Execute 三种模式有什么区别？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>Ask、Plan、Execute 是 Agent 常见的三种交互和执行模式，核心区别在于：是否先澄清、是否先规划、是否直接执行，以及用户参与程度有多高。</p>
+        <table>
+          <tr><th>模式</th><th>定义</th><th>适用场景</th></tr>
+          <tr><td>Ask</td><td>先询问再行动。</td><td>需求不明确、信息不足的场景。</td></tr>
+          <tr><td>Plan</td><td>先拆解任务并展示执行方案，再根据情况执行。</td><td>复杂任务和高可控场景。</td></tr>
+          <tr><td>Execute</td><td>目标明确时直接执行。</td><td>高确定性、低风险任务。</td></tr>
+        </table>
+        <p>本质上，这是在平衡自动化效率和执行可控性。越靠近 Ask / Plan，越稳；越靠近 Execute，越快。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>三种模式分别适合什么场景？</li>
+          <li>为什么很多系统不直接用 Execute？</li>
+          <li>Plan 模式的价值是什么？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>适合场景</h4>
+        <p>Ask 适合需求模糊；Plan 适合复杂任务；Execute 适合简单且定义明确的任务。</p>
+        <h4>为什么不总是 Execute</h4>
+        <p>如果问题理解错了，直接执行的代价会很高，尤其涉及外部操作、数据修改、资源消耗时。</p>
+        <h4>Plan 的价值</h4>
+        <p>Plan 让任务过程更透明，便于用户确认、系统审计和中间纠错，适合企业级场景。</p>
+      </div>
+    </section>
+
+    <section id="q6">
+      <h2>六、多智能体实现</h2>
+      <div class="question">6. 多智能体如何实现？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>多智能体系统的实现，本质是通过任务拆分、角色分工、通信协作和调度控制，把复杂问题交给多个 Agent 协同完成。</p>
+        <h4>常见实现流程</h4>
+        <ol>
+          <li>先把大任务拆成子任务。</li>
+          <li>给不同 Agent 分配角色，例如 Planner、Executor、Reviewer、Router。</li>
+          <li>通过共享上下文、消息传递或状态存储进行协作。</li>
+          <li>由主控流程或调度器决定执行顺序，可串行也可并行。</li>
+        </ol>
+        <p>多智能体不是“Agent 越多越强”。当任务天然具备可分工性时，多 Agent 能提升模块化、专业化和可扩展性；但前提是调度和状态管理要设计好，否则复杂度会反过来吞噬收益。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>多智能体相比单智能体的优势和代价是什么？</li>
+          <li>多智能体通信一般怎么做？</li>
+          <li>什么情况下不适合多智能体？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>优势和代价</h4>
+        <p>优势是分工明确、可并行、可复用；代价是协调成本高、状态一致性更难、调试复杂度更高。</p>
+        <h4>通信方式</h4>
+        <p>常见通信方式包括共享 memory、消息队列、blackboard、统一状态存储等。本质是让各 Agent 拿到自己需要的上下文。</p>
+        <h4>不适合的情况</h4>
+        <p>当任务本身很简单、链路短、没有明显角色分工时，多智能体反而会增加系统开销。</p>
+      </div>
+    </section>
+
+    <section id="q7">
+      <h2>七、Agent 工程与框架体系</h2>
+      <div class="question">7. LangChain 和 LangGraph 有什么区别？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>LangChain 和 LangGraph 的关系可以理解为：LangChain 偏向组件化封装，LangGraph 偏向复杂流程编排。</p>
+        <table>
+          <tr><th>框架</th><th>定位</th><th>典型能力</th></tr>
+          <tr><td>LangChain</td><td>组件化封装，更像“搭积木”。</td><td>快速组合 Prompt、模型、检索器、工具调用等，适合快速搭建原型。</td></tr>
+          <tr><td>LangGraph</td><td>复杂流程编排，更像“工作流引擎”。</td><td>图结构、显式状态管理、循环、分支、回溯、多 Agent 协作。</td></tr>
+        </table>
+        <p>当系统从 Demo 走向真实 Agent 编排时，仅靠线性 Chain 往往不够，这时 LangGraph 的价值会更明显。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>什么场景更适合 LangGraph？</li>
+          <li>LangChain 是否已经被 LangGraph 替代？</li>
+          <li>LangGraph 的核心优势是什么？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>适合 LangGraph 的场景</h4>
+        <p>需要状态持久化、循环重试、条件分支、多 Agent 编排的复杂流程。</p>
+        <h4>是否被替代</h4>
+        <p>不是。LangChain 仍然适合快速封装基础能力，LangGraph 更像是面向复杂编排的上层能力。</p>
+        <h4>核心优势</h4>
+        <p>显式状态管理和图式流程控制，使复杂 Agent 系统更可控、更可调试。</p>
+      </div>
+    </section>
+
+    <section id="q8">
+      <h2>八、Agent Harness</h2>
+      <div class="question">8. 什么是 Agent Harness？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>Agent Harness 可以理解为 Agent 的运行、管理、评估和测试框架。</p>
+        <p>它不直接定义 Agent 的推理逻辑，而是提供统一环境，承载 Agent 的执行过程、工具调用、上下文注入、行为记录和结果评估。</p>
+        <h4>通常包含的层面</h4>
+        <ul>
+          <li><strong>执行管理：</strong>控制 Agent 的运行流程。</li>
+          <li><strong>环境封装：</strong>管理 memory、工具、上下文。</li>
+          <li><strong>评测监控：</strong>记录轨迹、做回放、做效果分析。</li>
+        </ul>
+        <p>Harness 更接近“运行时 + 测试平台”。如果说 Agent 是业务逻辑，那么 Harness 就是让它可运行、可测量、可优化的工程底座。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>Agent Harness 和普通框架有什么不同？</li>
+          <li>为什么 Agent 系统需要 Harness？</li>
+          <li>Harness 一般重点评估什么？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>和普通框架的区别</h4>
+        <p>它不只是开发接口，更强调运行控制、日志轨迹、回放复现和评估能力。</p>
+        <h4>为什么需要</h4>
+        <p>Agent 是动态系统，不像固定模型推理那么可预测。没有 Harness 很难定位问题，也很难做系统化评估。</p>
+        <h4>重点评估内容</h4>
+        <p>任务成功率、工具使用正确率、轨迹合理性、成本、时延、稳定性等。</p>
+      </div>
+    </section>
+
+    <section id="q9">
+      <h2>九、Skill 与 MCP</h2>
+      <div class="question">9. Skill 和 MCP 的区别是什么？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>Skill 和 MCP 不是同一层面的概念。Skill 是能力封装，MCP（Model Context Protocol）是工具接入和上下文交互的协议标准。</p>
+        <table>
+          <tr><th>概念</th><th>关注点</th><th>类比</th></tr>
+          <tr><td>Skill</td><td>模型能做什么，例如搜索、计算、数据库查询、文件读取。</td><td>具体 API 能力。</td></tr>
+          <tr><td>MCP</td><td>这些能力怎样被标准化暴露给模型调用，即统一工具接口和上下文交互方式。</td><td>API 接入规范。</td></tr>
+        </table>
+        <p>Skill 是功能单元，MCP 是让这些功能单元能被模型一致发现、调用和管理的协议层。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>为什么需要 MCP 这种协议？</li>
+          <li>Skill 不通过 MCP 能不能用？</li>
+          <li>MCP 对 Agent 工程有什么价值？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>为什么需要协议</h4>
+        <p>工具来源多、接口风格各异，没有统一规范会导致接入成本高、扩展困难。</p>
+        <h4>Skill 不通过 MCP 能不能用</h4>
+        <p>可以，但会更碎片化。MCP 的价值在于标准化、可扩展和跨系统兼容。</p>
+        <h4>对 Agent 工程的价值</h4>
+        <p>MCP 能降低工具接入成本，让 Agent 更容易发现和调用外部能力，也便于治理和维护。</p>
+      </div>
+    </section>
+
+    <section id="q10">
+      <h2>十、主题间的体系化联系</h2>
+      <div class="question">10. 这些问题之间如何形成体系？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>这些知识点可以分成三层理解：</p>
+        <ul>
+          <li><strong>模型机制层：</strong>Transformer、QKV、位置编码，解决模型如何理解和表示信息。</li>
+          <li><strong>能力扩展层：</strong>多模态大模型、强化学习，解决模型如何处理更丰富的输入，以及如何通过奖励优化行为。</li>
+          <li><strong>系统工程层：</strong>ReAct、Ask / Plan / Execute、多智能体、LangChain / LangGraph、Agent Harness、Skill / MCP，解决如何把模型从“会生成”升级为“会调用工具、会执行任务、能被系统化管理”。</li>
+        </ul>
+        <p>换句话说：Transformer 是底层建模基础；多模态和强化学习扩展能力边界；Agent 框架和协议让这些能力真正落到可执行系统里。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>现在技术演进的主线是什么？</li>
+          <li>为什么单有大模型还不够？</li>
+          <li>面试时如何把这些知识点串起来表达？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>技术演进主线</h4>
+        <p>从“单任务模型”到“统一大模型”，再到“结合工具调用、检索、工作流和评估体系的智能系统”。</p>
+        <h4>为什么单有大模型还不够</h4>
+        <p>因为参数记忆有限、执行能力有限、可靠性有限。真实业务需要外部知识、工具执行和工程治理。</p>
+        <h4>如何串起来表达</h4>
+        <p>可以按“模型原理 → 能力扩展 → 系统落地”三层结构讲，体现体系化理解，而不是孤立背术语。</p>
+      </div>
+    </section>
+
+    <section id="q11">
+      <h2>十一、适合面试收尾的总结表达</h2>
+      <div class="question">11. 如果面试官让你整体概括，你可以怎么回答？</div>
+      <div class="card">
+        <h3>标准回答</h3>
+        <p>可以这样概括：这些知识点可以统一放在“从模型到系统”的演进路径里看。Transformer 解决了序列建模的核心问题，是现代大模型的基础；多模态和强化学习扩展了模型的理解和优化能力；而 ReAct、多智能体、LangGraph、MCP 这类概念，本质上是在解决大模型如何真正接入外部世界、执行复杂任务并被工程化管理的问题。</p>
+        <p>所以，这些面试问题看起来分散，但其实是同一条主线：从“模型会生成”走向“系统会理解、会调用、会执行、可评估、可落地”。</p>
+      </div>
+      <div class="card">
+        <h3>高频追问</h3>
+        <ul>
+          <li>你觉得未来重点会落在哪一层？</li>
+          <li>你更看重模型能力还是系统能力？</li>
+        </ul>
+        <h3>追问回答要点</h3>
+        <h4>未来重点落在哪一层</h4>
+        <p>未来重点会更多落在系统能力层。模型能力还会持续提升，但真正决定业务价值的是可靠性、成本、工具集成和执行闭环。</p>
+        <h4>更看重模型还是系统</h4>
+        <p>两者都重要，但从落地角度看，更应重视系统能力。因为模型再强，如果不能接工具、不能控流程、不能评估，就很难稳定进入生产环境。</p>
+      </div>
+      <div class="note">
+        <strong>面试表达建议：</strong>不要把概念孤立背诵。推荐按“模型原理 → 能力扩展 → 系统落地 → 工程治理”的逻辑串联，形成体系化表达。
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    由上传材料整理为 HTML 笔记；内容按面试复习结构重新组织。
+  </footer>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Linux 常用命令 HTML 笔记</title>
+  <style>
+    :root{--bg:#f7f7f8;--card:#fff;--text:#202124;--muted:#5f6368;--border:#e5e7eb;--code:#111827;--accent:#2563eb;--soft:#eff6ff;}
+    *{box-sizing:border-box} body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC","Microsoft YaHei",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.65;}
+    header{background:linear-gradient(135deg,#111827,#1f2937);color:#fff;padding:42px 24px;} header .wrap{max-width:1100px;margin:auto} h1{margin:0 0 10px;font-size:34px;letter-spacing:.02em} header p{margin:0;color:#d1d5db;font-size:16px}
+    main{max-width:1100px;margin:26px auto;padding:0 20px 48px;display:grid;grid-template-columns:260px 1fr;gap:24px;}
+    nav{position:sticky;top:18px;align-self:start;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px;box-shadow:0 4px 18px rgba(0,0,0,.04)}
+    nav h2{font-size:15px;margin:0 0 8px;color:#111827} nav a{display:block;color:var(--muted);text-decoration:none;padding:6px 4px;border-radius:8px;font-size:14px} nav a:hover{background:var(--soft);color:var(--accent)}
+    section{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-bottom:18px;box-shadow:0 4px 18px rgba(0,0,0,.035)}
+    h2{margin:0 0 12px;font-size:24px} h3{margin:20px 0 8px;font-size:18px;color:#111827}.tip{background:#f9fafb;border-left:4px solid var(--accent);padding:10px 12px;border-radius:10px;color:#374151;margin:12px 0}
+    table{width:100%;border-collapse:collapse;margin:12px 0 4px;overflow:hidden;border-radius:10px} th,td{border-bottom:1px solid var(--border);padding:10px 12px;text-align:left;vertical-align:top} th{background:#f3f4f6;font-weight:650;color:#374151} tr:last-child td{border-bottom:none}
+    code{background:#f3f4f6;color:#111827;border:1px solid #e5e7eb;border-radius:6px;padding:2px 6px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:.94em} pre{background:#111827;color:#f9fafb;border-radius:14px;padding:14px;overflow:auto} pre code{background:transparent;color:inherit;border:0;padding:0}.danger{color:#b91c1c;font-weight:650}.muted{color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.card{border:1px solid var(--border);border-radius:14px;padding:14px;background:#fcfcfd}.footer{color:var(--muted);font-size:13px;text-align:center;margin-top:20px}
+    @media(max-width:860px){main{grid-template-columns:1fr}nav{position:static}.grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+<header><div class="wrap"><h1>Linux 常用命令 HTML 笔记</h1><p>按“文件、查看、搜索、权限、进程、磁盘、压缩、用户、网络、帮助”等场景整理。</p></div></header>
+<main>
+<nav><h2>目录</h2>
+<a href="#files">文件与目录</a><a href="#list">列出文件</a><a href="#view">查看文件内容</a><a href="#pattern">文件名匹配</a><a href="#text">文本处理</a><a href="#perm">权限管理</a><a href="#compare">比较与查找</a><a href="#redirect">重定向与管道</a><a href="#process">进程与作业</a><a href="#disk">磁盘与统计</a><a href="#archive">压缩与归档</a><a href="#print">打印</a><a href="#users">用户与时间</a><a href="#help">帮助与系统管理</a><a href="#quick">速查清单</a></nav>
+<div>
+<section id="files"><h2>1. 文件与目录操作</h2><table><tr><th>用途</th><th>命令</th><th>说明</th></tr><tr><td>创建目录</td><td><code>mkdir dir</code></td><td>创建单层目录。</td></tr><tr><td>创建嵌套目录</td><td><code>mkdir -p dir1/dir2</code></td><td>父目录不存在时一并创建。</td></tr><tr><td>切换目录</td><td><code>cd newdir</code><br><code>cd ..</code><br><code>cd -</code><br><code>cd</code></td><td>分别表示进入目录、返回父目录、回到上一个目录、回到当前用户主目录。</td></tr><tr><td>显示当前目录</td><td><code>pwd</code></td><td>打印当前工作路径。</td></tr><tr><td>复制文件</td><td><code>cp source_file dest_file</code></td><td>复制为新文件。</td></tr><tr><td>复制到目录</td><td><code>cp file1 file2 dir</code></td><td>把多个文件复制进指定目录。</td></tr><tr><td>递归复制目录</td><td><code>cp -r source_dir dest_dir</code><br><code>rsync -a source_dir/ dest_dir/</code></td><td><code>rsync -a</code> 适合保留属性并同步目录内容。</td></tr><tr><td>创建软链接</td><td><code>ln -s linked_file link</code></td><td>创建符号链接。</td></tr><tr><td>重命名/移动</td><td><code>mv source_file dest_file</code></td><td>文件、链接、目录均可处理。</td></tr><tr><td>删除文件</td><td><code>rm file1 file2</code></td><td>删除普通文件或链接。</td></tr><tr><td>删除目录</td><td><code>rmdir dir</code><br><code>rm -rf dir</code></td><td><code>rmdir</code> 仅删除空目录；<code>rm -rf</code> 强制递归删除，需谨慎。</td></tr></table><div class="tip"><span class="danger">注意：</span><code>rm -rf</code> 不进入回收站，尤其避免在根目录、系统目录或变量为空时执行。</div></section>
+<section id="list"><h2>2. 列出文件</h2><table><tr><th>用途</th><th>命令</th></tr><tr><td>列出当前目录普通文件</td><td><code>ls</code></td></tr><tr><td>长格式列表</td><td><code>ls -l</code></td></tr><tr><td>显示隐藏文件</td><td><code>ls -a</code></td></tr><tr><td>按修改时间排序</td><td><code>ls -t</code></td></tr><tr><td>按大小排序</td><td><code>ls -S</code></td></tr><tr><td>反向排序</td><td><code>ls -r</code></td></tr><tr><td>长列表，旧文件在前/新文件在后</td><td><code>ls -ltr</code></td></tr></table></section>
+<section id="view"><h2>3. 查看文件内容</h2><table><tr><th>用途</th><th>命令</th><th>说明</th></tr><tr><td>显示文件内容</td><td><code>cat file1 file2</code></td><td>适合短文件。</td></tr><tr><td>分页查看</td><td><code>more file</code><br><code>less file</code></td><td><code>less</code> 功能更强，可上下翻页、搜索。</td></tr><tr><td>查看开头</td><td><code>head -10 file</code></td><td>显示前 10 行。</td></tr><tr><td>查看结尾</td><td><code>tail -10 file</code></td><td>显示后 10 行。</td></tr></table></section>
+<section id="pattern"><h2>4. 文件名模式匹配</h2><table><tr><th>模式</th><th>示例</th><th>含义</th></tr><tr><td><code>*</code></td><td><code>cat *</code></td><td>匹配当前目录普通文件名中的任意字符序列。</td></tr><tr><td><code>.*</code></td><td><code>cat .*</code></td><td>匹配隐藏文件；注意可能包含 <code>.</code> 和 <code>..</code>。</td></tr><tr><td><code>*.log</code></td><td><code>cat *.log</code></td><td>匹配以 <code>.log</code> 结尾的文件。</td></tr><tr><td><code>*.?</code></td><td><code>ls *.?</code></td><td>匹配扩展名为单个字符的文件。</td></tr></table></section>
+<section id="text"><h2>5. 文本处理</h2><table><tr><th>用途</th><th>命令</th></tr><tr><td>查找包含子字符串的行</td><td><code>grep substring file</code></td></tr><tr><td>忽略大小写搜索</td><td><code>grep -i substring file</code></td></tr><tr><td>显示不包含子字符串的行</td><td><code>grep -v substring file</code></td></tr><tr><td>递归搜索目录</td><td><code>grep -r substring dir</code></td></tr><tr><td>排序文件内容</td><td><code>sort file</code></td></tr><tr><td>排序并去重</td><td><code>sort -u file</code></td></tr></table><pre><code># 示例：查找日志中的错误并分页查看
+grep -i "error" app.log | less</code></pre></section>
+<section id="perm"><h2>6. 权限管理</h2><table><tr><th>用途</th><th>命令</th><th>说明</th></tr><tr><td>给当前用户添加写权限</td><td><code>chmod u+w file</code></td><td><code>u</code> 表示 user。</td></tr><tr><td>给所属组添加读权限</td><td><code>chmod g+r file</code></td><td><code>g</code> 表示 group。</td></tr><tr><td>给其他用户添加执行权限</td><td><code>chmod o+x file</code></td><td><code>o</code> 表示 others。</td></tr><tr><td>给所有用户添加读写权限</td><td><code>chmod a+rw file</code></td><td><code>a</code> 表示 all。</td></tr><tr><td>让文件/目录可被访问</td><td><code>chmod a+rX *</code></td><td><code>X</code> 只给目录或已有执行位的文件加执行权限。</td></tr><tr><td>递归修改目录权限</td><td><code>chmod -R a+rX dir</code></td><td><code>-R</code> 表示递归。</td></tr></table></section>
+<section id="compare"><h2>7. 比较与查找</h2><div class="grid"><div class="card"><h3>比较</h3><table><tr><td>比较两个文件</td><td><code>diff file1 file2</code></td></tr><tr><td>图形化比较</td><td><code>gvimdiff file1 file2</code><br><code>tkdiff file1 file2</code><br><code>meld file1 file2</code></td></tr><tr><td>比较两个目录</td><td><code>diff -r dir1 dir2</code></td></tr></table></div><div class="card"><h3>查找</h3><table><tr><td>按名称查找</td><td><code>find . -name "log"</code></td></tr><tr><td>查找 PDF 并执行命令</td><td><code>find . -name "*.pdf" -exec xpdf {} ';'</code></td></tr><tr><td>基于索引快速查找</td><td><code>locate "pub"</code></td></tr></table></div></div><div class="tip"><code>find</code> 实时遍历目录；<code>locate</code> 依赖索引，速度快，但可能查不到刚创建的文件。</div></section>
+<section id="redirect"><h2>8. 重定向与管道</h2><table><tr><th>用途</th><th>命令</th><th>说明</th></tr><tr><td>覆盖写入文件</td><td><code>ls *.png &gt; image_files</code></td><td>目标文件原内容会被覆盖。</td></tr><tr><td>追加写入文件</td><td><code>ls *.jpg &gt;&gt; image_files</code></td><td>把输出追加到文件末尾。</td></tr><tr><td>管道传递输出</td><td><code>cat *.log | grep error</code></td><td>把前一个命令输出作为后一个命令输入。</td></tr></table></section>
+<section id="process"><h2>9. 进程与作业控制</h2><table><tr><th>用途</th><th>命令</th></tr><tr><td>显示所有进程</td><td><code>ps -ef</code></td></tr><tr><td>实时查看进程资源占用</td><td><code>top</code></td></tr><tr><td>终止指定进程</td><td><code>kill PID</code></td></tr><tr><td>强制杀死进程</td><td><code>kill -9 PID</code></td></tr><tr><td>杀死当前用户全部进程</td><td><code>kill -9 -1</code></td></tr><tr><td>点击窗口杀死图形程序</td><td><code>xkill</code></td></tr></table><div class="tip"><span class="danger">注意：</span><code>kill -9</code> 是强制终止，进程无法清理临时文件或保存状态；优先尝试普通 <code>kill</code>。</div></section>
+<section id="disk"><h2>10. 文件大小、磁盘空间与统计</h2><table><tr><th>用途</th><th>命令</th></tr><tr><td>查看文件/目录占用空间</td><td><code>du -sh dir1 dir2 file1 file2</code></td></tr><tr><td>统计字节数、字数、行数</td><td><code>wc file</code></td></tr><tr><td>查看当前/所有分区空间</td><td><code>df -h</code></td></tr></table></section>
+<section id="archive"><h2>11. 压缩、解压与归档</h2><h3>单文件压缩/解压</h3><table><tr><th>格式</th><th>压缩</th><th>解压</th></tr><tr><td>gzip</td><td><code>gzip file</code></td><td><code>gunzip file.gz</code></td></tr><tr><td>bzip2</td><td><code>bzip2 file</code></td><td><code>bunzip2 file.bz2</code></td></tr><tr><td>lzma</td><td><code>lzma file</code></td><td><code>unlzma file.lzma</code></td></tr><tr><td>xz</td><td><code>xz file</code></td><td><code>unxz file.xz</code></td></tr></table><h3>tar 归档</h3><table><tr><th>用途</th><th>命令</th></tr><tr><td>创建 gzip 归档</td><td><code>tar zcvf archive.tar.gz dir</code></td></tr><tr><td>创建 bzip2 归档</td><td><code>tar jcvf archive.tar.bz2 dir</code></td></tr><tr><td>创建 xz 归档</td><td><code>tar Jcvf archive.tar.xz dir</code></td></tr><tr><td>测试/列出归档内容</td><td><code>tar tvf archive.tar.[gz|bz2|lzma|xz]</code></td></tr><tr><td>解包归档</td><td><code>tar xvf archive.tar.[gz|bz2|lzma|xz]</code></td></tr></table><h3>zip 归档</h3><table><tr><td>创建 zip</td><td><code>zip -r archive.zip dir</code></td></tr><tr><td>测试/列出 zip</td><td><code>unzip -t archive.zip</code></td></tr><tr><td>解压 zip</td><td><code>unzip archive.zip</code></td></tr></table><p class="muted">tar 常用选项：<code>c</code> 创建，<code>t</code> 列出，<code>x</code> 提取，<code>z</code> gzip，<code>j</code> bzip2，<code>J</code> xz。</p></section>
+<section id="print"><h2>12. 打印相关</h2><table><tr><th>用途</th><th>命令</th></tr><tr><td>发送文件到打印队列</td><td><code>lpr -Pqueue f1.ps f2.txt</code></td></tr><tr><td>查看打印队列</td><td><code>lpq -Pqueue</code></td></tr><tr><td>取消打印任务</td><td><code>cancel 123 queue</code></td></tr><tr><td>PDF 转 PostScript 后打印</td><td><code>pdf2ps doc.pdf</code><br><code>lpr doc.ps</code></td></tr><tr><td>PostScript 转 PDF 并查看</td><td><code>ps2pdf doc.ps</code><br><code>xpdf doc.pdf</code></td></tr></table></section>
+<section id="users"><h2>13. 用户管理与时间管理</h2><div class="grid"><div class="card"><h3>用户</h3><table><tr><td>列出登录用户</td><td><code>who</code></td></tr><tr><td>显示当前用户</td><td><code>whoami</code></td></tr><tr><td>查看用户所属组</td><td><code>groups user</code></td></tr><tr><td>查看用户信息</td><td><code>finger user</code></td></tr><tr><td>切换用户</td><td><code>su - hulk</code></td></tr><tr><td>切换到 root</td><td><code>su -</code><br><code>su</code></td></tr></table></div><div class="card"><h3>时间</h3><table><tr><td>等待 60 秒</td><td><code>sleep 60</code></td></tr><tr><td>显示日期时间</td><td><code>date</code></td></tr><tr><td>统计命令耗时</td><td><code>time command</code></td></tr></table></div></div></section>
+<section id="help"><h2>14. 帮助、计算器与基础系统管理</h2><h3>帮助与计算</h3><table><tr><td>查看简要帮助</td><td><code>grep --help</code></td></tr><tr><td>查看完整手册</td><td><code>man grep</code></td></tr><tr><td>命令行计算器</td><td><code>bc -l</code></td></tr></table><h3>基础系统管理</h3><table><tr><th>用途</th><th>命令</th></tr><tr><td>递归修改所有者和组</td><td><code>sudo chown -R newuser.newgroup dir</code></td></tr><tr><td>5 分钟后重启</td><td><code>sudo shutdown -r +5</code></td></tr><tr><td>立即关机</td><td><code>sudo shutdown -h now</code></td></tr><tr><td>显示网络接口</td><td><code>ifconfig -a</code></td></tr><tr><td>为接口分配 IP</td><td><code>sudo ifconfig eth0 207.46.130.108</code></td></tr><tr><td>关闭网络接口</td><td><code>sudo ifconfig eth0 down</code></td></tr><tr><td>添加默认网关</td><td><code>sudo route add default gw 192.168.0.1</code></td></tr><tr><td>删除默认路由</td><td><code>sudo route del default</code></td></tr><tr><td>测试网络连通性</td><td><code>ping 207.46.130.108</code></td></tr></table></section>
+<section id="quick"><h2>15. 常用速查清单</h2><pre><code># 目录与文件
+pwd
+ls -lah
+mkdir -p project/logs
+cp -r src backup
+mv old.txt new.txt
+rm file.txt
+
+# 查看与搜索
+less app.log
+head -10 app.log
+tail -10 app.log
+grep -r "error" ./logs
+
+# 权限与磁盘
+chmod -R a+rX public
+du -sh *
+df -h
+wc file.txt
+
+# 进程
+ps -ef | grep nginx
+top
+kill PID
+
+# 压缩与解压
+tar zcvf backup.tar.gz dir
+tar xvf backup.tar.gz
+zip -r archive.zip dir
+unzip archive.zip</code></pre></section>
+<p class="footer">整理来源：用户上传的《基本常用命令.docx》。</p>
+</div></main></body></html>

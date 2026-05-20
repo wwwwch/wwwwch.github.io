@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python语言基础（一）至（六）精简笔记</title>
+<style>
+:root {
+  --bg:#f6f8fb; --paper:#ffffff; --ink:#18202a; --muted:#5d6b7a;
+  --line:#d9e2ec; --blue:#1d4ed8; --blue-soft:#eff6ff; --code:#0f172a;
+}
+* { box-sizing: border-box; }
+body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif; background:var(--bg); color:var(--ink); line-height:1.68; }
+header { background:linear-gradient(135deg,#0f172a,#1d4ed8); color:#fff; padding:42px 28px; }
+header h1 { margin:0 0 8px; font-size:30px; letter-spacing:.02em; }
+header p { margin:4px 0; color:#dbeafe; }
+.wrap { max-width:1120px; margin:0 auto; padding:22px; }
+nav, section.part, .summary-box { background:var(--paper); border:1px solid var(--line); border-radius:16px; padding:22px; margin:18px 0; box-shadow:0 3px 18px rgba(15,23,42,.05); }
+nav h2 { margin-top:0; }
+nav ol { columns:2; padding-left:24px; }
+a { color:var(--blue); text-decoration:none; }
+a:hover { text-decoration:underline; }
+h2 { margin:0 0 8px; padding-bottom:8px; border-bottom:2px solid var(--line); color:#0f172a; }
+h3 { margin:24px 0 10px; color:#1e3a8a; }
+h4 { margin:18px 0 8px; color:#334155; }
+ul { margin:8px 0 12px; padding-left:22px; }
+li { margin:4px 0; }
+.tag { display:inline-block; font-size:12px; color:#1e40af; background:var(--blue-soft); border:1px solid #bfdbfe; border-radius:999px; padding:2px 9px; margin-right:6px; }
+.source { color:var(--muted); margin:0 0 16px; font-size:14px; }
+.grid { display:grid; gap:14px; }
+.grid.two { grid-template-columns:repeat(2,minmax(0,1fr)); }
+.card { border:1px solid var(--line); background:#fbfdff; border-radius:12px; padding:14px 16px; }
+.card h4 { margin-top:0; }
+table { width:100%; border-collapse:collapse; margin:10px 0 16px; background:#fff; }
+th,td { border:1px solid var(--line); padding:8px 10px; vertical-align:top; }
+th { background:#f1f5f9; color:#0f172a; text-align:left; }
+code { font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace; font-size:.95em; background:#eef2ff; padding:.1em .35em; border-radius:5px; }
+pre { background:var(--code); color:#e5e7eb; padding:12px 14px; border-radius:12px; overflow:auto; line-height:1.5; }
+pre code { background:transparent; color:inherit; padding:0; border-radius:0; }
+.note { border-left:4px solid #2563eb; background:#eff6ff; padding:10px 14px; border-radius:10px; color:#1e3a8a; }
+.warn { border-left:4px solid #f97316; background:#fff7ed; padding:10px 14px; border-radius:10px; color:#7c2d12; }
+.kbd { border:1px solid var(--line); border-bottom-width:2px; padding:1px 6px; border-radius:5px; background:#fff; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; }
+footer { color:var(--muted); text-align:center; padding:24px 0 40px; }
+@media (max-width:760px) { nav ol { columns:1; } .grid.two { grid-template-columns:1fr; } header h1 { font-size:24px; } }
+@media print { body { background:#fff; } header { color:#111; background:#fff; border-bottom:2px solid #111; } nav, section.part, .summary-box { box-shadow:none; break-inside:avoid; } a { color:#111; } }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>Python语言基础（一）至（六）精简笔记</h1>
+    <p>按 PDF 原顺序整理；保留所有章节框架，删去重复提纲页、联系方式与冗余输出。</p>
+    <p>适合考前速览、课堂复习与代码概念索引。</p>
+  </div>
+</header>
+<div class="wrap">
+<nav>
+  <h2>目录</h2>
+  <ol>
+    <li><a href="#part-1">（一）基础规范：数据类型、变量、书写规范、赋值、注释、运算符</a></li>
+    <li><a href="#part-2">（二）基本语句：if、for、while、pass</a></li>
+    <li><a href="#part-3">（三）序列：列表、元组、字符串、序列、集合、字典</a></li>
+    <li><a href="#part-4">（四）函数：内置函数、模块函数、自定义函数、lambda</a></li>
+    <li><a href="#part-5">（五）模块与包：迭代器/生成器、模块、包、帮助文档</a></li>
+    <li><a href="#part-6">（六）高阶应用：异常、调试、OOP、魔术命令、路径、工作目录</a></li>
+  </ol>
+</nav>
+
+<section id="part-1" class="part">
+  <h2>（一）Python语言基础：基础规范</h2>
+  <p class="source">来源：2-Python语言基础（一）-基础规范-2023.pdf</p>
+
+  <h3>1. 数据类型</h3>
+  <ul>
+    <li><b>可变类型</b>：<code>list</code>、<code>dict</code>、<code>set</code>；对象内容可被原地修改。</li>
+    <li><b>不可变类型</b>：<code>int</code>、<code>float</code>、<code>complex</code>、<code>bool</code>、<code>tuple</code>、<code>str</code>、<code>frozenset</code>。</li>
+    <li><b>序列类型</b>：字符串、列表、元组；共同支持索引、切片、迭代、重复运算等。</li>
+    <li><b>第三方数据类型</b>：如 pandas 的 <code>DataFrame</code>。</li>
+  </ul>
+  <table>
+    <tr><th>用途</th><th>函数/写法</th><th>要点</th></tr>
+    <tr><td>查看类型</td><td><code>type(obj)</code></td><td>返回对象类型，如 <code>int</code>、<code>float</code>、<code>str</code>、<code>list</code>。</td></tr>
+    <tr><td>判断类型</td><td><code>isinstance(obj, type)</code></td><td><code>isinstance(True, int)</code> 为真，因为 <code>bool</code> 是 <code>int</code> 的子类。</td></tr>
+    <tr><td>类型转换</td><td><code>int() / float() / bool() / tuple() / list()</code></td><td><code>int(1.6)</code> 截断为 <code>1</code>；<code>bool(0)</code> 为 <code>False</code>。</td></tr>
+    <tr><td>进制转换</td><td><code>int(&#x27;100&#x27;, base=2)</code></td><td>按指定进制解析字符串，二进制 <code>100</code> 转为十进制 <code>4</code>。</td></tr>
+  </table>
+  <pre><code># 特殊对象与复数
+x = None
+z = 2 + 3j
+y = complex(3, 4)
+NotImplemented
+Ellipsis
+
+# 序列示例
+s = &quot;Data Science&quot;; lst = [1,2,3,4,5]; tup = (11,12,13,14,15)
+s[1:3], lst[1:3], tup[1:3]
+s * 3</code></pre>
+
+  <h3>2. 变量</h3>
+  <ul>
+    <li>变量本质上是对象引用；同一变量名可先后引用不同类型对象。</li>
+    <li>Python 是<b>动态类型</b>：赋值时决定类型；也是<b>强类型</b>：如 <code>&quot;3&quot; + 2</code> 会报 <code>TypeError</code>。</li>
+    <li>大小写敏感：<code>i</code> 与 <code>I</code> 是不同变量。</li>
+    <li>命名规则：不能以数字开头，不能使用关键字；不建议覆盖内置函数名，如 <code>print = 0</code> 会导致 <code>print(x)</code> 不可调用。</li>
+    <li>常用查看/管理：<code>keyword.kwlist</code> 查看关键字，<code>dir()</code> 查看当前命名空间，<code>del name</code> 删除变量。</li>
+    <li>IPython 特殊变量：<code>In[n]</code>、<code>Out[n]</code>、<code>_</code> 等可访问历史输入/输出。</li>
+  </ul>
+
+  <h3>3. 语句书写规范</h3>
+  <ul>
+    <li>推荐<b>一行一句</b>；可用分号写一行多句，但不利于可读性。</li>
+    <li>一句多行可用反斜杠或括号；复合语句以冒号开头代码块，依赖缩进。</li>
+    <li>空语句用 <code>pass</code> 占位，常用于尚未实现的分支、函数或类。</li>
+  </ul>
+  <pre><code>i = 20; j = 30; k = 40      # 可行但不推荐
+print(&quot;nin \nhao&quot;)           # 续行
+
+if x &gt; y:
+    pass
+else:
+    print(y)</code></pre>
+
+  <h3>4. 赋值语句</h3>
+  <ul>
+    <li>普通赋值：<code>i = 1</code>；链式赋值：<code>i = j = 2</code>。</li>
+    <li>复合赋值：<code>i += 20</code>、<code>x *= 20 + 5</code> 等，先计算右侧表达式。</li>
+    <li>拆包赋值：<code>a, b, c = 1, 2, 3</code>；交换变量：<code>a, b = b, a</code>。</li>
+  </ul>
+
+  <h3>5. 注释语句</h3>
+  <ul>
+    <li>单行注释用 <code>#</code>；被注释代码不执行，不产生变量定义。</li>
+    <li>注释用于解释“为什么这样写”，而不是重复代码表面含义。</li>
+  </ul>
+
+  <h3>6. 运算符</h3>
+  <table>
+    <tr><th>类别</th><th>核心写法</th><th>说明</th></tr>
+    <tr><td>算术</td><td><code>+ - * / // % **</code></td><td><code>/</code> 真除法，<code>//</code> 整除，<code>%</code> 取余，<code>**</code> 幂。</td></tr>
+    <tr><td>比较</td><td><code>== != &gt; &gt;= &lt; &lt;=</code></td><td>返回布尔值。</td></tr>
+    <tr><td>身份</td><td><code>is / is not</code></td><td>判断是否同一对象，不等同于值相等。</td></tr>
+    <tr><td>成员</td><td><code>in / not in</code></td><td>判断元素是否在容器中。</td></tr>
+    <tr><td>逻辑</td><td><code>and / or / not</code></td><td>布尔逻辑判断。</td></tr>
+    <tr><td>位运算</td><td><code>&amp; | ^ ~ &lt;&lt; &gt;&gt;</code></td><td>按二进制位与、或、异或、取反、左移、右移。</td></tr>
+    <tr><td>常用函数</td><td><code>pow() / round() / math / cmath</code></td><td><code>math.sqrt(-1)</code> 报定义域错误；复数开方用 <code>cmath.sqrt()</code>。</td></tr>
+  </table>
+  <p class="note">运算优先级不确定时直接加括号，优先保证可读性和结果明确。</p>
+</section>
+
+<section id="part-2" class="part">
+  <h2>（二）Python语言基础：基本语句</h2>
+  <p class="source">来源：3-Python语言基础（二）-基本语句-2023.pdf</p>
+
+  <h3>1. if 语句</h3>
+  <ul>
+    <li>基本结构：<code>if 条件: ... else: ...</code>；多分支用 <code>elif</code>。</li>
+    <li>三元表达式：<code>A if 条件 else B</code>，适合简单赋值。</li>
+    <li>分支后必须有缩进代码块；暂不执行任何操作时写 <code>pass</code>。</li>
+  </ul>
+  <pre><code>a, b = 2, 3
+if a &lt; b:
+    print(&quot;a 小于 b&quot;)
+elif a == b:
+    print(&quot;a 等于 b&quot;)
+else:
+    print(&quot;a 大于 b&quot;)
+
+result = &quot;Y&quot; if x &gt; 0 else &quot;N&quot;</code></pre>
+
+  <h3>2. for 语句</h3>
+  <ul>
+    <li><code>for</code> 用于遍历可迭代对象，如元组、列表、字符串、<code>range</code>。</li>
+    <li><code>range(start, stop, step)</code> 左闭右开；需列表化时用 <code>list(range(...))</code>。</li>
+    <li><code>break</code> 终止循环；<code>continue</code> 跳过本轮；循环未被 <code>break</code> 中断时可执行 <code>else</code>。</li>
+  </ul>
+  <pre><code>s = 0
+for i in (1, 2, 3):
+    s += i
+    print(i, s)
+else:
+    print(&quot;循环正常结束&quot;)
+
+for k in range(0, 16, 2):
+    if k == 8:
+        break
+    print(k)</code></pre>
+
+  <h3>3. while 语句</h3>
+  <ul>
+    <li>条件为真时重复执行，必须显式更新循环变量，防止死循环。</li>
+    <li>同样支持 <code>break</code>、<code>continue</code> 与 <code>else</code>；被 <code>break</code> 退出时不执行 <code>else</code>。</li>
+  </ul>
+  <pre><code>i, total = 1, 0
+while i &lt;= 100:
+    total += i
+    i += 1
+print(total)      # 5050</code></pre>
+
+  <h3>4. pass 语句</h3>
+  <ul>
+    <li><code>pass</code> 是空操作，占位以满足语法结构。</li>
+    <li>常见位置：空分支、空函数体、空类体、临时保留代码块。</li>
+  </ul>
+</section>
+
+<section id="part-3" class="part">
+  <h2>（三）Python语言基础：序列</h2>
+  <p class="source">来源：4-Python语言基础（三）-序列-2023.pdf</p>
+
+  <h3>1. 列表 list</h3>
+  <ul>
+    <li>定义：<code>[1, 2, 3]</code> 或 <code>list(&quot;Data&quot;)</code>；索引从 <code>0</code> 开始，负索引从末尾开始。</li>
+    <li>切片：<code>lst[start:stop:step]</code> 左闭右开；<code>lst[::-1]</code> 返回反向副本。</li>
+    <li><code>reversed(lst)</code> 返回迭代器；<code>lst.reverse()</code> 原地反转。</li>
+    <li><code>append(x)</code> 把 <code>x</code> 作为一个元素追加；<code>extend(iterable)</code> 逐个追加 iterable 中的元素。</li>
+    <li>插入/删除：<code>insert(i,x)</code>、<code>del lst[i]</code>、<code>remove(x)</code>、过滤删除可用 <code>filter</code> 或列表推导式。</li>
+    <li>常用函数/方法：<code>len</code>、<code>sorted</code>、<code>sort</code>、<code>zip</code>、<code>enumerate</code>、<code>reverse</code>。</li>
+  </ul>
+  <pre><code>lst = [21,22,23,24,25,26,27,28,29]
+lst[1:8:2]      # [22,24,26,28]
+lst[:5]         # 前 5 个
+[x**2 for x in range(10)]
+[(i, v) for i, v in enumerate(lst)]</code></pre>
+  <p class="warn">遍历列表时原地删除元素容易跳项；更稳妥的写法是构造新列表：<code>[x for x in lst if x != 10]</code>。</p>
+
+  <h3>2. 元组 tuple</h3>
+  <ul>
+    <li>定义：<code>(1,3,5)</code> 或省略括号 <code>1,3,5</code>；单元素元组需写 <code>(1,)</code>。</li>
+    <li>不可变：不能给 <code>tuple[i]</code> 赋值，也没有 <code>sort()</code> 等原地修改方法。</li>
+    <li>支持 <code>len</code>、索引、切片、成员判断、拆包。</li>
+    <li>典型用途：函数 <code>*args</code> 参数收集、多返回值、变量交换、作为不可变记录。</li>
+  </ul>
+
+  <h3>3. 字符串 str</h3>
+  <ul>
+    <li>定义：单引号、双引号、三引号均可；字符串不可变。</li>
+    <li>常用操作：连接 <code>+</code>、拼接 <code>join</code>、去空白 <code>strip</code>、成员判断 <code>in</code>、长度 <code>len</code>、大小写 <code>upper/lower</code>。</li>
+    <li>字符编码：<code>ord(&quot;A&quot;)</code> 得码点，<code>chr(97)</code> 得字符。</li>
+    <li>转义与原始字符串：路径和正则中常用 <code>r&quot;...&quot;</code> 减少反斜杠歧义。</li>
+    <li>可结合 <code>re</code> 模块做正则匹配，如 <code>re.compile(&#x27;[a-gA-G]&#x27;).findall(text)</code>。</li>
+  </ul>
+  <pre><code>s = &quot; shiruifeng &quot;
+s.strip()
+&quot;-&quot;.join([&quot;s&quot;, &quot;r&quot;])
+&quot;abc&quot;.upper()
+ord(&quot;师&quot;), chr(24072)</code></pre>
+
+  <h3>4. 序列通用特征</h3>
+  <table>
+    <tr><th>特征</th><th>示例</th><th>说明</th></tr>
+    <tr><td>索引</td><td><code>seq[1]</code></td><td>字符串、列表、元组均支持。</td></tr>
+    <tr><td>切片</td><td><code>seq[1:9:2]</code></td><td>返回同类或相近序列对象。</td></tr>
+    <tr><td>迭代</td><td><code>for x in seq</code></td><td>逐个访问元素。</td></tr>
+    <tr><td>拆包</td><td><code>a,b,c = seq</code></td><td>变量数需与元素数匹配，除非使用星号收集。</td></tr>
+    <tr><td>重复</td><td><code>seq * 3</code></td><td>生成重复内容。</td></tr>
+    <tr><td>通用函数</td><td><code>len/sorted/reversed/enumerate/zip</code></td><td><code>reversed</code>、<code>enumerate</code>、<code>zip</code> 多返回迭代器。</td></tr>
+  </table>
+
+  <h3>5. 集合 set / frozenset</h3>
+  <ul>
+    <li>集合元素唯一且无序，适合去重和集合运算；不能用下标访问。</li>
+    <li>定义：<code>{1,2,3}</code>、<code>set(list_obj)</code>；空集合必须写 <code>set()</code>。</li>
+    <li>基本运算：并集 <code>|</code>、交集 <code>&amp;</code>、差集 <code>-</code>、对称差 <code>^</code>。</li>
+    <li>关系判断：<code>in</code>、<code>not in</code>、<code>&lt;</code>、<code>issubset</code>、<code>issuperset</code>。</li>
+    <li><code>set</code> 可变，支持 <code>add/remove</code>；<code>frozenset</code> 不可变。</li>
+  </ul>
+
+  <h3>6. 字典 dict</h3>
+  <ul>
+    <li>字典保存键值对：<code>{&#x27;name&#x27;:&#x27;Jerry&#x27;, &#x27;age&#x27;:23}</code>；通过键访问值。</li>
+    <li>键必须可哈希，列表不能作为键；重复键会被后值覆盖。</li>
+    <li>字典本身可变：可修改、添加、删除键值对。</li>
+    <li>函数参数中 <code>**kwargs</code> 会收集为字典。</li>
+  </ul>
+  <pre><code>def func(arg1, **kwargs):
+    print(arg1)
+    print(kwargs)
+
+func(&quot;a&quot;, x1=&quot;b&quot;, x2=&quot;c&quot;)   # kwargs 是字典</code></pre>
+</section>
+
+<section id="part-4" class="part">
+  <h2>（四）Python语言基础：函数</h2>
+  <p class="source">来源：5-Python语言基础（四）-函数-2023.pdf</p>
+
+  <h3>1. 函数分类</h3>
+  <ul>
+    <li><b>内置函数</b>：无需导入，如 <code>type</code>、<code>len</code>、<code>abs</code>。</li>
+    <li><b>模块函数</b>：需导入模块后调用，如 <code>math.sin(1.5)</code>。</li>
+    <li><b>用户自定义函数</b>：用 <code>def</code> 定义。</li>
+  </ul>
+
+  <h3>2. 内置函数</h3>
+  <table>
+    <tr><th>类别</th><th>函数</th><th>要点</th></tr>
+    <tr><td>数学</td><td><code>abs/min/max/pow/round</code></td><td>基础数学计算，如 <code>pow(2,10)</code>。</td></tr>
+    <tr><td>类型转换</td><td><code>int/float/bool/str/list/set/tuple</code></td><td>用于显式转换对象类型。</td></tr>
+    <tr><td>对象与帮助</td><td><code>type/isinstance/dir/help/callable</code></td><td>查看对象、类型、属性和帮助信息。</td></tr>
+    <tr><td>容器与迭代</td><td><code>len/range/enumerate/zip</code></td><td>构造范围、编号遍历、并行打包。</td></tr>
+    <tr><td>进制</td><td><code>bin/hex</code></td><td>把整数表示成二进制、十六进制字符串。</td></tr>
+  </table>
+
+  <h3>3. 模块函数</h3>
+  <ul>
+    <li><code>import math</code> 后必须写 <code>math.cos(1.5)</code>，直接 <code>cos(1.5)</code> 会 <code>NameError</code>。</li>
+    <li><code>import math as mt</code> 使用别名，如 <code>mt.sin(1.5)</code>。</li>
+    <li><code>from math import cos</code> 后可直接调用 <code>cos(1.5)</code>。</li>
+  </ul>
+
+  <h3>4. 自定义函数</h3>
+  <ul>
+    <li>基本结构：<code>def name(params):</code> + 缩进函数体；可写 docstring 供 <code>help</code> 与 <code>?</code> 查看。</li>
+    <li>调用前函数必须已定义；<code>callable(func)</code> 可判断对象是否可调用。</li>
+    <li><code>return</code> 决定返回值；没有 <code>return</code> 时返回 <code>None</code>；可返回多个值，本质是元组拆包。</li>
+    <li>参数形式：位置参数、默认参数、可变位置参数 <code>*args</code>、关键字参数、关键字可变参数 <code>**kwargs</code>。</li>
+    <li>作用域：局部变量默认不影响外层；修改全局变量用 <code>global</code>；嵌套函数修改外层局部变量用 <code>nonlocal</code>。</li>
+    <li>传参行为：不可变对象修改通常不影响外部；可变对象原地修改会影响外部引用。</li>
+    <li>默认参数必须放在非默认参数之后；函数也是对象，可赋值给变量，如 <code>myfunc = abs</code>。</li>
+  </ul>
+  <pre><code>def my_func(x1, *x2, x3, x5=5, x4=4):
+    print(x1, x2, x3, x4, x5)
+
+my_func(1, 2, 4, x3=3, x5=5)
+
+def f(i, j=2):
+    return i, i + 1
+
+a, b = f(3)</code></pre>
+
+  <h3>5. lambda 函数</h3>
+  <ul>
+    <li>匿名函数形式：<code>lambda 参数: 表达式</code>，适合短小的一次性函数。</li>
+    <li>常与 <code>filter</code>、<code>map</code>、<code>reduce</code> 搭配。</li>
+  </ul>
+  <pre><code>nums = [1,2,3,4,5,6,7,8,9,10]
+list(filter(lambda x: x % 3 == 0, nums))
+list(map(lambda x: x * 2, nums))
+
+from functools import reduce
+reduce(lambda x, y: x + y, nums)</code></pre>
+</section>
+
+<section id="part-5" class="part">
+  <h2>（五）Python语言基础：模块与包</h2>
+  <p class="source">来源：6-Python语言基础（五）-模块与包-2023.pdf</p>
+
+  <h3>1. 迭代器与生成器</h3>
+  <ul>
+    <li>列表是<b>可迭代对象</b>，但不是迭代器，直接 <code>next(myList)</code> 会报错。</li>
+    <li>用 <code>iter(obj)</code> 把可迭代对象转为迭代器，再用 <code>next(iterator)</code> 逐个取值。</li>
+    <li>生成器函数使用 <code>yield</code>，调用后返回生成器对象；在循环中惰性产生值。</li>
+  </ul>
+  <pre><code>my_list = [1,2,3,4,5]
+it = iter(my_list)
+next(it); next(it)
+
+def my_gen():
+    for i in range(1, 11):
+        yield i + 2
+
+for x in my_gen():
+    print(x, end=&quot;,&quot;)</code></pre>
+
+  <h3>2. 模块</h3>
+  <ul>
+    <li>模块导入方式与函数章节一致：<code>import module</code>、<code>import module as alias</code>、<code>from module import name</code>。</li>
+    <li>查看内置模块清单：<code>import sys; sys.builtin_module_names</code>。</li>
+  </ul>
+
+  <h3>3. 包</h3>
+  <ul>
+    <li>包是组织模块的目录结构，可通过点号路径导入。</li>
+    <li>查看包：<code>pip list</code>、<code>conda list</code>；更新：<code>pip install --upgrade 包名</code>、<code>conda update 包名</code>。</li>
+    <li>常见导入：<code>import pandas as pd</code>、<code>import numpy as np</code>、<code>from pandas import DataFrame</code>。</li>
+    <li>查看版本或帮助：如 <code>pd.__version__</code>。</li>
+  </ul>
+
+  <h3>4. 帮助文档</h3>
+  <ul>
+    <li><code>help(obj)</code> 查看帮助；IPython 中 <code>obj?</code> 查看签名/docstring，<code>obj??</code> 尝试查看源代码。</li>
+    <li>函数或类第一段三引号字符串是 docstring；可通过 <code>__doc__</code> 读取。</li>
+    <li><code>dir(obj)</code> 查看对象属性和方法；IPython 支持通配查询，如 <code>myList1.c*?</code>。</li>
+  </ul>
+</section>
+
+<section id="part-6" class="part">
+  <h2>（六）Python语言基础：高阶应用</h2>
+  <p class="source">来源：7-Python语言基础（六）-高阶应用-2023.pdf</p>
+
+  <h3>1. 异常与错误</h3>
+  <ul>
+    <li><code>try/except/finally</code> 用于捕获异常和释放资源；<code>finally</code> 无论是否异常都会执行。</li>
+    <li>IPython 异常显示模式：<code>%xmode Plain</code>、<code>%xmode Context</code>、<code>%xmode Verbose</code>。</li>
+    <li><code>assert 条件, &quot;错误信息&quot;</code> 用于运行时检查；条件为假时抛出 <code>AssertionError</code>。</li>
+  </ul>
+  <pre><code>try:
+    f = open(&quot;myfile.txt&quot;, &quot;w&quot;)
+    # 写文件
+except KeyboardInterrupt:
+    print(&quot;程序中断&quot;)
+finally:
+    f.close()
+
+assert b != 0, &quot;分母不能等于0&quot;</code></pre>
+
+  <h3>2. 程序调试方法</h3>
+  <ul>
+    <li>先复现错误，阅读 traceback，定位异常类型、报错行和变量名。</li>
+    <li><code>%debug</code> 进入交互式调试，可在 <code>ipdb</code> 中查看变量、逐步退出。</li>
+    <li><code>%xmode</code> 控制错误信息详细程度；<code>assert</code> 可主动暴露不符合预期的状态。</li>
+  </ul>
+
+  <h3>3. 面向对象编程</h3>
+  <ul>
+    <li>类用 <code>class</code> 定义；实例方法第一个参数通常是 <code>self</code>；构造初始化用 <code>__init__</code>。</li>
+    <li>类属性属于类，实例属性属于对象；实例属性会遮蔽同名类属性。</li>
+    <li><code>@classmethod</code> 的第一个参数是 <code>cls</code>，可修改类状态；<code>@staticmethod</code> 不依赖 <code>self/cls</code>。</li>
+    <li>继承：子类可复用父类方法与属性；双下划线私有属性如 <code>__gender</code> 不直接被子类访问。</li>
+    <li><code>@property</code> 可把方法包装为只读属性式访问。</li>
+    <li><code>__new__</code> 负责创建对象并返回实例；若不返回实例，<code>__init__</code> 不会正常完成，实例可能是 <code>None</code>。</li>
+  </ul>
+  <pre><code>class Person:
+    nationality = &quot;China&quot;
+    _deposit = 10e10
+    __gender = &quot;M&quot;
+
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+
+    def say_hi(self):
+        print(self.name)
+
+    @classmethod
+    def class_func(cls):
+        cls.nationality = &quot;CHINA&quot;
+
+    @staticmethod
+    def static_func(x, y):
+        print(x + y)
+
+class Teacher(Person):
+    pass</code></pre>
+
+  <h3>4. 魔术命令</h3>
+  <table>
+    <tr><th>命令</th><th>用途</th></tr>
+    <tr><td><code>%run file.py</code></td><td>运行 Python 文件；与当前工作目录相关。</td></tr>
+    <tr><td><code>%timeit</code> / <code>%%timeit</code></td><td>统计单行/单元代码运行时间。</td></tr>
+    <tr><td><code>%history</code></td><td>查看输入输出历史，可指定编号范围。</td></tr>
+    <tr><td><code>%xmode</code></td><td>更改异常信息显示模式。</td></tr>
+    <tr><td><code>%debug</code></td><td>进入调试器查看错误现场。</td></tr>
+    <tr><td><code>%prun</code> / <code>%lprun</code></td><td>函数级/逐行性能分析；<code>%lprun</code> 需加载 <code>line_profiler</code>。</td></tr>
+    <tr><td><code>%memit</code> / <code>%mprun</code></td><td>内存占用分析；需 <code>memory_profiler</code>。</td></tr>
+  </table>
+
+  <h3>5. 搜索路径</h3>
+  <ul>
+    <li>变量搜索路径：<code>dir()</code> 查看当前命名空间；<code>del vi</code> 删除变量后再访问会 <code>NameError</code>。</li>
+    <li>模块搜索路径：<code>sys.path</code>；可用 <code>sys.path.append(path)</code> 临时增加路径，用 <code>sys.path.remove(path)</code> 删除。</li>
+  </ul>
+
+  <h3>6. 当前工作目录</h3>
+  <ul>
+    <li>显示目录：<code>os.getcwd()</code>；更改目录：<code>os.chdir(path)</code>。</li>
+    <li>相对路径读写文件依赖当前工作目录；例如 <code>read_csv(&#x27;bc_data.csv&#x27;)</code> 会从当前目录查找文件。</li>
+  </ul>
+</section>
+
+<section class="summary-box">
+  <h2>速记总表</h2>
+  <table>
+    <tr><th>主题</th><th>必须掌握</th></tr>
+    <tr><td>基础类型</td><td>可变/不可变、序列、类型查看与转换、特殊对象。</td></tr>
+    <tr><td>变量与语法</td><td>引用、动态/强类型、命名规范、缩进、<code>pass</code>。</td></tr>
+    <tr><td>控制流</td><td><code>if/elif/else</code>、<code>for/range</code>、<code>while</code>、<code>break/continue/else</code>。</td></tr>
+    <tr><td>数据结构</td><td>列表可变、元组/字符串不可变、集合去重与运算、字典键值映射。</td></tr>
+    <tr><td>函数</td><td>参数、返回值、作用域、可变对象传参、模块导入、lambda。</td></tr>
+    <tr><td>工程习惯</td><td>帮助文档、异常处理、调试、搜索路径、工作目录。</td></tr>
+  </table>
+</section>
+
+<footer>
+  <p>整理为 HTML 笔记：保留课程章节顺序（一）至（六），压缩示例输出与重复提纲。</p>
+</footer>
+</div>
+</body>
+</html>

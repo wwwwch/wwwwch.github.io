@@ -1,0 +1,42 @@
+﻿[
+    {
+        "number":  1,
+        "title":  "字节·机器学习｜HTML完整笔记",
+        "file":  "1-字节·机器学习.html"
+    },
+    {
+        "number":  2,
+        "title":  "大模型与 Agent 面试知识体系笔记",
+        "file":  "2-福来科技·Research.html"
+    },
+    {
+        "number":  null,
+        "title":  "大模型部署与微调：完整面试笔记",
+        "file":  "大模型部署与微调.html"
+    },
+    {
+        "number":  null,
+        "title":  "机器学习章节完整 HTML 笔记",
+        "file":  "机器学习-课内.html"
+    },
+    {
+        "number":  null,
+        "title":  "深度学习完整HTML笔记",
+        "file":  "深度学习-课内.html"
+    },
+    {
+        "number":  null,
+        "title":  "Linux 常用命令 HTML 笔记",
+        "file":  "Linux 常用命令.html"
+    },
+    {
+        "number":  null,
+        "title":  "Python 全栈开发常用技术栈复习笔记",
+        "file":  "Python 全栈开发.html"
+    },
+    {
+        "number":  null,
+        "title":  "Python语言基础（一）至（六）精简笔记",
+        "file":  "Python 语言基础.html"
+    }
+]
