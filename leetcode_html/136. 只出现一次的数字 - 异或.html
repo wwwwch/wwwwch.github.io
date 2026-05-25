@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>136. 只出现一次的数字 - 异或复习笔记</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #f7f8fa;
+    color: #1f2937;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .page {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 14px;
+    border-radius: 12px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.06);
+  }
+  h1 {
+    margin: 0 0 10px;
+    font-size: 22px;
+    line-height: 1.2;
+    color: #111827;
+  }
+  h2 {
+    font-size: 15px;
+    margin: 0 0 8px;
+    padding-left: 8px;
+    border-left: 4px solid #2563eb;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 10px;
+    background: #ffffff;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    margin: 2px 4px 2px 0;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #dbeafe;
+    color: #1d4ed8;
+  }
+  .warn {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+    padding: 8px;
+    margin-top: 6px;
+  }
+  .formula {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+  .box {
+    padding: 5px 8px;
+    border-radius: 8px;
+    background: #eef2ff;
+    color: #3730a3;
+    border: 1px solid #c7d2fe;
+  }
+  .zero {
+    background: #dcfce7;
+    color: #166534;
+    border-color: #bbf7d0;
+  }
+  .ans {
+    background: #fee2e2;
+    color: #991b1b;
+    border-color: #fecaca;
+  }
+  ul {
+    margin: 6px 0 0 18px;
+    padding: 0;
+  }
+  li { margin: 2px 0; }
+  pre {
+    margin: 6px 0 0;
+    padding: 10px;
+    background: #0f172a;
+    color: #e5e7eb;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  code {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  .mini {
+    font-size: 12px;
+    color: #4b5563;
+  }
+  .key {
+    font-weight: 700;
+    color: #dc2626;
+  }
+  .complexity {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+  .complexity div {
+    background: #f3f4f6;
+    border-radius: 8px;
+    padding: 7px;
+    text-align: center;
+    font-weight: 700;
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+  <h1>136. 只出现一次的数字｜异或</h1>
+
+  <div class="grid">
+    <section class="card">
+      <h2>题目核心</h2>
+      <p>
+        给定非空整数数组 <code>nums</code>：
+        <span class="tag">一个元素出现 1 次</span>
+        <span class="tag">其余元素出现 2 次</span>
+      </p>
+      <p class="key">目标：找出只出现一次的元素。</p>
+
+      <div class="warn">
+        <strong>记忆点：</strong>成对元素可以被异或“抵消”，最后剩下单独元素。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>异或性质</h2>
+      <ul>
+        <li><strong>a ⊕ a = 0</strong>：相同数字抵消</li>
+        <li><strong>0 ⊕ a = a</strong>：0 是异或初始值</li>
+        <li><strong>a ⊕ b = b ⊕ a</strong>：交换律</li>
+        <li><strong>(a ⊕ b) ⊕ c = a ⊕ (b ⊕ c)</strong>：结合律</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>消除过程示例</h2>
+      <p class="mini"><code>nums = [4, 1, 2, 1, 2]</code></p>
+
+      <div class="formula">
+        <span class="box ans">4</span>
+        <span>⊕</span>
+        <span class="box">1</span>
+        <span>⊕</span>
+        <span class="box">2</span>
+        <span>⊕</span>
+        <span class="box">1</span>
+        <span>⊕</span>
+        <span class="box">2</span>
+      </div>
+
+      <div class="formula">
+        <span class="box ans">4</span>
+        <span>⊕</span>
+        <span class="box zero">(1 ⊕ 1)</span>
+        <span>⊕</span>
+        <span class="box zero">(2 ⊕ 2)</span>
+      </div>
+
+      <div class="formula">
+        <span class="box ans">4</span>
+        <span>⊕</span>
+        <span class="box zero">0</span>
+        <span>⊕</span>
+        <span class="box zero">0</span>
+        <span>=</span>
+        <span class="box ans">4</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>算法步骤</h2>
+      <ul>
+        <li>初始化 <code>x = 0</code></li>
+        <li>遍历数组，每个元素执行 <code>x ^= num</code></li>
+        <li>重复元素互相抵消</li>
+        <li>返回最终的 <code>x</code></li>
+      </ul>
+
+      <div class="warn">
+        <strong>易错点：</strong><code>ans = 0</code> 不是随便取值，因为 <code>0 ⊕ a = a</code>。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>复杂度</h2>
+      <div class="complexity">
+        <div>时间：O(n)</div>
+        <div>空间：O(1)</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>结论</h2>
+      <p>
+        <strong>所有数异或一遍</strong>，出现两次的数全部变成 <code>0</code>，
+        <span class="key">剩下的就是只出现一次的数字。</span>
+      </p>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:10px;">
+    <h2>代码</h2>
+<pre><code>class Solution:
+    def singleNumber(self, nums: List[int]) -> int:
+        x = 0
+        for num in nums:
+            x ^= num
+        return x</code></pre>
+  </section>
+</div>
+</body>
+</html>

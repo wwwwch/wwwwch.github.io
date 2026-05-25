@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>128. 最长连续序列｜O(n) 复习速记</title>
+<style>
+  * { box-sizing: border-box; }
+  :root {
+    --ink:#111827; --sub:#4b5563; --muted:#6b7280; --line:#e5e7eb;
+    --blue:#2563eb; --blue-bg:#eff6ff; --green:#059669; --green-bg:#ecfdf5;
+    --orange:#ea580c; --orange-bg:#fff7ed; --red:#dc2626; --red-bg:#fef2f2;
+    --violet:#7c3aed; --violet-bg:#f5f3ff; --code:#0f172a;
+  }
+  body {
+    margin:0; padding:10px; background:#f3f4f6; color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:12.5px; line-height:1.38;
+  }
+  .page {
+    max-width:1180px; margin:0 auto; background:white; border:1px solid var(--line);
+    border-radius:14px; padding:12px; box-shadow:0 5px 18px rgba(15,23,42,.06);
+  }
+  header {
+    display:flex; justify-content:space-between; align-items:flex-start; gap:8px;
+    border-bottom:1px solid var(--line); padding-bottom:8px; margin-bottom:8px;
+  }
+  h1 { margin:0; font-size:21px; line-height:1.15; letter-spacing:-.3px; }
+  h2 { margin:0 0 6px; font-size:14px; line-height:1.2; display:flex; align-items:center; gap:5px; }
+  p { margin:4px 0; }
+  ul,ol { margin:4px 0 0 17px; padding:0; }
+  li { margin:2px 0; }
+  .tags { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:4px; min-width:260px; }
+  .tag {
+    display:inline-flex; align-items:center; gap:3px; padding:2px 7px; border-radius:999px;
+    background:var(--blue-bg); color:#1d4ed8; font-size:11.5px; font-weight:800; white-space:nowrap;
+  }
+  .tag.green { background:var(--green-bg); color:#047857; }
+  .tag.orange { background:var(--orange-bg); color:#c2410c; }
+  .grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+  .card { border:1px solid var(--line); border-radius:12px; padding:8px; background:#fbfdff; }
+  .card.blue { background:var(--blue-bg); border-color:#bfdbfe; }
+  .card.green { background:var(--green-bg); border-color:#bbf7d0; }
+  .card.orange { background:var(--orange-bg); border-color:#fed7aa; }
+  .card.red { background:var(--red-bg); border-color:#fecaca; }
+  .card.violet { background:var(--violet-bg); border-color:#ddd6fe; }
+  .k {
+    display:inline-block; padding:0 4px; border-radius:4px; background:white; border:1px solid #dbeafe;
+    color:#1d4ed8; font-family:"SFMono-Regular",Consolas,monospace; font-weight:800;
+  }
+  .strong { font-weight:900; color:#0f172a; }
+  .diagram { display:grid; grid-template-columns:repeat(5,1fr); gap:5px; align-items:stretch; margin-top:5px; }
+  .node {
+    min-height:46px; border:1px solid var(--line); border-radius:10px; background:white;
+    padding:6px 5px; text-align:center; display:flex; flex-direction:column; justify-content:center;
+  }
+  .node b { font-size:12px; }
+  .node small { color:var(--muted); font-size:10.5px; }
+  .arrow { position:relative; }
+  .arrow:after { content:"→"; position:absolute; right:-9px; top:50%; transform:translateY(-50%); font-weight:900; color:#64748b; }
+  .decision {
+    display:grid; grid-template-columns:1fr .8fr 1fr; gap:5px; align-items:center; margin-top:5px;
+  }
+  .diamond {
+    border:1px dashed #fb923c; background:white; border-radius:10px; padding:6px; text-align:center; font-weight:900;
+  }
+  .minirow { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; margin-top:5px; }
+  .pill {
+    background:white; border:1px solid var(--line); border-radius:10px; padding:5px 6px; text-align:center;
+  }
+  .pill b { display:block; font-size:13px; }
+  .compare { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:5px; }
+  .bad,.good { border-radius:10px; padding:6px; border:1px solid; background:white; }
+  .bad { border-color:#fecaca; } .good { border-color:#bbf7d0; }
+  .bad b { color:var(--red); } .good b { color:var(--green); }
+  .code-card { grid-column:1 / -1; padding:0; overflow:hidden; background:#020617; }
+  .code-head {
+    display:flex; justify-content:space-between; align-items:center; padding:7px 9px;
+    color:#dbeafe; background:#111827; border-bottom:1px solid #334155; font-size:12px;
+  }
+  pre { margin:0; padding:10px 12px; overflow:auto; background:var(--code); color:#e5e7eb; font-size:11.6px; line-height:1.36; }
+  code { font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace; }
+  .memory {
+    display:grid; grid-template-columns:repeat(4,1fr); gap:5px; margin-top:5px;
+  }
+  .memo {
+    background:white; border:1px solid var(--line); border-radius:10px; padding:6px; text-align:center;
+  }
+  .memo span { display:block; font-size:18px; line-height:1; margin-bottom:2px; }
+  @media print {
+    body { background:white; padding:0; font-size:11.5px; }
+    .page { box-shadow:none; border:0; border-radius:0; max-width:none; padding:8px; }
+    header { margin-bottom:6px; padding-bottom:6px; }
+    .card { break-inside:avoid; padding:7px; }
+    pre { white-space:pre-wrap; font-size:10.6px; }
+  }
+  @media (max-width:900px) {
+    .grid,.diagram,.memory { grid-template-columns:1fr; }
+    .arrow:after { content:"↓"; right:50%; top:auto; bottom:-13px; transform:translateX(50%); }
+    header { flex-direction:column; } .tags { justify-content:flex-start; min-width:0; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+  <header>
+    <div>
+      <h1>128. 最长连续序列｜O(n) 复习速记</h1>
+      <p><span class="strong">目标：</span>未排序数组 <span class="k">nums</span> 中，找最长“连续整数链”的长度。</p>
+    </div>
+    <div class="tags">
+      <span class="tag">HashSet</span><span class="tag green">只从起点扩展</span><span class="tag orange">去重防退化</span><span class="tag">O(n)</span>
+    </div>
+  </header>
+
+  <section class="grid">
+    <div class="card blue">
+      <h2>核心图解</h2>
+      <div class="diagram">
+        <div class="node arrow"><b>nums</b><small>未排序/可重复</small></div>
+        <div class="node arrow"><b>set(nums)</b><small>去重 + O(1) 查询</small></div>
+        <div class="node arrow"><b>找起点 x</b><small><span class="k">x-1 ∉ set</span></small></div>
+        <div class="node arrow"><b>向右扩展</b><small>x+1,x+2...</small></div>
+        <div class="node"><b>更新 ans</b><small><span class="k">y-x</span></small></div>
+      </div>
+      <div class="minirow">
+        <div class="pill"><b>输入</b><span class="k">[100,4,200,1,3,2]</span></div>
+        <div class="pill"><b>最长链</b><span class="k">1→2→3→4</span></div>
+        <div class="pill"><b>答案</b><span class="k">4</span></div>
+      </div>
+    </div>
+
+    <div class="card orange">
+      <h2>起点判断图</h2>
+      <div class="decision">
+        <div class="pill"><b>当前数 x</b><span class="k">x</span></div>
+        <div class="diamond">x-1 在 set？</div>
+        <div class="pill"><b>Yes</b>不是起点，跳过</div>
+      </div>
+      <div class="decision" style="grid-template-columns:1fr .8fr 1fr;">
+        <div class="pill"><b>No</b>x 是起点</div>
+        <div class="diamond">找 x+1...</div>
+        <div class="pill"><b>长度</b><span class="k">y - x</span></div>
+      </div>
+      <p><span class="strong">记忆句：</span><span class="k">前面没人，才开跑；前面有人，直接跳。</span></p>
+    </div>
+
+    <div class="card green">
+      <h2>必须保留的结论</h2>
+      <ol>
+        <li><span class="strong">不能排序：</span>排序是 <span class="k">O(nlogn)</span>，不满足要求。</li>
+        <li><span class="strong">必须用 HashSet：</span>成员查询平均 <span class="k">O(1)</span>。</li>
+        <li><span class="strong">只从起点算：</span><span class="k">x-1 not in st</span> 才扩展。</li>
+        <li><span class="strong">长度公式：</span>扩展到第一个不存在的 <span class="k">y</span>，长度为 <span class="k">y-x</span>。</li>
+      </ol>
+      <div class="memory">
+        <div class="memo"><span>①</span>建 set</div>
+        <div class="memo"><span>②</span>判起点</div>
+        <div class="memo"><span>③</span>向右扫</div>
+        <div class="memo"><span>④</span>更新 ans</div>
+      </div>
+    </div>
+
+    <div class="card red">
+      <h2>易错点：遍历谁？</h2>
+      <div class="compare">
+        <div class="bad">
+          <b>错：遍历 nums</b>
+          <p>重复元素会反复触发内层循环，最坏可能退化为 <span class="k">O(n²)</span>。</p>
+        </div>
+        <div class="good">
+          <b>对：遍历 st</b>
+          <p>每个不同数字只作为候选检查一次，总体保持 <span class="k">O(n)</span>。</p>
+        </div>
+      </div>
+      <p><span class="strong">反例记忆：</span><span class="k">[1,1,1,...,1,2,3,4,5,...]</span></p>
+    </div>
+
+    <div class="card violet">
+      <h2>复杂度 & 提前结束</h2>
+      <ul>
+        <li><span class="strong">时间：</span><span class="k">O(n)</span></li>
+        <li><span class="strong">空间：</span><span class="k">O(m)</span>，<span class="k">m=len(set(nums))</span></li>
+        <li><span class="strong">小优化：</span>若 <span class="k">2*ans &gt;= m</span>，后面不可能更长，提前 <span class="k">break</span>。</li>
+      </ul>
+    </div>
+
+    <div class="card blue">
+      <h2>一眼回忆版</h2>
+      <p><span class="k">set</span> 去重 → <span class="k">x-1</span> 不存在才是起点 → while 找 <span class="k">x+1</span> → 长度 <span class="k">y-x</span> → 取最大。</p>
+      <p><span class="strong">核心防线：</span>不排序；不重复扫；不从中间开始。</p>
+    </div>
+
+    <section class="card code-card">
+      <div class="code-head"><b>完整代码｜不可删改逻辑与注释</b><span>Python</span></div>
+<pre><code>class Solution:
+    def longestConsecutive(self, nums: List[int]) -&gt; int:
+        st = set(nums)  # 把 nums 转成哈希集合
+        m = len(st)
+
+        ans = 0
+        for x in st:  # 遍历哈希集合
+            if x-1 in st:  # 如果 x 不是序列的起点，直接跳过
+                continue
+
+            # x 是序列的起点
+            y = x+1
+            while y in st:  # 不断查找下一个数是否在哈希集合中
+                y += 1
+
+            # 循环结束后，y-1 是最后一个在哈希集合中的数
+            ans = max(ans, y-x)  # 从 x 到 y-1 一共 y-x 个数
+
+            # 小优化
+            if 2*ans &gt;= m:  # ans 不可能变得更大
+                break
+
+        return ans</code></pre>
+    </section>
+  </section>
+</main>
+</body>
+</html>

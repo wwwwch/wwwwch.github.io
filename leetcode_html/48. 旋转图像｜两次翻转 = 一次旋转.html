@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>48. 旋转图像｜两次翻转 = 一次旋转</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                 "Microsoft YaHei", Arial, sans-serif;
+    background: #f6f7fb;
+    color: #222;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .page {
+    max-width: 1180px;
+    margin: auto;
+    background: #fff;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.08);
+  }
+  h1 {
+    margin: 0 0 10px;
+    font-size: 24px;
+    line-height: 1.15;
+  }
+  h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    border-left: 5px solid #4f7cff;
+    padding-left: 8px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .card {
+    border: 1px solid #e5e7ef;
+    border-radius: 12px;
+    padding: 10px;
+    background: #fff;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    margin: 2px 4px 2px 0;
+    border-radius: 999px;
+    background: #eef3ff;
+    color: #2754d8;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .danger {
+    background: #fff2f0;
+    color: #c0392b;
+  }
+  .ok {
+    background: #ecfff5;
+    color: #168a4a;
+  }
+  .formula {
+    text-align: center;
+    font-size: 19px;
+    font-weight: 800;
+    padding: 8px;
+    border-radius: 10px;
+    background: linear-gradient(90deg, #eef3ff, #f8fbff);
+    margin: 8px 0;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .arrow {
+    font-size: 22px;
+    font-weight: 900;
+    color: #4f7cff;
+  }
+  table.matrix {
+    border-collapse: collapse;
+    margin: auto;
+    font-weight: 800;
+  }
+  .matrix td {
+    width: 34px;
+    height: 30px;
+    text-align: center;
+    border: 1px solid #cfd6e6;
+    background: #fafbff;
+  }
+  .caption {
+    text-align: center;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #666;
+    font-weight: 700;
+  }
+  ul {
+    margin: 6px 0 0 18px;
+    padding: 0;
+  }
+  li { margin: 2px 0; }
+  .highlight {
+    background: #fff8d8;
+    padding: 1px 4px;
+    border-radius: 4px;
+    font-weight: 800;
+  }
+  .note {
+    padding: 8px;
+    border-radius: 10px;
+    background: #f7faff;
+    border: 1px dashed #b8c8ff;
+    margin-top: 6px;
+  }
+  pre {
+    margin: 0;
+    padding: 10px;
+    background: #1f2430;
+    color: #f4f7ff;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 12.5px;
+    line-height: 1.42;
+  }
+  code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  }
+  .full { grid-column: 1 / -1; }
+  .mini-diagram {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 6px;
+  }
+  .axis-box {
+    width: 130px;
+    height: 90px;
+    border-radius: 10px;
+    border: 1px solid #dbe2f3;
+    background:
+      linear-gradient(45deg, transparent 49%, #4f7cff 49%, #4f7cff 51%, transparent 51%),
+      linear-gradient(90deg, transparent 49%, #ff9f43 49%, #ff9f43 51%, transparent 51%),
+      #fbfcff;
+    position: relative;
+  }
+  .axis-box::after {
+    content: "主对角线 + 垂直中轴";
+    position: absolute;
+    left: 8px;
+    bottom: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #555;
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { box-shadow: none; max-width: none; }
+    pre { font-size: 11.5px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <h1>48. 旋转图像：两次翻转 = 顺时针旋转 90°</h1>
+
+  <div class="grid">
+    <section class="card">
+      <h2>题意 & 约束</h2>
+      <span class="tag">n × n 方阵</span>
+      <span class="tag">顺时针 90°</span>
+      <span class="tag danger">不能新建矩阵</span>
+      <span class="tag ok">O(1) 空间</span>
+
+      <div class="formula">(i, j) → (j, n - 1 - i)</div>
+
+      <ul>
+        <li>第 <b>i 行</b> → 第 <span class="highlight">n - 1 - i 列</span></li>
+        <li>第 <b>j 列</b> → 第 <span class="highlight">j 行</span></li>
+        <li>目标坐标：<b>行列互换 + 列反向</b></li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>核心结论</h2>
+      <div class="formula">(i,j) → 转置 (j,i) → 行翻转 (j,n-1-i)</div>
+
+      <ul>
+        <li><b>转置</b>：沿主对角线交换 <code>matrix[i][j]</code> 与 <code>matrix[j][i]</code></li>
+        <li><b>行翻转</b>：每一行左右翻转，即关于垂直中轴翻转</li>
+        <li><b>组合效果</b>：顺时针旋转 90°</li>
+      </ul>
+
+      <div class="note">
+        记忆：<b>顺时针 = 先转置，再反转每一行</b>
+      </div>
+    </section>
+
+    <section class="card full">
+      <h2>图解流程</h2>
+      <div class="steps">
+        <div>
+          <table class="matrix">
+            <tr><td>1</td><td>2</td><td>3</td></tr>
+            <tr><td>4</td><td>5</td><td>6</td></tr>
+            <tr><td>7</td><td>8</td><td>9</td></tr>
+          </table>
+          <div class="caption">原矩阵</div>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div>
+          <table class="matrix">
+            <tr><td>1</td><td>4</td><td>7</td></tr>
+            <tr><td>2</td><td>5</td><td>8</td></tr>
+            <tr><td>3</td><td>6</td><td>9</td></tr>
+          </table>
+          <div class="caption">① 转置</div>
+        </div>
+
+        <div class="arrow">→</div>
+
+        <div>
+          <table class="matrix">
+            <tr><td>7</td><td>4</td><td>1</td></tr>
+            <tr><td>8</td><td>5</td><td>2</td></tr>
+            <tr><td>9</td><td>6</td><td>3</td></tr>
+          </table>
+          <div class="caption">② 每行翻转 = 答案</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>实现细节</h2>
+      <ul>
+        <li><b>转置范围</b>：只遍历主对角线下方，避免重复交换。</li>
+        <li><code>for j in range(i)</code>：表示 <code>j &lt; i</code>。</li>
+        <li><b>行翻转</b>：直接使用 <code>row.reverse()</code>，原地修改。</li>
+        <li><b>时间复杂度</b>：<span class="highlight">O(n²)</span></li>
+        <li><b>空间复杂度</b>：<span class="highlight">O(1)</span></li>
+      </ul>
+
+      <div class="mini-diagram">
+        <div class="axis-box"></div>
+      </div>
+
+      <div class="note">
+        易错点：不是“上下翻转”，而是<b>每一行左右翻转</b>。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>记忆卡片</h2>
+      <ul>
+        <li><span class="tag">坐标公式</span> <b>(i,j) → (j,n-1-i)</b></li>
+        <li><span class="tag">操作顺序</span> <b>转置 → 行翻转</b></li>
+        <li><span class="tag">原地修改</span> 不返回新矩阵</li>
+        <li><span class="tag danger">反例记忆</span> 先列翻转再转置也可旋转，但不是本代码顺序</li>
+      </ul>
+
+      <div class="note">
+        一句话：<b>主对角线换位，行内左右倒序。</b>
+      </div>
+    </section>
+
+    <section class="card full">
+      <h2>代码完整保留</h2>
+<pre><code>class Solution:
+    def rotate(self, matrix: List[List[int]]) -> None:
+        n = len(matrix)
+        # 第一步：转置
+        for i in range(n):
+            for j in range(i):  # 遍历对角线下方元素
+                matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+
+        # 第二步：行翻转
+        for row in matrix:
+            row.reverse()</code></pre>
+    </section>
+  </div>
+</div>
+</body>
+</html>

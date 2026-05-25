@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>189. 轮转数组｜负负得正</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#f6f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;line-height:1.35}
+  .page{max-width:1100px;margin:0 auto;padding:10px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(135deg,#e0f2fe,#eef2ff);border:1px solid #dbeafe}
+  h1{margin:0;font-size:20px;line-height:1.15;color:#0f172a}
+  h2{margin:0 0 6px;font-size:14px;color:#111827}
+  .tag{display:inline-block;padding:2px 7px;margin:1px;border-radius:999px;background:#fff;border:1px solid #c7d2fe;color:#3730a3;font-weight:700;font-size:11px;white-space:nowrap}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid}
+  .full{grid-column:1 / -1}
+  .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+  .box{border-radius:10px;padding:7px;border:1px solid #e5e7eb;background:#f9fafb;text-align:center}
+  .box b{color:#dc2626}
+  .formula{font-size:14px;font-weight:800;color:#111827;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:6px 8px;text-align:center;margin:4px 0}
+  .arr{display:flex;align-items:center;justify-content:center;gap:3px;flex-wrap:wrap;margin:4px 0}
+  .cell{min-width:24px;padding:3px 5px;border-radius:7px;text-align:center;font-weight:700;border:1px solid #d1d5db;background:#f8fafc}
+  .a{background:#ecfeff;border-color:#67e8f9;color:#155e75}
+  .b{background:#fce7f3;border-color:#f9a8d4;color:#9d174d}
+  .rev{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
+  .arrow{text-align:center;font-weight:900;color:#64748b;font-size:15px;margin:1px 0}
+  ol,ul{margin:4px 0 0 18px;padding:0}
+  li{margin:2px 0}
+  .tip{padding:6px 8px;border-radius:10px;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;font-weight:650}
+  .warn{padding:6px 8px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:650}
+  .kv{display:grid;grid-template-columns:70px 1fr;gap:4px 6px;margin-top:4px}
+  .k{font-weight:800;color:#475569}
+  pre{margin:0;background:#0f172a;color:#e5e7eb;border-radius:12px;padding:10px;overflow:auto;font-size:11.5px;line-height:1.35;border:1px solid #1e293b}
+  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace}
+  .hl{font-weight:900;color:#dc2626;background:#fee2e2;border-radius:5px;padding:0 3px}
+  .note{font-size:11px;color:#64748b}
+  @media print{
+    body{background:#fff;font-size:10.8px}
+    .page{max-width:none;padding:6mm}
+    header,.card{box-shadow:none}
+    pre{font-size:9.5px;white-space:pre-wrap}
+  }
+  @media(max-width:760px){.grid{grid-template-columns:1fr}.mini{grid-template-columns:1fr}h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <h1>189. 轮转数组｜“负负得正”三次反转</h1>
+      <div class="note">目标：将 nums 向右轮转 k 位，原地完成。</div>
+    </div>
+    <div>
+      <span class="tag">原地 O(1)</span>
+      <span class="tag">时间 O(n)</span>
+      <span class="tag">三次反转</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>核心拆分</h2>
+      <div class="formula">nums = A + B → 目标 = B + A</div>
+      <div class="arr">
+        <span class="cell a">1</span><span class="cell a">2</span><span class="cell a">3</span><span class="cell a">4</span>
+        <span class="cell b">5</span><span class="cell b">6</span><span class="cell b">7</span>
+      </div>
+      <div class="note" style="text-align:center">A = 前 n-k 个；B = 后 k 个</div>
+      <div class="arrow">↓</div>
+      <div class="arr">
+        <span class="cell b">5</span><span class="cell b">6</span><span class="cell b">7</span>
+        <span class="cell a">1</span><span class="cell a">2</span><span class="cell a">3</span><span class="cell a">4</span>
+      </div>
+      <div class="tip">记忆：右轮转 k 位 = 把最后 k 个元素搬到最前面。</div>
+    </section>
+
+    <section class="card">
+      <h2>三次反转图解</h2>
+      <div class="arr">
+        <span class="cell a">1</span><span class="cell a">2</span><span class="cell a">3</span><span class="cell a">4</span>
+        <span class="cell b">5</span><span class="cell b">6</span><span class="cell b">7</span>
+      </div>
+      <div class="arrow">① 整体反转</div>
+      <div class="arr">
+        <span class="cell rev">7</span><span class="cell rev">6</span><span class="cell rev">5</span>
+        <span class="cell rev">4</span><span class="cell rev">3</span><span class="cell rev">2</span><span class="cell rev">1</span>
+      </div>
+      <div class="arrow">② 反转前 k 个｜③ 反转剩余</div>
+      <div class="arr">
+        <span class="cell b">5</span><span class="cell b">6</span><span class="cell b">7</span>
+        <span class="cell a">1</span><span class="cell a">2</span><span class="cell a">3</span><span class="cell a">4</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>算法步骤</h2>
+      <ol>
+        <li><b>k %= n</b>：把 k 转成有效轮转次数。</li>
+        <li><b>reverse(0, n-1)</b>：A+B → rev(B)+rev(A)。</li>
+        <li><b>reverse(0, k-1)</b>：rev(B) → B。</li>
+        <li><b>reverse(k, n-1)</b>：rev(A) → A。</li>
+      </ol>
+      <div class="formula">rev(rev(X)) = X</div>
+      <div class="warn">易错：第二次反转范围是 <span class="hl">0 ~ k-1</span>，第三次是 <span class="hl">k ~ n-1</span>。</div>
+    </section>
+
+    <section class="card">
+      <h2>记忆卡片</h2>
+      <div class="mini">
+        <div class="box"><b>拆</b><br>A + B</div>
+        <div class="box"><b>整反</b><br>rev(B)+rev(A)</div>
+        <div class="box"><b>分反</b><br>B + A</div>
+      </div>
+      <div class="kv">
+        <div class="k">场景</div><div>数组右轮转 k 位</div>
+        <div class="k">关键</div><div>后 k 个元素作为 B</div>
+        <div class="k">本质</div><div>交换两个连续子数组 A、B</div>
+        <div class="k">复杂度</div><div>时间 <b>O(n)</b>；空间 <b>O(1)</b></div>
+      </div>
+    </section>
+
+    <section class="card full">
+      <h2>完整代码</h2>
+<pre><code>class Solution:
+    def rotate(self, nums: List[int], k: int) -&gt; None:
+        def reverse(i: int, j: int) -&gt; None:
+            while i &lt; j:
+                nums[i], nums[j] = nums[j], nums[i]
+                i += 1
+                j -= 1
+        
+        n = len(nums)
+        k %= n
+
+        reverse(0, n-1) # 把 nums=A+B 反转
+        reverse(0, k-1) # 单独反转 rev(B)
+        reverse(k, n-1) # 单独反转 rev(A), 数组变成 B+A</code></pre>
+    </section>
+  </main>
+</div>
+</body>
+</html>

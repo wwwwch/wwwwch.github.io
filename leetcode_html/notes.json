@@ -20,9 +20,24 @@
         "file":  "21_merge_two_sorted_lists_notes_html.html"
     },
     {
+        "number":  48,
+        "title":  "48. 旋转图像｜两次翻转 = 一次旋转",
+        "file":  "48. 旋转图像｜两次翻转 = 一次旋转.html"
+    },
+    {
+        "number":  49,
+        "title":  "49. 字母异位词分组｜哈希表分组",
+        "file":  "49. 字母异位词分组｜哈希表分组.html"
+    },
+    {
         "number":  53,
         "title":  "53.最大子数组和 —— 解法总结",
         "file":  "53_maximum_subarray_a_4_notes_html.html"
+    },
+    {
+        "number":  54,
+        "title":  "54. 螺旋矩阵｜复习速记",
+        "file":  "54. 螺旋矩阵｜复习速记.html"
     },
     {
         "number":  55,
@@ -45,6 +60,11 @@
         "file":  "73_matrix_zeroing_a_4_note_html.html"
     },
     {
+        "number":  75,
+        "title":  "75. 颜色分类 - 三指针复习笔记",
+        "file":  "75. 颜色分类 - 三指针.html"
+    },
+    {
         "number":  120,
         "title":  "120. 三角形最小路径和｜自底向上 DP",
         "file":  "120_triangle_min_path_sum_a_4_notes.html"
@@ -55,9 +75,24 @@
         "file":  "121_stock_profit_a_4_infographic.html"
     },
     {
+        "number":  128,
+        "title":  "128. 最长连续序列｜O(n) 复习速记",
+        "file":  "128. 最长连续序列｜O(n) .html"
+    },
+    {
+        "number":  136,
+        "title":  "136. 只出现一次的数字 - 异或复习笔记",
+        "file":  "136. 只出现一次的数字 - 异或.html"
+    },
+    {
         "number":  136,
         "title":  "136. 只出现一次的数字 - 多解法总结",
         "file":  "136_single_number_a_4_infographic.html"
+    },
+    {
+        "number":  169,
+        "title":  "169. 多数元素｜Boyer-Moore 摩尔投票复习笔记",
+        "file":  "169. 多数元素｜摩尔投票.html"
     },
     {
         "number":  169,
@@ -65,14 +100,29 @@
         "file":  "169_boyer_moore_majority_vote_a_4_poster.html"
     },
     {
+        "number":  189,
+        "title":  "189. 轮转数组｜负负得正",
+        "file":  "189. 轮转数组｜负负得正.html"
+    },
+    {
         "number":  206,
         "title":  "206. 反转链表 —— 解题思想总结",
         "file":  "206_linked_list_reverse_a_4_notes.html"
     },
     {
+        "number":  238,
+        "title":  "238. 除自身以外数组的乘积｜前后缀分解",
+        "file":  "238. 除了自身以外数组的乘积｜前后缀分解.html"
+    },
+    {
         "number":  239,
         "title":  "239. 滑动窗口最大值 —— 单调队列解法",
         "file":  "239_sliding_window_maximum_note_html.html"
+    },
+    {
+        "number":  240,
+        "title":  "240. 搜索二维矩阵 II - 排除法",
+        "file":  "240. 搜索二维矩阵 II - 排除法.html"
     },
     {
         "number":  283,

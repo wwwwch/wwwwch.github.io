@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>49. 字母异位词分组｜哈希表分组</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#f5f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;line-height:1.32}
+  .page{max-width:1120px;margin:0 auto;padding:10px}
+  header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(135deg,#e0f2fe,#eef2ff);border:1px solid #dbeafe}
+  h1{margin:0;font-size:20px;line-height:1.12;color:#0f172a}
+  h2{margin:0 0 6px;font-size:14px;color:#111827}
+  .sub{font-size:11px;color:#475569;margin-top:2px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid}
+  .full{grid-column:1/-1}
+  .tag{display:inline-block;padding:2px 7px;margin:1px;border-radius:999px;background:#e0f2fe;color:#075985;border:1px solid #bae6fd;font-weight:800;font-size:11px;white-space:nowrap}
+  .tag.pink{background:#fce7f3;color:#9d174d;border-color:#fbcfe8}
+  .tag.green{background:#dcfce7;color:#166534;border-color:#bbf7d0}
+  .tag.orange{background:#ffedd5;color:#9a3412;border-color:#fed7aa}
+  .formula{padding:7px 8px;border-radius:10px;background:#fef3c7;border:1px solid #fde68a;text-align:center;font-size:15px;font-weight:900;color:#111827;margin:4px 0}
+  .flow{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr;align-items:center;gap:4px;margin-top:5px}
+  .node{min-height:54px;border-radius:10px;border:1px solid #dbeafe;background:#eff6ff;padding:6px;text-align:center;font-weight:750;display:flex;flex-direction:column;justify-content:center;gap:3px}
+  .node b{font-size:13px;color:#1d4ed8}
+  .arrow{text-align:center;font-weight:900;color:#64748b;font-size:18px}
+  .mini{font-size:11px;color:#475569;font-weight:600}
+  .map{display:grid;grid-template-columns:70px 1fr;gap:5px;margin-top:5px}
+  .key{border-radius:9px;background:#0f172a;color:#e5e7eb;font-family:Consolas,monospace;font-weight:800;text-align:center;padding:6px 4px}
+  .vals{border-radius:9px;background:#f8fafc;border:1px solid #e5e7eb;padding:5px 6px;font-weight:700}
+  .pill{display:inline-block;margin:1px 2px;padding:2px 6px;border-radius:7px;background:#ecfeff;border:1px solid #67e8f9;color:#155e75;font-family:Consolas,monospace;font-weight:800}
+  .stepgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:5px}
+  .step{border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;padding:6px;text-align:center;min-height:58px}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2563eb;color:#fff;font-size:11px;font-weight:900;margin-bottom:2px}
+  .warn{padding:6px 8px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:700;margin-top:6px}
+  .ok{padding:6px 8px;border-radius:10px;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;font-weight:700;margin-top:6px}
+  .kv{display:grid;grid-template-columns:64px 1fr;gap:4px 6px;margin-top:4px}
+  .k{font-weight:900;color:#475569}
+  .v b{color:#dc2626}
+  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;background:#f1f5f9;border-radius:4px;padding:0 3px}
+  pre{margin:0;background:#0f172a;color:#e5e7eb;border-radius:12px;padding:10px;overflow:auto;font-size:11.3px;line-height:1.35;border:1px solid #1e293b;tab-size:4}
+  pre code{background:transparent;padding:0;color:inherit}
+  @media print{body{background:#fff;font-size:10.5px}.page{max-width:none;padding:6mm}.card,header{box-shadow:none}pre{font-size:9.3px;white-space:pre-wrap}.step{min-height:48px}}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.stepgrid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}h1{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <h1>49. 字母异位词分组｜哈希表分组</h1>
+      <div class="sub">目标：把互为字母异位词的字符串放到同一组。</div>
+    </div>
+    <div>
+      <span class="tag">HashMap</span>
+      <span class="tag pink">排序作 key</span>
+      <span class="tag green">保留原字符串</span>
+    </div>
+  </header>
+
+  <main class="grid">
+    <section class="card">
+      <h2>核心判断</h2>
+      <div class="formula">排序后相等 ⇒ 同一组异位词</div>
+      <div class="flow">
+        <div class="node"><b>aab</b><span class="mini">原字符串</span></div>
+        <div class="arrow">→</div>
+        <div class="node"><b>aab</b><span class="mini">排序 key</span></div>
+        <div class="arrow">←</div>
+        <div class="node"><b>aba / baa</b><span class="mini">同 key</span></div>
+      </div>
+      <div class="ok">记忆：<code>key</code> 是“统一特征”，<code>value</code> 存“原字符串列表”。</div>
+    </section>
+
+    <section class="card">
+      <h2>示例分组图</h2>
+      <div class="sub">strs = [eat, tea, tan, ate, nat, bat]</div>
+      <div class="map">
+        <div class="key">aet</div><div class="vals"><span class="pill">eat</span><span class="pill">tea</span><span class="pill">ate</span></div>
+        <div class="key">ant</div><div class="vals"><span class="pill">tan</span><span class="pill">nat</span></div>
+        <div class="key">abt</div><div class="vals"><span class="pill">bat</span></div>
+      </div>
+      <div class="warn">注意：返回的组顺序、组内顺序通常不要求固定。</div>
+    </section>
+
+    <section class="card full">
+      <h2>流程速记</h2>
+      <div class="stepgrid">
+        <div class="step"><span class="num">1</span><br><b>建表</b><br><code>d</code></div>
+        <div class="step"><span class="num">2</span><br><b>遍历</b><br><code>s</code></div>
+        <div class="step"><span class="num">3</span><br><b>排序</b><br><code>sorted_s</code></div>
+        <div class="step"><span class="num">4</span><br><b>入组</b><br><code>d[key].append(s)</code></div>
+        <div class="step"><span class="num">5</span><br><b>返回</b><br><code>list(d.values())</code></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>关键变量</h2>
+      <div class="kv">
+        <div class="k">key</div><div class="v"><b>排序后的字符串</b>，如 <code>aet</code></div>
+        <div class="k">value</div><div class="v"><b>原字符串列表</b>，如 <code>[eat, tea, ate]</code></div>
+        <div class="k">本质</div><div class="v">同类字符串映射到同一个 key</div>
+        <div class="k">结果</div><div class="v">哈希表所有 value</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>易错点</h2>
+      <div class="warn">不要把 <b>排序后的字符串</b> 加入结果；结果必须保留 <b>原字符串</b>。</div>
+      <div class="warn">需要 <code>defaultdict(list)</code> 或手动初始化空列表。</div>
+      <div class="ok">复杂度：常见写法约 <b>O(m·nlogn)</b>；m 为字符串数，n 为单词最大长度。</div>
+    </section>
+
+    <section class="card full">
+      <h2>完整代码</h2>
+<pre><code>class Solution:
+    def groupAnagrams(self, strs: List[str]) -&gt; List[List[str]]:
+        d = defaultdict(list)  # 如果 key 不在字典中，defaultdict 会自动创建一个空列表作为 value
+        
+	for s in strs:
+            sorted_s = ''.join(sorted(s))  # 把 s 排序，作为字典的 key
+            d[sorted_s].append(s)  # 排序后相同的字符串，分到同一组
+
+        return list(d.values())  # 哈希表的所有 value 就是分组结果</code></pre>
+    </section>
+  </main>
+</div>
+</body>
+</html>

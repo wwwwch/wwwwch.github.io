@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>238. 除自身以外数组的乘积｜前后缀分解</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", sans-serif;
+    background: #f6f7f9;
+    color: #222;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 14px;
+    border-radius: 14px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.08);
+  }
+  h1 {
+    font-size: 20px;
+    margin: 0 0 10px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #e8ecf3;
+  }
+  h2 {
+    font-size: 15px;
+    margin: 10px 0 6px;
+    color: #1f4f8f;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    gap: 12px;
+  }
+  .card {
+    border: 1px solid #e1e6ef;
+    border-radius: 10px;
+    padding: 10px;
+    background: #fbfcff;
+    margin-bottom: 10px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    margin: 2px 4px 2px 0;
+    border-radius: 999px;
+    background: #eaf2ff;
+    color: #24528f;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .warn {
+    background: #fff7e6;
+    border-left: 4px solid #f0a500;
+    padding: 7px 9px;
+    border-radius: 6px;
+    margin-top: 6px;
+  }
+  .formula {
+    font-family: "Consolas", monospace;
+    background: #eef5ff;
+    padding: 6px 8px;
+    border-radius: 7px;
+    margin: 5px 0;
+    font-weight: 700;
+  }
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    text-align: center;
+    margin-top: 8px;
+  }
+  .box {
+    background: #eef5ff;
+    border: 1px solid #cfe0ff;
+    border-radius: 8px;
+    padding: 8px 4px;
+    font-weight: 700;
+  }
+  .arrow {
+    color: #777;
+    font-size: 18px;
+    font-weight: 700;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 6px;
+  }
+  th, td {
+    border: 1px solid #dfe5ee;
+    padding: 5px 6px;
+    text-align: center;
+  }
+  th {
+    background: #edf3ff;
+  }
+  pre {
+    margin: 0;
+    padding: 10px;
+    background: #1f2430;
+    color: #f4f7fb;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  code {
+    font-family: "Consolas", "Menlo", monospace;
+  }
+  .key {
+    color: #c0392b;
+    font-weight: 800;
+  }
+  ul {
+    margin: 5px 0 0 18px;
+    padding: 0;
+  }
+  li { margin: 2px 0; }
+  .mini {
+    font-size: 12px;
+    color: #555;
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+  <h1>238. 除了自身以外数组的乘积｜前后缀分解</h1>
+
+  <div class="grid">
+    <div>
+      <div class="card">
+        <h2>题意</h2>
+        <p>给定整数数组 <b>nums</b>，返回 <b>answer</b>：</p>
+        <div class="formula">answer[i] = nums 中除 nums[i] 外所有元素乘积</div>
+        <p><b>示例：</b></p>
+        <div class="formula">nums = [1,2,3,4] → [24,12,8,6]</div>
+      </div>
+
+      <div class="card">
+        <h2>核心思想</h2>
+        <p><span class="tag">前缀乘积</span><span class="tag">后缀乘积</span><span class="tag">不包含自身</span></p>
+        <div class="flow">
+          <div class="box">左边乘积<br>pre[i]</div>
+          <div class="box">当前位置<br>nums[i]</div>
+          <div class="box">右边乘积<br>suf[i]</div>
+        </div>
+        <div class="formula">answer[i] = pre[i] × suf[i]</div>
+        <div class="warn">
+          <b>记忆：</b>当前位置不参与计算，只要 <span class="key">左边所有数</span> × <span class="key">右边所有数</span>。
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>定义与递推</h2>
+        <ul>
+          <li><b>pre[i]</b>：nums[0] 到 nums[i−1] 的乘积</li>
+          <li><b>suf[i]</b>：nums[i+1] 到 nums[n−1] 的乘积</li>
+        </ul>
+        <div class="formula">pre[i] = pre[i−1] × nums[i−1]</div>
+        <div class="formula">suf[i] = suf[i+1] × nums[i+1]</div>
+        <div class="formula">pre[0] = 1，suf[n−1] = 1</div>
+        <p class="mini">空子数组乘积规定为 <b>1</b>，便于递推。</p>
+      </div>
+
+      <div class="card">
+        <h2>示例拆解</h2>
+        <table>
+          <tr>
+            <th>i</th><th>nums[i]</th><th>pre[i]</th><th>suf[i]</th><th>answer[i]</th>
+          </tr>
+          <tr><td>0</td><td>1</td><td>1</td><td>24</td><td>24</td></tr>
+          <tr><td>1</td><td>2</td><td>1</td><td>12</td><td>12</td></tr>
+          <tr><td>2</td><td>3</td><td>2</td><td>4</td><td>8</td></tr>
+          <tr><td>3</td><td>4</td><td>6</td><td>1</td><td>6</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <h2>复杂度</h2>
+        <p><span class="tag">时间 O(n)</span><span class="tag">空间 O(n)</span></p>
+      </div>
+    </div>
+
+    <div>
+      <div class="card">
+        <h2>完整代码</h2>
+<pre><code>class Solution:
+    def productExceptSelf(self, nums: List[int]) -&gt; List[int]:
+        n = len(nums)
+
+        # 前缀乘积：pre[i] 表示从 nums[0] 到 nums[i−1] 的乘积
+        pre = [1] * n
+        for i in range(1, n):
+            pre[i] = pre[i-1] * nums[i-1]
+
+        # 后缀乘积：suf[i] 表示从 nums[i+1] 到 nums[n−1] 的乘积
+        suf = [1] * n
+        for i in range(n-2, -1, -1):
+            suf[i] = suf[i+1] * nums[i+1]
+        
+        return [p*s for p, s in zip(pre, suf)]</code></pre>
+      </div>
+
+      <div class="card">
+        <h2>速记模板</h2>
+        <ul>
+          <li>先从左到右：记录每个位置 <b>左边乘积</b>。</li>
+          <li>再从右到左：记录每个位置 <b>右边乘积</b>。</li>
+          <li>最后：<b>对应相乘</b>。</li>
+        </ul>
+        <div class="warn">
+          <b>易错点：</b>
+          <ul>
+            <li>pre[i] 不包含 nums[i]</li>
+            <li>suf[i] 不包含 nums[i]</li>
+            <li>边界必须初始化为 1</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

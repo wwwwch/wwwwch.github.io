@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>169. 多数元素｜Boyer-Moore 摩尔投票复习笔记</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", Arial, sans-serif;
+    background: #f6f7fb;
+    color: #1f2937;
+    font-size: 13px;
+    line-height: 1.35;
+  }
+  .page {
+    max-width: 1180px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    line-height: 1.15;
+    color: #111827;
+    letter-spacing: -0.3px;
+  }
+  h2 {
+    margin: 0 0 7px;
+    font-size: 15px;
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .sub {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .tag.hot { background: #fff7ed; color: #c2410c; }
+  .tag.ok { background: #ecfdf5; color: #047857; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 10px;
+    background: #ffffff;
+  }
+  .card.tint { background: #f9fafb; }
+  .card.key { border-color: #c7d2fe; background: #f8faff; }
+  ul, ol { margin: 6px 0 0 18px; padding: 0; }
+  li { margin: 2px 0; }
+  b, .kw { color: #111827; font-weight: 800; }
+  .formula {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-weight: 700;
+  }
+  .visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: 7px;
+  }
+  .box {
+    flex: 1;
+    min-height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 7px;
+    border-radius: 10px;
+    border: 1px solid #d1d5db;
+    background: #f9fafb;
+    font-weight: 700;
+  }
+  .box.major { background: #ecfdf5; border-color: #a7f3d0; color: #065f46; }
+  .box.other { background: #fef2f2; border-color: #fecaca; color: #991b1b; }
+  .box.left { background: #eef2ff; border-color: #c7d2fe; color: #3730a3; }
+  .arrow {
+    flex: 0 0 auto;
+    color: #6b7280;
+    font-weight: 900;
+    font-size: 18px;
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+    margin-top: 7px;
+  }
+  .step {
+    border-radius: 10px;
+    padding: 8px;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    min-height: 72px;
+  }
+  .step .n {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    border-radius: 50%;
+    background: #111827;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 4px;
+  }
+  .mini-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 12px;
+  }
+  .mini-table th, .mini-table td {
+    border: 1px solid #e5e7eb;
+    padding: 5px 6px;
+    vertical-align: top;
+  }
+  .mini-table th { background: #f3f4f6; text-align: left; }
+  .note {
+    margin-top: 7px;
+    padding: 8px;
+    border-radius: 10px;
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    color: #92400e;
+    font-weight: 700;
+  }
+  .conclusion {
+    margin-top: 7px;
+    padding: 8px;
+    border-radius: 10px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #065f46;
+    font-weight: 800;
+  }
+  pre {
+    margin: 7px 0 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: #0f172a;
+    color: #e5e7eb;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.32;
+    tab-size: 4;
+  }
+  code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+  .full { grid-column: 1 / -1; }
+  @media print {
+    body { padding: 0; background: #fff; font-size: 12px; }
+    .page { max-width: none; border: none; box-shadow: none; border-radius: 0; padding: 8px; }
+    .card { break-inside: avoid; padding: 8px; }
+    pre { font-size: 11px; }
+  }
+  @media (max-width: 800px) {
+    .grid { grid-template-columns: 1fr; }
+    .full { grid-column: auto; }
+    .steps { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+  <main class="page">
+    <h1>169. 多数元素｜Boyer-Moore 摩尔投票</h1>
+    <div class="sub">
+      <span class="tag hot">目标：找绝对众数</span>
+      <span class="tag">出现次数 &gt; ⌊n/2⌋</span>
+      <span class="tag ok">O(n) 时间</span>
+      <span class="tag ok">O(1) 空间</span>
+      <span class="tag">题目保证存在</span>
+    </div>
+
+    <section class="grid">
+      <div class="card key">
+        <h2>核心记忆：抵消</h2>
+        <div class="visual">
+          <div class="box major">多数元素<br />票数 &gt; 一半</div>
+          <div class="arrow">−</div>
+          <div class="box other">其它元素<br />总票数 &lt; 一半</div>
+          <div class="arrow">=</div>
+          <div class="box left">最后存活<br />多数元素</div>
+        </div>
+        <div class="conclusion">一对不同元素互相抵消；因为多数元素数量更多，最终留下的必是多数元素。</div>
+      </div>
+
+      <div class="card">
+        <h2>题意压缩</h2>
+        <ul>
+          <li>输入：数组 <span class="formula">nums</span>，长度 <span class="formula">n</span></li>
+          <li>输出：出现次数 <span class="formula">&gt; ⌊n/2⌋</span> 的元素</li>
+          <li><b>绝对众数</b>：比其它所有元素加起来还多</li>
+          <li>保证：答案一定存在，无需二次验证</li>
+        </ul>
+        <div class="note">易错点：不是普通最高频；必须超过半数。</div>
+      </div>
+
+      <div class="card tint">
+        <h2>变量含义</h2>
+        <table class="mini-table">
+          <thead>
+            <tr><th>变量</th><th>作用</th><th>记忆</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="formula">major</span></td><td>当前候选多数元素</td><td>台上候选人</td></tr>
+            <tr><td><span class="formula">count</span></td><td>候选元素净支持票</td><td>支持 − 反对</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card tint">
+        <h2>三步流程</h2>
+        <div class="steps">
+          <div class="step"><span class="n">1</span><br /><b>count == 0</b><br />无候选，当前元素上台</div>
+          <div class="step"><span class="n">2</span><br /><b>num == major</b><br />同阵营，支持票 +1</div>
+          <div class="step"><span class="n">3</span><br /><b>num != major</b><br />不同阵营，互相抵消 -1</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>为什么正确</h2>
+        <ul>
+          <li>删除任意两个不同元素，多数元素仍然是多数元素。</li>
+          <li>候选不是多数元素时，会被真正多数元素持续抵消，直到 <span class="formula">count = 0</span>。</li>
+          <li>真正多数元素数量超过其它元素总和，因此一定能存活到最后。</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h2>复杂度与结论</h2>
+        <ul>
+          <li><b>时间复杂度：</b><span class="formula">O(n)</span>，一次遍历</li>
+          <li><b>空间复杂度：</b><span class="formula">O(1)</span>，仅两个变量</li>
+          <li><b>最优解：</b>无需排序、哈希表或额外计数结构</li>
+        </ul>
+        <div class="conclusion">口诀：不同抵消，票空换人，多数必胜。</div>
+      </div>
+
+      <div class="card full">
+        <h2>完整代码</h2>
+<pre><code>class Solution:
+    def majorityElement(self, nums: List[int]) -&gt; int:
+        major = 0     # 当前候选多数元素
+        count = 0     # 候选元素的净支持票数
+
+        for num in nums:
+            if count == 0:    # 1. 当前无候选 → 新候选上台
+                major = num
+            if num == major:  # 2. 相同元素 → 支持票+1
+                count += 1
+            else:             # 3. 不同元素 → 反对票-1（抵消）
+                count -= 1
+
+        return major</code></pre>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

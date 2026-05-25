@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>54. 螺旋矩阵｜复习速记</title>
+<style>
+  :root{
+    --ink:#172033; --muted:#5b6475; --line:#dbe3ef; --bg:#f7f9fc;
+    --card:#ffffff; --key:#fff2c6; --blue:#e9f2ff; --green:#eaf8ef; --red:#fff0f0;
+    --code:#101828;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; padding:14px; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    font-size:13px; line-height:1.35;
+  }
+  .page{max-width:1180px; margin:0 auto;}
+  header{
+    display:flex; justify-content:space-between; align-items:flex-end; gap:10px;
+    padding:10px 12px; background:linear-gradient(135deg,#eaf2ff,#fff7dc);
+    border:1px solid var(--line); border-radius:14px; margin-bottom:10px;
+  }
+  h1{font-size:22px; margin:0; letter-spacing:.2px}
+  .subtitle{color:var(--muted); margin-top:2px}
+  .pill{display:inline-block; padding:3px 8px; border-radius:999px; background:#fff; border:1px solid var(--line); font-size:12px; white-space:nowrap}
+  .grid{display:grid; grid-template-columns:0.88fr 1.12fr; gap:10px; align-items:start;}
+  section{background:var(--card); border:1px solid var(--line); border-radius:14px; padding:10px 12px; margin-bottom:10px; box-shadow:0 1px 3px rgba(16,24,40,.04)}
+  h2{font-size:15px; margin:0 0 7px; display:flex; align-items:center; gap:6px}
+  .tag{font-size:11px; padding:2px 6px; border-radius:6px; background:var(--blue); color:#24558f; font-weight:700}
+  ul{margin:6px 0 0 18px; padding:0}
+  li{margin:3px 0}
+  b,.key{background:var(--key); padding:0 3px; border-radius:3px}
+  .note{border-left:4px solid #f2b84b; background:#fff8e6; padding:7px 8px; border-radius:8px; margin-top:7px}
+  .warn{border-left:4px solid #e25555; background:var(--red); padding:7px 8px; border-radius:8px; margin-top:7px}
+  table{width:100%; border-collapse:collapse; font-size:12px; margin-top:6px; overflow:hidden; border-radius:10px}
+  th,td{border:1px solid var(--line); padding:5px 6px; vertical-align:middle}
+  th{background:#f0f5ff; text-align:left}
+  .steps{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:7px}
+  .step{background:#f8fbff; border:1px solid var(--line); border-radius:10px; padding:7px; min-height:74px}
+  .step .dir{font-weight:800; font-size:12px; margin-bottom:4px}
+  .step .mini{font-size:11px; color:var(--muted)}
+  .matrix-wrap{display:grid; grid-template-columns:1fr 1fr; gap:10px; align-items:center}
+  .matrix{display:grid; grid-template-columns:repeat(3,44px); grid-template-rows:repeat(3,44px); gap:4px; justify-content:center}
+  .cell{display:flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:10px; background:#fff; font-weight:800; position:relative}
+  .order{position:absolute; top:2px; right:4px; font-size:10px; color:#2463ad; font-weight:700}
+  .path{font-size:12px; color:var(--muted)}
+  .path .out{display:block; margin-top:6px; background:var(--green); border:1px solid #ccebd5; padding:6px 7px; border-radius:8px; color:#285b36; font-weight:700}
+  .boundary{display:grid; grid-template-columns:repeat(4,1fr); gap:6px; margin-top:7px}
+  .bcard{padding:7px; border-radius:10px; background:#f7f9fc; border:1px solid var(--line); text-align:center}
+  .bcard strong{display:block; font-size:15px}
+  pre{margin:0; padding:10px 12px; background:var(--code); color:#f2f4f7; border-radius:12px; overflow:auto; font-size:12px; line-height:1.38; tab-size:4}
+  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace}
+  .complexity{display:flex; gap:8px; flex-wrap:wrap}
+  .complexity span{background:#f2f6fb; border:1px solid var(--line); border-radius:9px; padding:5px 8px}
+  @media print{
+    body{padding:8px; background:#fff; font-size:12px}
+    header,section{box-shadow:none; break-inside:avoid}
+    .page{max-width:none}
+    pre{font-size:10.5px; white-space:pre-wrap}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header>
+    <div>
+      <h1>54. 螺旋矩阵</h1>
+      <div class="subtitle">顺时针螺旋遍历矩阵，返回所有元素</div>
+    </div>
+    <div class="pill">核心：四边界模拟</div>
+  </header>
+
+  <div class="grid">
+    <main>
+      <section>
+        <h2>题意 <span class="tag">Goal</span></h2>
+        <ul>
+          <li>输入 <b>m × n</b> 矩阵 <code>matrix</code></li>
+          <li>按 <b>顺时针螺旋顺序</b> 返回所有元素</li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>直观图 <span class="tag">3×3 Example</span></h2>
+        <div class="matrix-wrap">
+          <div class="matrix" aria-label="spiral order matrix">
+            <div class="cell">1<span class="order">①</span></div>
+            <div class="cell">2<span class="order">②</span></div>
+            <div class="cell">3<span class="order">③</span></div>
+            <div class="cell">4<span class="order">⑧</span></div>
+            <div class="cell">5<span class="order">⑨</span></div>
+            <div class="cell">6<span class="order">④</span></div>
+            <div class="cell">7<span class="order">⑦</span></div>
+            <div class="cell">8<span class="order">⑥</span></div>
+            <div class="cell">9<span class="order">⑤</span></div>
+          </div>
+          <div class="path">
+            <b>方向循环</b><br/>
+            左 → 右<br/>
+            上 → 下<br/>
+            右 → 左<br/>
+            下 → 上
+            <span class="out">输出：[1,2,3,6,9,8,7,4,5]</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>核心变量 <span class="tag">Boundary</span></h2>
+        <div class="boundary">
+          <div class="bcard"><strong>l</strong>左边界</div>
+          <div class="bcard"><strong>r</strong>右边界</div>
+          <div class="bcard"><strong>t</strong>上边界</div>
+          <div class="bcard"><strong>b</strong>下边界</div>
+        </div>
+        <div class="note">每打印完一条边，对应边界向内收缩 <b>1</b>；若边界交错，说明遍历结束。</div>
+      </section>
+
+      <section>
+        <h2>算法流程 <span class="tag">Loop</span></h2>
+        <ul>
+          <li><b>空值处理</b>：<code>if not matrix: return []</code></li>
+          <li><b>初始化</b>：<code>l, r, t, b</code> 与结果列表 <code>ans</code></li>
+          <li><b>循环打印</b>：四个方向依次遍历，并收缩边界</li>
+          <li><b>终止条件</b>：任意边界交错立即 <code>break</code></li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>四方向速记 <span class="tag">Print → Shrink → Check</span></h2>
+        <div class="steps">
+          <div class="step">
+            <div class="dir">① 左 → 右</div>
+            <div>打印第 <b>t</b> 行</div>
+            <div class="mini"><code>t += 1</code>；查 <code>t &gt; b</code></div>
+          </div>
+          <div class="step">
+            <div class="dir">② 上 → 下</div>
+            <div>打印第 <b>r</b> 列</div>
+            <div class="mini"><code>r -= 1</code>；查 <code>l &gt; r</code></div>
+          </div>
+          <div class="step">
+            <div class="dir">③ 右 → 左</div>
+            <div>打印第 <b>b</b> 行</div>
+            <div class="mini"><code>b -= 1</code>；查 <code>t &gt; b</code></div>
+          </div>
+          <div class="step">
+            <div class="dir">④ 下 → 上</div>
+            <div>打印第 <b>l</b> 列</div>
+            <div class="mini"><code>l += 1</code>；查 <code>l &gt; r</code></div>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h2>边界表 <span class="tag">易记</span></h2>
+        <table>
+          <thead>
+            <tr><th>打印方向</th><th>打印范围</th><th>收缩</th><th>结束判断</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>左 → 右</td><td><code>l</code> 到 <code>r</code></td><td><code>t += 1</code></td><td><code>t &gt; b</code></td></tr>
+            <tr><td>上 → 下</td><td><code>t</code> 到 <code>b</code></td><td><code>r -= 1</code></td><td><code>l &gt; r</code></td></tr>
+            <tr><td>右 → 左</td><td><code>r</code> 到 <code>l</code></td><td><code>b -= 1</code></td><td><code>t &gt; b</code></td></tr>
+            <tr><td>下 → 上</td><td><code>b</code> 到 <code>t</code></td><td><code>l += 1</code></td><td><code>l &gt; r</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section>
+        <h2>复杂度 <span class="tag">Cost</span></h2>
+        <div class="complexity">
+          <span>时间：<b>O(MN)</b></span>
+          <span>额外空间：<b>O(1)</b></span>
+        </div>
+      </section>
+    </main>
+
+    <aside>
+      <section>
+        <h2>完整代码 <span class="tag">Keep All</span></h2>
+<pre><code>class Solution:
+    def spiralOrder(self, matrix: List[List[int]]) -&gt; List[int]:
+        if not matrix:
+            return []
+
+        l, r, t, b = 0, len(matrix[0])-1, 0, len(matrix)-1
+        ans = []
+
+        while True:
+            for i in range(l, r+1):
+                ans.append(matrix[t][i]) # left to right
+            t += 1
+            if t &gt; b:
+                break
+
+            for i in range(t, b+1):
+                ans.append(matrix[i][r]) # top to bottom
+            r -= 1
+            if l &gt; r:
+                break
+            
+            for i in range(r, l-1, -1):
+                ans.append(matrix[b][i]) # right to left
+            b -= 1
+            if t &gt; b:
+                break
+            
+            for i in range(b, t-1, -1):
+                ans.append(matrix[i][l]) # bottom to top
+            l += 1
+            if l &gt; r:
+                break
+
+        return ans
+
+        </code></pre>
+      </section>
+
+      <section>
+        <h2>易错点 <span class="tag">Pitfalls</span></h2>
+        <div class="warn">
+          <ul>
+            <li>每走完一条边，必须 <b>立刻检查</b> 是否越界。</li>
+            <li>判断顺序不能省略，否则单行、单列矩阵可能重复打印。</li>
+            <li>反向遍历范围：<code>range(r, l-1, -1)</code>、<code>range(b, t-1, -1)</code>。</li>
+          </ul>
+        </div>
+      </section>
+
+      <section>
+        <h2>一句话记忆 <span class="tag">Mnemonic</span></h2>
+        <div class="note">
+          <b>右下左上，走一边缩一边；缩完先判断，交错就结束。</b>
+        </div>
+      </section>
+    </aside>
+  </div>
+</div>
+</body>
+</html>
