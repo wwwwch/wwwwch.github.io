@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>73.矩阵置零｜手机端紧凑复习笔记</title>
+  <style>
+    :root{
+      --bg:#eef4ff;--paper:#ffffff;--text:#172033;--muted:#5b6475;
+      --blue:#1d4ed8;--blue2:#0f2f78;--soft:#eaf2ff;--soft2:#f7fbff;
+      --green:#15803d;--amber:#b45309;--red:#b91c1c;--line:#c7d8f7;
+      --code:#f6f9ff;--shadow:0 10px 28px rgba(29,78,216,.13)
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.42}
+    body{padding:10px}
+    .page{max-width:780px;margin:0 auto;background:var(--paper);border-radius:18px;box-shadow:var(--shadow);padding:14px 12px 18px;overflow:hidden}
+    h1{margin:0 0 10px;text-align:center;color:var(--blue2);font-size:24px;line-height:1.15;font-weight:950;letter-spacing:-.4px}
+    h2{margin:0 0 8px;color:var(--blue2);font-size:17px;line-height:1.15;font-weight:900;display:flex;align-items:center;gap:6px}
+    h3{margin:8px 0 5px;color:var(--blue2);font-size:13.5px;font-weight:900}
+    p{margin:0}.small{font-size:12px;color:var(--muted)}
+    .card{border:1px solid var(--line);background:linear-gradient(180deg,#fff,#f9fbff);border-radius:14px;padding:10px;margin:8px 0}
+    .hero{background:linear-gradient(135deg,#eff6ff,#fff7ed);border-color:#bad2fb}
+    .formula{font-size:14px;text-align:center;font-weight:850;color:#111827;background:#fff;border:1px dashed #93b4ee;border-radius:12px;padding:8px 6px}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+    .tag{display:inline-flex;align-items:center;gap:3px;border-radius:999px;padding:3px 8px;font-size:12px;font-weight:850;background:var(--soft);color:var(--blue2);border:1px solid #c8dbfb;white-space:nowrap}
+    .tag.warn{background:#fff7ed;color:#9a3412;border-color:#fed7aa}.tag.good{background:#ecfdf5;color:#166534;border-color:#bbf7d0}.tag.bad{background:#fef2f2;color:#991b1b;border-color:#fecaca}
+    .flow{display:grid;grid-template-columns:1fr;gap:6px;margin-top:6px}.step{border:1px solid #d5e3fa;background:#fff;border-radius:12px;padding:7px 8px;font-size:13px}.step b{color:var(--blue2)}.arrow{text-align:center;color:var(--blue);font-weight:900;line-height:1}
+    .method{border-left:5px solid var(--blue)}
+    .method-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:6px}.method-head h2{margin:0}.badge{font-size:12px;font-weight:950;color:#fff;background:var(--blue);border-radius:999px;padding:3px 8px;white-space:nowrap}
+    ul{margin:0;padding-left:18px;font-size:13px}li{margin:2px 0}.key{font-weight:900;color:var(--blue2)}.danger{font-weight:900;color:var(--red)}
+    .compare{display:grid;grid-template-columns:1fr;gap:7px}.cmp{border:1px solid var(--line);border-radius:12px;background:#fff;overflow:hidden}.cmp .top{display:flex;justify-content:space-between;gap:6px;align-items:center;padding:7px 8px;background:var(--soft);font-weight:900;color:var(--blue2)}.cmp .body{padding:7px 8px;font-size:13px}.cmp .body p+p{margin-top:4px}.label{font-weight:900;color:#334155}
+    table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:12.5px;border-radius:10px;overflow:hidden}th{background:var(--blue);color:white;font-weight:900;padding:6px 4px;border:1px solid #4f7ee8}td{border:1px solid var(--line);padding:6px 4px;text-align:center;vertical-align:middle;background:#fff;word-break:break-word}tr:nth-child(even) td{background:var(--soft2)}
+    .note{border:1px solid #f6c453;background:#fff8e6;border-radius:12px;padding:8px;font-size:13px}.note b{color:#92400e}
+    pre{margin:6px 0 0;padding:9px;border:1px solid #c8dbfb;border-radius:12px;background:var(--code);font-size:11px;line-height:1.32;overflow-x:hidden;white-space:pre-wrap;word-break:break-word;overflow-wrap:anywhere;tab-size:4}code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;color:#162033}.kw{color:#7c3aed;font-weight:800}.fn{color:#0369a1;font-weight:800}.cm{color:var(--green);font-weight:800}.num{color:#0f766e}.bool{color:#1d4ed8;font-weight:800}
+    .memory{background:linear-gradient(180deg,#fffdf5,#fff8e6);border-color:#f6c453}.quote{border:1.5px dashed #f2b021;border-radius:13px;padding:10px;background:#fffaf0;color:var(--blue2);font-size:16px;font-weight:950;line-height:1.45;text-align:center}
+    .print-tip{font-size:11.5px;color:var(--muted);text-align:center;margin-top:8px}
+    @media (min-width:720px){body{padding:18px}.page{padding:18px}.compare{grid-template-columns:1fr 1fr}h1{font-size:30px}pre{font-size:11.5px}}
+    @media print{body{background:#fff;padding:0}.page{max-width:none;box-shadow:none;border-radius:0;padding:10mm}.card{break-inside:avoid}pre{font-size:9.2px}.print-tip{display:none}}
+  </style>
+</head>
+<body>
+<main class="page">
+  <h1>📚 73. 矩阵置零</h1>
+
+  <section class="card hero">
+    <h2>🎯 题意压缩</h2>
+    <div class="formula">元素为 <b>0</b> ⇒ 该元素所在 <b>整行 + 整列</b> 全部置 0；要求 <b>原地修改</b>。</div>
+    <div class="tags">
+      <span class="tag">矩阵</span><span class="tag">原地算法</span><span class="tag warn">标记不能污染原数据</span><span class="tag good">核心：先标记，后置零</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🧠 一图记忆流程</h2>
+    <div class="flow">
+      <div class="step">1️⃣ 扫描矩阵：发现 <b>0</b></div>
+      <div class="arrow">↓</div>
+      <div class="step">2️⃣ 记录该 <b>行 / 列</b> 需要清零</div>
+      <div class="arrow">↓</div>
+      <div class="step">3️⃣ 再次扫描：按标记置零</div>
+      <div class="arrow">↓</div>
+      <div class="step">4️⃣ V2 最后单独处理 <b>第一行 / 第一列</b></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>📊 方法对比</h2>
+    <div class="compare">
+      <div class="cmp">
+        <div class="top"><span>V1 辅助数组</span><span class="tag">O(m+n)</span></div>
+        <div class="body">
+          <p><span class="label">标记：</span><code>row_zero</code> + <code>col_zero</code></p>
+          <p><span class="label">优点：</span>直观，不易错</p>
+          <p><span class="label">缺点：</span>额外空间</p>
+        </div>
+      </div>
+      <div class="cmp">
+        <div class="top"><span>V2 常量空间</span><span class="tag good">O(1)</span></div>
+        <div class="body">
+          <p><span class="label">标记：</span>复用第一行 + 第一列</p>
+          <p><span class="label">优点：</span>空间最优</p>
+          <p><span class="label">易错：</span>首行首列必须先保存状态</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card method">
+    <div class="method-head"><h2>🔍 V1：辅助数组法</h2><span class="badge">O(m+n)</span></div>
+    <ul>
+      <li><span class="key">行标记：</span><code>row_zero[i]</code></li>
+      <li><span class="key">列标记：</span><code>col_zero[j]</code></li>
+      <li><span class="key">两遍：</span>先标记，再置零</li>
+    </ul>
+    <h3>💻 完整代码</h3>
+    <pre><code><span class="kw">def</span> <span class="fn">setZeroes</span>(self, matrix: List[List[int]]) -&gt; None:
+    m, n = len(matrix), len(matrix[<span class="num">0</span>])
+    row_zero = [<span class="bool">False</span>] * m
+    col_zero = [<span class="bool">False</span>] * n
+
+    <span class="cm"># 第一遍：标记</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(m):
+        <span class="kw">for</span> j <span class="kw">in</span> range(n):
+            <span class="kw">if</span> matrix[i][j] == <span class="num">0</span>:
+                row_zero[i] = <span class="bool">True</span>
+                col_zero[j] = <span class="bool">True</span>
+
+    <span class="cm"># 第二遍：置零</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(m):
+        <span class="kw">if</span> row_zero[i]:
+            matrix[i] = [<span class="num">0</span>] * n      <span class="cm"># 整行清零</span>
+        <span class="kw">else</span>:
+            <span class="kw">for</span> j <span class="kw">in</span> range(n):
+                <span class="kw">if</span> col_zero[j]:
+                    matrix[i][j] = <span class="num">0</span></code></pre>
+  </section>
+
+  <section class="card method">
+    <div class="method-head"><h2>🔍 V2：常量空间法</h2><span class="badge">O(1)</span></div>
+    <ul>
+      <li><span class="key">第一行：</span>记录哪些列清零</li>
+      <li><span class="key">第一列：</span>记录哪些行清零</li>
+      <li><span class="danger">易错：</span>先存 <code>first_row_zero</code> / <code>first_col_zero</code>，最后处理首行首列</li>
+    </ul>
+    <h3>💻 完整代码</h3>
+    <pre><code><span class="kw">def</span> <span class="fn">setZeroes</span>(self, matrix: List[List[int]]) -&gt; None:
+    m, n = len(matrix), len(matrix[<span class="num">0</span>])
+    first_row_zero = any(matrix[<span class="num">0</span>][j] == <span class="num">0</span> <span class="kw">for</span> j <span class="kw">in</span> range(n))
+    first_col_zero = any(matrix[i][<span class="num">0</span>] == <span class="num">0</span> <span class="kw">for</span> i <span class="kw">in</span> range(m))
+
+    <span class="cm"># 第一遍：用第一行和第一列做标记（跳过第一行第一列）</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">1</span>, m):
+        <span class="kw">for</span> j <span class="kw">in</span> range(<span class="num">1</span>, n):
+            <span class="kw">if</span> matrix[i][j] == <span class="num">0</span>:
+                matrix[i][<span class="num">0</span>] = <span class="num">0</span>
+                matrix[<span class="num">0</span>][j] = <span class="num">0</span>
+
+    <span class="cm"># 第二遍：根据标记置零（跳过第一行第一列）</span>
+    <span class="kw">for</span> i <span class="kw">in</span> range(<span class="num">1</span>, m):
+        <span class="kw">if</span> matrix[i][<span class="num">0</span>] == <span class="num">0</span>:
+            matrix[i] = [<span class="num">0</span>] * n
+        <span class="kw">else</span>:
+            <span class="kw">for</span> j <span class="kw">in</span> range(<span class="num">1</span>, n):
+                <span class="kw">if</span> matrix[<span class="num">0</span>][j] == <span class="num">0</span>:
+                    matrix[i][j] = <span class="num">0</span>
+
+    <span class="cm"># 最后处理第一行和第一列</span>
+    <span class="kw">if</span> first_row_zero:
+        <span class="kw">for</span> j <span class="kw">in</span> range(n):
+            matrix[<span class="num">0</span>][j] = <span class="num">0</span>
+    <span class="kw">if</span> first_col_zero:
+        <span class="kw">for</span> i <span class="kw">in</span> range(m):
+            matrix[i][<span class="num">0</span>] = <span class="num">0</span></code></pre>
+  </section>
+
+  <section class="card">
+    <h2>⚠️ 易错点速查</h2>
+    <table>
+      <thead><tr><th>点</th><th>记忆</th></tr></thead>
+      <tbody>
+        <tr><td>顺序</td><td><b>先标记，后置零</b>，不能边扫边清</td></tr>
+        <tr><td>V2 标记区</td><td><code>matrix[i][0]</code> 标行，<code>matrix[0][j]</code> 标列</td></tr>
+        <tr><td>首行/列</td><td>先用变量保存，最后清零</td></tr>
+        <tr><td>遍历范围</td><td>V2 主体从 <code>1</code> 开始，跳过首行首列</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <section class="card memory">
+    <h2>💡 一句话背诵</h2>
+    <div class="quote">V1 用额外数组记行列；V2 借第一行/列当标记区，首行首列先保存、最后处理。</div>
+  </section>
+  <p class="print-tip">适合手机复习 / 截图 / 打印：单栏、自动换行、代码完整保留。</p>
+</main>
+</body>
+</html>

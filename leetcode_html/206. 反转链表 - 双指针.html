@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>206. 反转链表｜手机复习笔记</title>
+  <style>
+    :root{
+      --bg:#f6f7fb;--card:#fff;--ink:#172033;--muted:#5f6b7a;--line:#e5e9f2;
+      --blue:#2563eb;--blue2:#eff6ff;--green:#16a34a;--green2:#f0fdf4;
+      --red:#dc2626;--red2:#fef2f2;--amber:#d97706;--amber2:#fffbeb;--code:#0f172a;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;line-height:1.42;font-size:15px;}
+    body{overflow-x:hidden}
+    .page{max-width:760px;margin:0 auto;padding:10px 10px 22px;}
+    header{position:sticky;top:0;z-index:5;margin:0 -10px 8px;padding:10px 12px;background:rgba(246,247,251,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+    h1{margin:0;font-size:20px;line-height:1.2;letter-spacing:-.2px}.sub{margin:4px 0 0;color:var(--muted);font-size:12.5px}
+    .tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.tag{display:inline-flex;align-items:center;gap:3px;padding:3px 7px;border-radius:999px;background:var(--blue2);color:#1d4ed8;font-weight:700;font-size:12px}.tag.hot{background:var(--green2);color:#15803d}.tag.warn{background:var(--amber2);color:#b45309}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:14px;margin:9px 0;padding:10px 11px;box-shadow:0 4px 16px rgba(15,23,42,.045)}
+    h2{display:flex;align-items:center;gap:7px;margin:0 0 7px;font-size:16.5px;line-height:1.25}.no{display:inline-grid;place-items:center;width:24px;height:24px;border-radius:8px;background:var(--blue);color:#fff;font-size:13px;font-weight:800;flex:0 0 auto}.best{background:var(--green)}
+    h3{margin:9px 0 5px;font-size:14px;color:#1e3a8a}.p{margin:5px 0;color:var(--muted)}
+    .grid{display:grid;grid-template-columns:1fr;gap:7px}.kv{display:grid;grid-template-columns:66px 1fr;gap:6px;align-items:start}.k{font-weight:800;color:#1d4ed8}.v{color:var(--ink)}
+    ul,ol{margin:5px 0 0;padding-left:20px}li{margin:2px 0}.mini{font-size:13px;color:var(--muted)}
+    .flow{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:7px 0}.node,.null{padding:5px 8px;border-radius:9px;border:1px solid #bfdbfe;background:var(--blue2);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;font-weight:700}.null{background:#f8fafc;color:#64748b;border-color:#cbd5e1}.arrow{color:#64748b;font-weight:900}.rev{border-color:#86efac;background:var(--green2);color:#166534}
+    .tip{margin-top:7px;padding:8px 9px;border-radius:11px;border-left:4px solid var(--blue);background:var(--blue2);font-size:13.2px}.warn{border-left-color:var(--red);background:var(--red2)}.ok{border-left-color:var(--green);background:var(--green2)}
+    .formula{display:flex;gap:6px;flex-wrap:wrap;margin-top:7px}.chip{padding:5px 8px;border-radius:9px;background:#f8fafc;border:1px solid var(--line);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12.5px;font-weight:700;color:#334155}
+    .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:12px;border:1px solid var(--line);margin-top:7px}table{width:100%;min-width:560px;border-collapse:collapse;background:#fff;font-size:12.8px}th,td{padding:8px 7px;border-bottom:1px solid var(--line);text-align:center;vertical-align:middle}th{background:#0f2f6f;color:#fff;font-weight:800}td:first-child{font-weight:800;color:#1e3a8a}.stars{white-space:nowrap;color:#d97706}
+    pre{margin:7px 0 0;padding:10px;border-radius:12px;border:1px solid #d6e4ff;background:#f8fbff;color:var(--code);font:12.2px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;overflow-x:auto;white-space:pre;max-width:100%;-webkit-overflow-scrolling:touch}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace}.inline{padding:1px 5px;border-radius:6px;background:#eef2ff;color:#1e3a8a;font-size:.92em;font-weight:700}
+    details{margin-top:8px;border:1px solid var(--line);border-radius:12px;background:#fcfdff;overflow:hidden}summary{cursor:pointer;padding:9px 10px;font-weight:800;color:#1e3a8a;list-style:none}summary::-webkit-details-marker{display:none}summary:after{content:"展开完整代码";float:right;color:#64748b;font-size:12px;font-weight:600}details[open] summary:after{content:"收起"}
+    .memory{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:8px 0}.mem{padding:8px 6px;border-radius:12px;background:#fff;border:1px solid var(--line);text-align:center}.mem b{display:block;font-size:13px}.mem span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
+    .print-note{color:var(--muted);font-size:11.5px;text-align:center;margin-top:10px}
+    @media (max-width:420px){.page{padding:8px 8px 18px}header{margin:0 -8px 8px}.memory{grid-template-columns:1fr 1fr 1fr;gap:5px}.mem{padding:7px 4px}.mem b{font-size:12px}.mem span{font-size:10.5px}.kv{grid-template-columns:58px 1fr}.card{padding:9px}.flow{gap:4px}.node,.null{padding:4px 6px;font-size:12px}pre{font-size:11.5px;padding:9px}}
+    @media print{body{background:#fff}.page{max-width:none;padding:0}.card{break-inside:avoid;box-shadow:none}header{position:static;background:#fff}.table-wrap,pre{overflow:visible}pre{white-space:pre-wrap;word-break:break-word}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>🔗 206. 反转链表｜紧凑复习笔记</h1>
+      <p class="sub">核心：逐个改变 <code class="inline">next</code> 指向。首选 <b>双指针迭代</b>；递归用于理解回溯与状态传递。</p>
+      <div class="tags"><span class="tag hot">O(N)</span><span class="tag hot">原地反转</span><span class="tag">指针题</span><span class="tag warn">防断链 / 防成环</span></div>
+    </header>
+
+    <section class="memory" aria-label="记忆卡片">
+      <div class="mem"><b>存</b><span>q = pre.next</span></div>
+      <div class="mem"><b>反</b><span>pre.next = cur</span></div>
+      <div class="mem"><b>移</b><span>cur / pre 前进</span></div>
+    </section>
+
+    <section class="card">
+      <h2><span class="no best">★</span>总图：链表反转在做什么</h2>
+      <div class="flow" aria-label="反转前">
+        <span class="node">1</span><span class="arrow">→</span><span class="node">2</span><span class="arrow">→</span><span class="node">3</span><span class="arrow">→</span><span class="null">None</span>
+      </div>
+      <div class="flow" aria-label="反转后">
+        <span class="node rev">1</span><span class="arrow">←</span><span class="node rev">2</span><span class="arrow">←</span><span class="node rev">3</span><span class="arrow">←</span><span class="null">None</span>
+      </div>
+      <div class="tip ok"><b>一句话：</b>遍历每个节点，把它的 <code class="inline">next</code> 从“指向后面”改成“指向前面”。</div>
+    </section>
+
+    <section class="card">
+      <h2><span class="no best">1</span>双指针迭代法｜首选</h2>
+      <div class="grid">
+        <div class="kv"><div class="k">状态</div><div class="v"><code class="inline">cur</code>：已反转头；<code class="inline">pre</code>：当前待处理节点。</div></div>
+        <div class="kv"><div class="k">口诀</div><div class="v"><b>暂存下一 → 反向链接 → 双指针前进</b></div></div>
+        <div class="kv"><div class="k">复杂度</div><div class="v">时间 <b>O(N)</b>；空间 <b>O(1)</b>。</div></div>
+      </div>
+      <div class="formula"><span class="chip">q = pre.next</span><span class="chip">pre.next = cur</span><span class="chip">cur = pre</span><span class="chip">pre = q</span></div>
+      <div class="tip warn"><b>易错：</b>必须先保存 <code class="inline">q</code>，否则 <code class="inline">pre.next = cur</code> 后会丢失后续链表。</div>
+      <details open>
+        <summary>代码：双指针迭代</summary>
+<pre><code># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        # 双指针法：pre 指向当前处理节点，cur 指向已反转部分的头节点（即 pre 的新 next）
+        # 初始时：
+        # - pre 指向原链表头节点（待反转的第一个节点）
+        # - cur 指向 None（表示已反转部分为空）
+        cur = None
+        pre = head
+        
+        # 遍历原链表，直到 pre 为 None（即所有节点都已反转）
+        while pre is not None:
+            # 1. 保存 pre.next，防止断链后丢失后续节点
+            q = pre.next
+            
+            # 2. 将 pre 所指节点的 next 指向 cur，完成局部反转
+            pre.next = cur  
+            
+            # 3. 更新 cur：将 cur 前进到 pre 位置，代表已反转部分的新头部
+            cur = pre
+            
+            # 4. 更新 pre：移动 pre 到下一个待处理节点（之前保存的 q）
+            pre = q
+        
+        # 最终 cur 指向原链表最后一个节点，即新链表的头节点
+        return cur</code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="no">2</span>递归回溯法｜自底向上</h2>
+      <div class="grid">
+        <div class="kv"><div class="k">思想</div><div class="v">先递归到尾节点，回溯时让后继节点指回当前节点。</div></div>
+        <div class="kv"><div class="k">关键</div><div class="v"><code class="inline">head.next.next = head</code> + <code class="inline">head.next = None</code></div></div>
+        <div class="kv"><div class="k">复杂度</div><div class="v">时间 <b>O(N)</b>；递归栈空间 <b>O(N)</b>。</div></div>
+      </div>
+      <div class="flow"><span class="node">head</span><span class="arrow">→</span><span class="node">next</span><span class="arrow">变为</span><span class="node rev">head</span><span class="arrow">←</span><span class="node rev">next</span></div>
+      <div class="tip warn"><b>易错：</b><code class="inline">head.next = None</code> 不能漏，否则可能形成环。</div>
+      <details>
+        <summary>代码：递归回溯</summary>
+<pre><code># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        if not head or not head.next:
+            return head
+        new_head = self.reverseList(head.next)
+        head.next.next = head  # 将后继节点指向当前节点
+        head.next = None       # 断开原向后指针
+        return new_head 
+        </code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="no">3</span>显式状态递归｜递归版双指针</h2>
+      <div class="grid">
+        <div class="kv"><div class="k">思想</div><div class="v">把 <code class="inline">pre</code> / <code class="inline">cur</code> 作为递归参数，递归到末尾后统一改指针。</div></div>
+        <div class="kv"><div class="k">终止</div><div class="v"><code class="inline">cur == None</code> 时，<code class="inline">pre</code> 就是新头。</div></div>
+        <div class="kv"><div class="k">复杂度</div><div class="v">时间 <b>O(N)</b>；递归栈空间 <b>O(N)</b>。</div></div>
+      </div>
+      <div class="formula"><span class="chip">recur(pre, cur)</span><span class="chip">recur(cur, cur.next)</span><span class="chip">cur.next = pre</span></div>
+      <details>
+        <summary>代码：显式状态递归</summary>
+<pre><code># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+
+class Solution:
+    def reverseList(self, head: ListNode) -> ListNode:
+        # 调用辅助方法，传入前驱节点（None）和当前节点
+        return self.recur(None, head)
+    
+    def recur(self, pre: ListNode, cur: ListNode) -> ListNode:
+        """
+        递归反转链表的辅助函数
+        pre: 当前节点的前驱节点（反转后的 next 指向）
+        cur: 当前节点
+        return: 新链表的头节点（原链表尾节点）
+        """
+        if not cur:
+            return pre  # 终止条件：到达原链表末尾，pre 即为新头
+
+        head = self.recur(cur, cur.next)    # 递归处理后续节点
+
+        cur.next = pre  # 将当前节点的 next 指向前驱节点，完成反转
+
+        return head     # 返回最终的新头节点（始终是最后一个返回的 pre）</code></pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <h2><span class="no">✓</span>对比速记</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>方法</th><th>核心动作</th><th>时间</th><th>空间</th><th>推荐</th></tr></thead>
+          <tbody>
+            <tr><td>双指针迭代</td><td>存 q，改 next，前进</td><td>O(N)</td><td>O(1)</td><td class="stars">★★★★★</td></tr>
+            <tr><td>递归回溯</td><td>到底后 head.next.next=head</td><td>O(N)</td><td>O(N)</td><td class="stars">★★★☆</td></tr>
+            <tr><td>状态递归</td><td>pre / cur 参数传递</td><td>O(N)</td><td>O(N)</td><td class="stars">★★★★</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tip ok"><b>结论：</b>面试和实战优先写 <b>双指针迭代</b>；递归重点记住“回溯改指针”和“断开原指针”。</div>
+    </section>
+
+    <p class="print-note">适合手机截图 / 打印；代码块保留完整内容，横向局部滚动。</p>
+  </main>
+</body>
+</html>

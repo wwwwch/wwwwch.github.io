@@ -1,47 +1,47 @@
 ﻿[
     {
+        "number":  0,
+        "title":  "00. Python 语言基础",
+        "file":  "00. Python 语言基础.html"
+    },
+    {
         "number":  1,
-        "title":  "字节·机器学习｜HTML完整笔记",
-        "file":  "1-字节·机器学习.html"
+        "title":  "01. Linux 常用命令",
+        "file":  "01. Linux 常用命令.html"
     },
     {
-        "number":  2,
-        "title":  "大模型与 Agent 面试知识体系笔记",
-        "file":  "2-福来科技·Research.html"
+        "number":  10,
+        "title":  "10. 机器学习-课内",
+        "file":  "10. 机器学习-课内.html"
     },
     {
-        "number":  null,
-        "title":  "强化学习与智能体面试题 HTML 笔记",
-        "file":  "思特奇-AI智能体开发-笔试题.html"
+        "number":  11,
+        "title":  "11. 深度学习-课内",
+        "file":  "11. 深度学习-课内.html"
     },
     {
-        "number":  null,
-        "title":  "机器学习章节完整 HTML 笔记",
-        "file":  "机器学习-课内.html"
+        "number":  20,
+        "title":  "20. Python 全栈开发",
+        "file":  "20. Python 全栈开发.html"
     },
     {
-        "number":  null,
-        "title":  "深度学习完整HTML笔记",
-        "file":  "深度学习-课内.html"
+        "number":  111,
+        "title":  "111. 字节·机器学习",
+        "file":  "111. 字节·机器学习.html"
     },
     {
-        "number":  null,
-        "title":  "大模型部署与微调：完整面试笔记",
-        "file":  "大模型部署与微调.html"
+        "number":  112,
+        "title":  "112. 福来科技·Research",
+        "file":  "112. 福来科技·Research.html"
     },
     {
-        "number":  null,
-        "title":  "Linux 常用命令 HTML 笔记",
-        "file":  "Linux 常用命令.html"
+        "number":  113,
+        "title":  "113. 大模型部署与微调",
+        "file":  "113. 大模型部署与微调.html"
     },
     {
-        "number":  null,
-        "title":  "Python 全栈开发常用技术栈复习笔记",
-        "file":  "Python 全栈开发.html"
-    },
-    {
-        "number":  null,
-        "title":  "Python语言基础（一）至（六）精简笔记",
-        "file":  "Python 语言基础.html"
+        "number":  114,
+        "title":  "114. 思特奇-AI智能体开发-笔试题",
+        "file":  "114. 思特奇-AI智能体开发-笔试题.html"
     }
 ]

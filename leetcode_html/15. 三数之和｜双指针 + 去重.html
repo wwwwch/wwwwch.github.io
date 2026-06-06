@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>15. 三数之和｜HTML复习笔记</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    background: #f6f7fb;
+    color: #1f2937;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .page {
+    max-width: 980px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+  }
+  h1 {
+    margin: 0 0 8px;
+    font-size: 20px;
+    line-height: 1.2;
+  }
+  h2 {
+    margin: 8px 0 6px;
+    font-size: 15px;
+    border-left: 4px solid #6366f1;
+    padding-left: 6px;
+  }
+  ul, ol {
+    margin: 4px 0;
+    padding-left: 18px;
+  }
+  li { margin: 2px 0; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .card {
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 8px;
+  }
+  .tag {
+    display: inline-block;
+    padding: 2px 6px;
+    margin: 2px 3px 2px 0;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-weight: 700;
+    font-size: 12px;
+  }
+  .warn {
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #9a3412;
+    border-radius: 8px;
+    padding: 6px 8px;
+    margin-top: 5px;
+  }
+  .ok {
+    background: #ecfdf5;
+    border: 1px solid #bbf7d0;
+    color: #166534;
+    border-radius: 8px;
+    padding: 6px 8px;
+    margin-top: 5px;
+  }
+  .flow {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 4px;
+  }
+  .step {
+    background: #eef2ff;
+    border: 1px solid #c7d2fe;
+    border-radius: 8px;
+    padding: 5px 7px;
+    font-weight: 700;
+  }
+  .mini {
+    font-size: 12px;
+    color: #4b5563;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  th, td {
+    border: 1px solid #e5e7eb;
+    padding: 5px;
+    vertical-align: top;
+  }
+  th {
+    background: #f3f4f6;
+    font-weight: 700;
+  }
+  pre {
+    margin: 8px 0 0;
+    padding: 10px;
+    background: #111827;
+    color: #f9fafb;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-size: 12px;
+    line-height: 1.38;
+  }
+  code {
+    font-family: Consolas, Monaco, "Courier New", monospace;
+  }
+  .formula {
+    font-family: Consolas, Monaco, monospace;
+    background: #f3f4f6;
+    padding: 1px 4px;
+    border-radius: 4px;
+  }
+  @media (max-width: 640px) {
+    body { padding: 6px; font-size: 12px; }
+    .page { padding: 9px; border-radius: 10px; }
+    h1 { font-size: 18px; }
+    h2 { font-size: 14px; }
+    .grid { grid-template-columns: 1fr 1fr; gap: 6px; }
+    .card { padding: 6px; }
+    pre { font-size: 11px; }
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+  <h1>15. 三数之和｜双指针 + 去重</h1>
+
+  <div class="grid">
+    <section class="card">
+      <h2>题目目标</h2>
+      <p>
+        给定整数数组 <span class="formula">nums</span>，返回所有满足：
+        <span class="formula">a + b + c = 0</span> 的<strong>不重复三元组</strong>。
+      </p>
+      <div>
+        <span class="tag">排序</span>
+        <span class="tag">双指针</span>
+        <span class="tag">去重</span>
+        <span class="tag">O(n²)</span>
+      </div>
+      <div class="ok">
+        示例：<br>
+        输入：<span class="formula">[-1,0,1,2,-1,-4]</span><br>
+        输出：<span class="formula">[[-1,-1,2],[-1,0,1]]</span>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>核心思路</h2>
+      <div class="flow">
+        <div class="step">1 排序</div>
+        <div class="step">2 枚举 k</div>
+        <div class="step">3 双指针 i / j</div>
+        <div class="step">4 去重</div>
+      </div>
+      <ul>
+        <li>先排序，方便<strong>移动指针</strong>和<strong>跳过重复值</strong>。</li>
+        <li>固定 <span class="formula">nums[k]</span>，转化为：
+          <span class="formula">nums[i] + nums[j] = -nums[k]</span>
+        </li>
+        <li>
+          <span class="formula">total &lt; 0</span>：左指针右移；
+          <span class="formula">total &gt; 0</span>：右指针左移。
+        </li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>去重规则</h2>
+      <table>
+        <tr>
+          <th>位置</th>
+          <th>做法</th>
+        </tr>
+        <tr>
+          <td>第 1 个数</td>
+          <td><span class="formula">k &gt; 0 and nums[k] == nums[k-1]</span> → 跳过</td>
+        </tr>
+        <tr>
+          <td>第 2 个数</td>
+          <td>找到答案后，跳过连续相同的 <span class="formula">nums[i]</span></td>
+        </tr>
+        <tr>
+          <td>第 3 个数</td>
+          <td>找到答案后，跳过连续相同的 <span class="formula">nums[j]</span></td>
+        </tr>
+      </table>
+      <div class="warn">
+        易错点：去重必须在<strong>找到一个合法三元组后</strong>处理内层重复值。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>剪枝优化</h2>
+      <ul>
+        <li>
+          <strong>最小和 &gt; 0：</strong><br>
+          <span class="formula">nums[k] + nums[k+1] + nums[k+2] &gt; 0</span><br>
+          后面只会更大，直接 <strong>break</strong>。
+        </li>
+        <li>
+          <strong>最大和 &lt; 0：</strong><br>
+          <span class="formula">nums[k] + nums[-2] + nums[-1] &lt; 0</span><br>
+          当前 <span class="formula">k</span> 太小，直接 <strong>continue</strong>。
+        </li>
+        <li>
+          <strong>nums[k] &gt; 0：</strong>排序后后面都 ≥ 0，不可能凑 0。
+        </li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>复杂度</h2>
+      <ul>
+        <li>时间复杂度：<strong>O(n²)</strong></li>
+        <li>空间复杂度：<strong>O(1)</strong></li>
+        <li class="mini">返回结果不计入；忽略排序栈开销。</li>
+      </ul>
+    </section>
+
+    <section class="card">
+      <h2>记忆口诀</h2>
+      <ul>
+        <li><strong>先排序，定一位。</strong></li>
+        <li><strong>双指针，夹逼走。</strong></li>
+        <li><strong>小了左移，大了右移。</strong></li>
+        <li><strong>命中收集，左右去重。</strong></li>
+        <li><strong>最小大于零 break，最大小于零 continue。</strong></li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="card" style="margin-top:8px;">
+    <h2>完整代码</h2>
+    <pre><code>class Solution: 
+    def threeSum(self, nums: List[int]) -&gt; List[List[int]]:
+        n = len(nums)
+        if n &lt; 3:
+            return []  # 元素不足3个，不可能有解
+        
+        nums.sort()  # 关键步骤：排序后可以方便去重和使用双指针
+        result = []
+        
+        for k in range(n - 2):  # k遍历到倒数第三个元素
+            # 优化1: 如果第一个数已经大于0，后面不可能有解
+            if nums[k] &gt; 0:
+                break
+                
+            # 去重1: 跳过重复的第一个数
+            if k &gt; 0 and nums[k] == nums[k - 1]:
+                continue
+                
+            # 优化2: 当前k的最小可能和已经大于0
+            if nums[k] + nums[k + 1] + nums[k + 2] &gt; 0:
+                break
+                
+            # 优化3: 当前k的最大可能和仍然小于0
+            if nums[k] + nums[-2] + nums[-1] &lt; 0:
+                continue
+            
+            # 双指针法查找剩下的两个数
+            i, j = k + 1, n - 1
+            
+            while i &lt; j:
+                total = nums[k] + nums[i] + nums[j]
+                
+                if total &lt; 0:
+                    i += 1  # 和太小，左指针右移增加和
+                elif total &gt; 0:
+                    j -= 1  # 和太大，右指针左移减小和
+                else:
+                    # 找到有效三元组
+                    result.append([nums[k], nums[i], nums[j]])
+                    
+                    # 去重2: 跳过重复的第二个数
+                    while i &lt; j and nums[i] == nums[i + 1]:
+                        i += 1
+                    # 去重3: 跳过重复的第三个数
+                    while i &lt; j and nums[j] == nums[j - 1]:
+                        j -= 1
+                    
+                    # 继续寻找其他可能的组合
+                    i += 1
+                    j -= 1
+        
+        return result</code></pre>
+  </section>
+</div>
+</body>
+</html>

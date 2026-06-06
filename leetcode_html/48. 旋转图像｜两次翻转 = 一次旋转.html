@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>48. 旋转图像｜两次翻转 = 一次旋转</title>
 <style>
   * { box-sizing: border-box; }
@@ -162,6 +163,128 @@
     font-weight: 700;
     color: #555;
   }
+
+  @media (max-width: 640px) {
+    body {
+      padding: 8px;
+      font-size: 12px;
+      line-height: 1.34;
+      background: #fff;
+    }
+    .page {
+      max-width: none;
+      width: 100%;
+      border-radius: 10px;
+      padding: 8px;
+      box-shadow: none;
+    }
+    h1 {
+      margin-bottom: 7px;
+      font-size: 18px;
+      line-height: 1.18;
+    }
+    h2 {
+      margin-bottom: 5px;
+      font-size: 14px;
+      border-left-width: 4px;
+      padding-left: 6px;
+    }
+    .grid {
+      grid-template-columns: 1fr;
+      gap: 7px;
+    }
+    .card {
+      border-radius: 9px;
+      padding: 7px;
+    }
+    .tag {
+      padding: 1px 6px;
+      margin: 1px 3px 1px 0;
+      font-size: 11px;
+    }
+    .formula {
+      font-size: 15px;
+      padding: 6px;
+      margin: 6px 0;
+      border-radius: 8px;
+    }
+    ul {
+      margin: 4px 0 0 16px;
+    }
+    li {
+      margin: 1px 0;
+    }
+    .note {
+      padding: 6px;
+      margin-top: 5px;
+      border-radius: 8px;
+    }
+    .steps {
+      grid-template-columns: 1fr;
+      gap: 4px;
+      margin-top: 4px;
+    }
+    .steps > div {
+      min-width: 0;
+    }
+    .arrow {
+      font-size: 16px;
+      line-height: 1;
+      text-align: center;
+      transform: rotate(90deg);
+    }
+    .matrix td {
+      width: 28px;
+      height: 25px;
+      font-size: 12px;
+    }
+    .caption {
+      margin-top: 3px;
+      font-size: 11px;
+    }
+    .mini-diagram {
+      margin-top: 4px;
+      gap: 6px;
+    }
+    .axis-box {
+      width: 112px;
+      height: 72px;
+      border-radius: 8px;
+    }
+    .axis-box::after {
+      left: 6px;
+      bottom: 5px;
+      font-size: 10px;
+    }
+    pre {
+      padding: 7px;
+      border-radius: 8px;
+      font-size: 10.8px;
+      line-height: 1.34;
+      white-space: pre;
+      -webkit-overflow-scrolling: touch;
+    }
+    code {
+      word-break: normal;
+    }
+    .full {
+      grid-column: auto;
+    }
+  }
+
+  @media (max-width: 380px) {
+    body { padding: 6px; }
+    .page { padding: 6px; }
+    h1 { font-size: 16px; }
+    h2 { font-size: 13px; }
+    .formula { font-size: 14px; }
+    .matrix td {
+      width: 25px;
+      height: 23px;
+    }
+    pre { font-size: 10px; }
+  }
+
   @media print {
     body { background: #fff; padding: 0; }
     .page { box-shadow: none; max-width: none; }

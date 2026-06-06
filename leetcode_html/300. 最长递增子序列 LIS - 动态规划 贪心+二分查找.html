@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>300. 最长递增子序列 LIS｜紧凑复习笔记</title>
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    padding: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+    background: #f6f7fb;
+    color: #222;
+    line-height: 1.45;
+    font-size: 14px;
+  }
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .hero {
+    background: linear-gradient(135deg, #eef4ff, #f9fbff);
+    border: 1px solid #dbe7ff;
+    border-radius: 16px;
+    padding: 14px;
+    box-shadow: 0 2px 8px rgba(30, 70, 130, 0.06);
+  }
+  h1 {
+    font-size: 20px;
+    margin: 0 0 8px;
+    line-height: 1.25;
+  }
+  h2 {
+    font-size: 16px;
+    margin: 16px 0 8px;
+    padding-left: 8px;
+    border-left: 4px solid #4f7cff;
+  }
+  h3 {
+    font-size: 14px;
+    margin: 12px 0 6px;
+  }
+  p { margin: 6px 0; }
+  strong, .kw { color: #1d4ed8; font-weight: 800; }
+  .sub {
+    color: #4b5563;
+    font-size: 13px;
+  }
+  .tagbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 3px 8px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #1e3a8a;
+    font-size: 12px;
+    font-weight: 700;
+    border: 1px solid #dbe4ff;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 12px;
+    box-shadow: 0 1px 5px rgba(20, 30, 50, 0.04);
+  }
+  .mini {
+    padding: 10px;
+    border-radius: 12px;
+    background: #f9fafb;
+    border: 1px solid #eceff3;
+  }
+  .tip {
+    margin: 8px 0;
+    padding: 9px 10px;
+    border-radius: 12px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    color: #7c2d12;
+  }
+  .ok {
+    background: #ecfdf5;
+    border-color: #bbf7d0;
+    color: #065f46;
+  }
+  .warn {
+    background: #fff1f2;
+    border-color: #fecdd3;
+    color: #9f1239;
+  }
+  ul, ol {
+    margin: 6px 0 6px 20px;
+    padding: 0;
+  }
+  li { margin: 3px 0; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 8px 0;
+    background: #fff;
+    font-size: 13px;
+    table-layout: fixed;
+  }
+  th, td {
+    border: 1px solid #e5e7eb;
+    padding: 7px 6px;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  th {
+    background: #f3f6ff;
+    color: #1e3a8a;
+  }
+  .flow {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-top: 10px;
+  }
+  .formula {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    padding: 8px;
+    background: #f8fafc;
+    border: 1px dashed #cbd5e1;
+    border-radius: 10px;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  details {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 10px 12px;
+    margin: 10px 0;
+  }
+  summary {
+    cursor: pointer;
+    font-weight: 800;
+    color: #111827;
+  }
+  pre {
+    margin: 8px 0 0;
+    padding: 10px;
+    background: #111827;
+    color: #f9fafb;
+    border-radius: 12px;
+    overflow-x: auto;
+    white-space: pre;
+    font-size: 12.5px;
+    line-height: 1.45;
+    -webkit-overflow-scrolling: touch;
+  }
+  code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  }
+  :not(pre) > code {
+    background: #eef2ff;
+    color: #1e3a8a;
+    border-radius: 5px;
+    padding: 1px 4px;
+    overflow-wrap: anywhere;
+  }
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .pill {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 800;
+    background: #e0f2fe;
+    color: #075985;
+  }
+  .bad {
+    background: #fee2e2;
+    color: #991b1b;
+  }
+  .good {
+    background: #dcfce7;
+    color: #166534;
+  }
+  .memory {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 8px;
+    align-items: start;
+  }
+  .icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: grid;
+    place-items: center;
+    background: #eff6ff;
+    border: 1px solid #dbeafe;
+  }
+  @media (max-width: 520px) {
+    body { padding: 8px; font-size: 13.5px; }
+    h1 { font-size: 18px; }
+    h2 { font-size: 15px; margin-top: 14px; }
+    .hero, .card, details { border-radius: 12px; padding: 10px; }
+    .compare { grid-template-columns: 1fr; }
+    table { font-size: 12.5px; }
+    th, td { padding: 6px 5px; }
+    pre { font-size: 11.8px; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .card, .hero, details { box-shadow: none; break-inside: avoid; }
+    pre { white-space: pre-wrap; word-break: break-word; }
+  }
+</style>
+</head>
+<body>
+<main class="page">
+
+  <section class="hero">
+    <h1>300. 最长递增子序列 LIS</h1>
+    <p><strong>目标：</strong>给定整数数组 <code>nums</code>，求其中<strong>严格递增</strong>的最长子序列<strong>长度</strong>。</p>
+    <div class="tagbar">
+      <span class="tag">📌 子序列：不要求连续</span>
+      <span class="tag">⬆️ 严格递增：后者 &gt; 前者</span>
+      <span class="tag">🎯 只求长度</span>
+    </div>
+
+    <svg class="flow" viewBox="0 0 720 130" role="img" aria-label="LIS 解法演进图">
+      <rect x="10" y="20" width="190" height="70" rx="16" fill="#eef2ff" stroke="#c7d2fe"/>
+      <text x="105" y="50" text-anchor="middle" font-size="18" font-weight="700" fill="#1e3a8a">DP 发现结构</text>
+      <text x="105" y="75" text-anchor="middle" font-size="14" fill="#475569">dp[i]：以 i 结尾</text>
+
+      <path d="M210 55 H285" stroke="#64748b" stroke-width="3" marker-end="url(#arrow)"/>
+
+      <rect x="295" y="20" width="190" height="70" rx="16" fill="#ecfdf5" stroke="#bbf7d0"/>
+      <text x="390" y="50" text-anchor="middle" font-size="18" font-weight="700" fill="#166534">贪心提炼状态</text>
+      <text x="390" y="75" text-anchor="middle" font-size="14" fill="#475569">tails：最小结尾</text>
+
+      <path d="M495 55 H570" stroke="#64748b" stroke-width="3" marker-end="url(#arrow)"/>
+
+      <rect x="580" y="20" width="130" height="70" rx="16" fill="#fff7ed" stroke="#fed7aa"/>
+      <text x="645" y="50" text-anchor="middle" font-size="18" font-weight="700" fill="#9a3412">二分加速</text>
+      <text x="645" y="75" text-anchor="middle" font-size="14" fill="#475569">O(n log n)</text>
+
+      <defs>
+        <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L9,3 z" fill="#64748b"/>
+        </marker>
+      </defs>
+    </svg>
+  </section>
+
+  <section class="card">
+    <h2>核心记忆图</h2>
+    <div class="memory">
+      <div class="icon">🧩</div>
+      <div><strong>DP：</strong>“我能接在谁后面？”遍历前面所有更小元素。</div>
+    </div>
+    <div class="memory">
+      <div class="icon">🚀</div>
+      <div><strong>贪心 + 二分：</strong>“同样长度，结尾越小越好。”维护每个长度的最小结尾。</div>
+    </div>
+    <div class="tip ok">
+      <strong>进化链：</strong>DP 发现结构 → 贪心提炼状态 → 二分加速查找。
+    </div>
+  </section>
+
+  <section class="grid">
+    <article class="card">
+      <h2>V1：动态规划｜O(n²)</h2>
+      <p class="sub">适合小规模数据、面试展示 DP 思维。</p>
+
+      <h3>状态定义</h3>
+      <div class="formula">dp[i] = 以 nums[i] 结尾的最长递增子序列长度</div>
+
+      <h3>转移公式</h3>
+      <div class="formula">若 j &lt; i 且 nums[j] &lt; nums[i]：dp[i] = max(dp[i], dp[j] + 1)</div>
+
+      <h3>步骤</h3>
+      <ol>
+        <li>初始化：所有 <code>dp[i] = 1</code>。</li>
+        <li>对每个 <code>i</code>，枚举前面所有 <code>j</code>。</li>
+        <li>若 <code>nums[j] &lt; nums[i]</code>，尝试接上。</li>
+        <li>答案：<code>max(dp)</code>。</li>
+      </ol>
+
+      <div class="tip">
+        <strong>比喻：</strong>每个人问：“前面谁比我小？谁能带我走得最远？”
+      </div>
+
+      <table>
+        <tr><th>时间</th><th>空间</th><th>关键词</th></tr>
+        <tr><td>O(n²)</td><td>O(n)</td><td>枚举前驱、以 i 结尾</td></tr>
+      </table>
+    </article>
+
+    <article class="card">
+      <h2>V2：贪心 + 二分｜O(n log n)</h2>
+      <p><code>tails[L-1]</code> 表示：长度为 <code>L</code> 的递增子序列中，<strong>最小结尾值</strong>。</p>
+
+      <div class="tip ok">
+        <strong>核心：</strong>不关心具体路径，只关心每种长度下的“最优结尾”。结尾越小，未来越容易扩展。
+      </div>
+
+      <h3>更新规则</h3>
+      <ul>
+        <li><code>x &gt; tails[-1]</code>：直接追加，长度 +1。</li>
+        <li>否则：找第一个 <code>&gt;= x</code> 的位置并替换。</li>
+        <li>查找用二分：因为 <code>tails</code> 始终有序。</li>
+      </ul>
+
+      <table>
+        <tr><th>性质</th><th>结论</th><th>原因</th></tr>
+        <tr><td><code>tails</code> 有序</td><td>✅</td><td>追加或替换都保持递增</td></tr>
+        <tr><td>替换安全</td><td>✅</td><td>只优化结尾，不减少长度</td></tr>
+        <tr><td>可二分</td><td>✅</td><td>有序 → lower_bound</td></tr>
+      </table>
+
+      <div class="tip">
+        <strong>比喻：</strong><code>tails</code> 是“潜力排行榜”：记录每种长度下最有前途的结尾。
+      </div>
+    </article>
+  </section>
+
+  <section class="card">
+    <h2>对比速记</h2>
+    <div class="compare">
+      <div class="mini">
+        <p><span class="pill bad">DP</span></p>
+        <ul>
+          <li>状态真实：每个 <code>dp[i]</code> 对应真实结尾。</li>
+          <li>思路直观：枚举所有前驱。</li>
+          <li>瓶颈：双循环。</li>
+        </ul>
+      </div>
+      <div class="mini">
+        <p><span class="pill good">Greedy + Binary</span></p>
+        <ul>
+          <li><code>tails</code> 不一定是一条真实 LIS。</li>
+          <li>它是辅助状态表：维护最小结尾。</li>
+          <li>用二分把查找降到 <code>log n</code>。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tip warn">
+      <strong>易错点：</strong><code>tails</code> 的内容不是最终 LIS 本身；<strong>长度</strong>才是答案。
+    </div>
+  </section>
+
+  <details open>
+    <summary>代码 1：动态规划 O(n²)</summary>
+<pre><code>class Solution:
+    def lengthOfLIS(self, nums: List[int]) -&gt; int:
+        n = len(nums)
+        # dp[i] 表示以 nums[i] 结尾的最长递增子序列长度
+        dp = [1] * n
+
+        for i in range(n):
+            # 检查前面所有比 nums[i] 小的元素
+            for j in range(i):
+                if nums[j] &lt; nums[i]:
+                    # 可接在 nums[j] 后，更新长度
+                    dp[i] = max(dp[i], dp[j] + 1)
+
+        # 返回所有可能结尾中的最大长度
+        return max(dp)</code></pre>
+  </details>
+
+  <details open>
+    <summary>代码 2：贪心 + 二分 O(n log n)</summary>
+<pre><code>class Solution:
+    def lengthOfLIS(self, nums: List[int]) -&gt; int:
+        tails = []  # 维护一个数组：tails[i] 表示长度为 i+1 的递增子序列的最小结尾值
+
+        # 遍历每个数字，动态更新 tails 数组
+        for i in range(len(nums)):
+            tails = self.tails_update(nums[i], tails)
+
+        # 最终 tails 的长度就是最长递增子序列的长度
+        return len(tails)
+
+    def tails_update(self, num_i: int, tails: List[int]) -&gt; List[int]:
+        """
+        更新 tails 数组：
+        - 若 num_i 大于所有结尾，则追加（延长序列）
+        - 否则，替换第一个 &gt;= num_i 的元素（保持相同长度下的最小结尾）
+        """
+        left, right = 0, len(tails)  # 注意：right 指向插入位置上限，不一定是最后一个索引
+
+        # 使用二分查找找到第一个 &gt;= num_i 的位置（即 bisect_left）
+        while left &lt; right:
+            mid = (left + right) // 2
+            if tails[mid] &lt; num_i:
+                left = mid + 1  # 往右找
+            else:
+                right = mid     # 往左找第一个满足的位置
+
+        # 此时 left 就是要插入/替换的位置
+        if left == len(tails):
+            tails.append(num_i)      # 可以延长最长序列
+        else:
+            tails[left] = num_i      # 替换，维持更优结尾
+
+        return tails</code></pre>
+  </details>
+
+  <section class="card">
+    <h2>最后背诵版</h2>
+    <p><strong>LIS</strong> 求严格递增子序列最大长度。</p>
+    <p><strong>DP：</strong><code>dp[i]</code> 表示以 <code>nums[i]</code> 结尾，枚举 <code>j &lt; i</code> 且 <code>nums[j] &lt; nums[i]</code>。</p>
+    <p><strong>优化：</strong>用 <code>tails</code> 记录每种长度的最小结尾；追加或替换第一个 <code>&gt;= x</code> 的位置。</p>
+    <p><strong>结论：</strong><code>len(tails)</code> 就是答案；<code>tails</code> 本身不一定是最终序列。</p>
+  </section>
+
+</main>
+</body>
+</html>

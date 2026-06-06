@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>347. 前 K 个高频元素｜手机端紧凑复习笔记</title>
+<style>
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    padding: 8px;
+    background: #f4f6fb;
+    color: #172033;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+      "Microsoft YaHei", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.42;
+  }
+  .page {
+    width: min(100%, 780px);
+    margin: 0 auto;
+  }
+  h1 {
+    margin: 4px 0 6px;
+    font-size: 19px;
+    line-height: 1.22;
+    letter-spacing: .2px;
+  }
+  h2 {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 12px 0 6px;
+    font-size: 15px;
+    line-height: 1.2;
+  }
+  h2::before {
+    content: "";
+    width: 4px;
+    height: 16px;
+    border-radius: 6px;
+    background: #4f46e5;
+    flex: 0 0 auto;
+  }
+  p { margin: 4px 0; }
+  ul, ol {
+    margin: 4px 0;
+    padding-left: 18px;
+  }
+  li { margin: 2px 0; }
+  .card {
+    margin: 7px 0;
+    padding: 9px;
+    border: 1px solid #e4e7f0;
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, .055);
+  }
+  .hero {
+    padding: 10px;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #eef2ff 0%, #ffffff 58%, #ecfdf5 100%);
+    border: 1px solid #dbe3ff;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 7px;
+  }
+  .tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 7px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+  .tag.ok { background: #ecfdf5; color: #047857; }
+  .tag.warn { background: #fff7ed; color: #c2410c; }
+  .tag.dark { background: #111827; color: #f9fafb; }
+  .key { color: #dc2626; font-weight: 800; }
+  .muted { color: #667085; }
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 5px;
+  }
+  .step {
+    position: relative;
+    padding: 8px 8px 8px 38px;
+    border-radius: 10px;
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+  }
+  .bubble {
+    position: absolute;
+    left: 8px;
+    top: 8px;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    background: #4f46e5;
+    color: white;
+    font-weight: 800;
+    font-size: 12px;
+  }
+  .arrow {
+    text-align: center;
+    color: #98a2b3;
+    font-weight: 900;
+    line-height: 1;
+    margin: -2px 0;
+  }
+  .mini-diagram {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    align-items: center;
+    gap: 4px;
+    margin: 6px 0 2px;
+  }
+  .node {
+    min-height: 42px;
+    padding: 7px 5px;
+    border-radius: 10px;
+    text-align: center;
+    background: #f1f5f9;
+    border: 1px solid #dbe2ea;
+    font-weight: 750;
+    word-break: break-word;
+  }
+  .node b { display: block; font-size: 12px; color: #111827; }
+  .node code { font-size: 11px; }
+  .arr { color: #64748b; font-weight: 900; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 5px 0;
+    table-layout: fixed;
+    word-break: break-word;
+  }
+  th, td {
+    border: 1px solid #e5e7eb;
+    padding: 5px 6px;
+    text-align: left;
+    vertical-align: top;
+  }
+  th {
+    width: 31%;
+    background: #f3f4f6;
+    font-weight: 800;
+  }
+  code {
+    max-width: 100%;
+    padding: 1px 4px;
+    border-radius: 5px;
+    background: #f3f4f6;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: .94em;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  pre {
+    margin: 6px 0 0;
+    padding: 9px;
+    border-radius: 10px;
+    background: #111827;
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+    overflow-x: hidden;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    font-size: 11.5px;
+    line-height: 1.4;
+  }
+  pre code {
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .tips {
+    margin-top: 6px;
+    padding: 7px 8px;
+    border-left: 4px solid #f59e0b;
+    border-radius: 9px;
+    background: #fffbeb;
+  }
+  .okbox {
+    padding: 7px 8px;
+    border-left: 4px solid #10b981;
+    border-radius: 9px;
+    background: #ecfdf5;
+  }
+  .memory {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+  }
+  .formula {
+    padding: 7px 6px;
+    border-radius: 10px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-weight: 800;
+    text-align: center;
+  }
+  .formula small {
+    display: block;
+    margin-bottom: 2px;
+    color: #4f46e5;
+    font-size: 11px;
+    font-weight: 800;
+  }
+  .checklist li::marker { color: #ef4444; }
+  .footer {
+    margin: 8px 0 2px;
+    color: #667085;
+    font-size: 11px;
+    text-align: center;
+  }
+  @media (max-width: 380px) {
+    body { padding: 6px; font-size: 12.5px; }
+    h1 { font-size: 17px; }
+    .card { padding: 8px; border-radius: 10px; }
+    .mini-diagram {
+      grid-template-columns: 1fr;
+    }
+    .arr { text-align: center; transform: rotate(90deg); }
+    .memory { grid-template-columns: 1fr; }
+  }
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page { width: 100%; max-width: none; }
+    .card, .hero {
+      box-shadow: none;
+      break-inside: avoid;
+      page-break-inside: avoid;
+    }
+    pre { white-space: pre-wrap; }
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <header class="hero">
+    <h1>347. 前 K 个高频元素</h1>
+    <p><b>目标：</b>返回数组中<span class="key">频率最高的 k 个元素</span>，顺序不限。</p>
+    <div class="tags">
+      <span class="tag">哈希表</span>
+      <span class="tag">桶排序</span>
+      <span class="tag ok">时间 O(n)</span>
+      <span class="tag ok">空间 O(n)</span>
+      <span class="tag warn">倒序取高频</span>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2>一图记法</h2>
+    <div class="mini-diagram">
+      <div class="node"><b>Counter</b><code>x → c</code></div>
+      <div class="arr">→</div>
+      <div class="node"><b>Bucket</b><code>buckets[c]</code></div>
+      <div class="arr">→</div>
+      <div class="node"><b>Reverse</b><code>高频 → 低频</code></div>
+    </div>
+    <div class="tips"><b>记忆句：</b><span class="key">数频率 → 按频率入桶 → 倒扫够 k 返回</span>。</div>
+  </section>
+
+  <section class="card">
+    <h2>题意压缩</h2>
+    <table>
+      <tr>
+        <th>输入</th>
+        <td><code>nums = [1,1,1,2,2,3], k = 2</code></td>
+      </tr>
+      <tr>
+        <th>输出</th>
+        <td><code>[1,2]</code>，也可 <code>[2,1]</code></td>
+      </tr>
+      <tr>
+        <th>本质</th>
+        <td>找<span class="key">出现次数排名前 k</span> 的元素。</td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>步骤图</h2>
+    <div class="flow">
+      <div class="step"><span class="bubble">1</span><b>统计频率</b><br><code>cnt = Counter(nums)</code></div>
+      <div class="arrow">↓</div>
+      <div class="step"><span class="bubble">2</span><b>建立桶</b><br><code>buckets[c].append(x)</code>，桶下标 = 频率。</div>
+      <div class="arrow">↓</div>
+      <div class="step"><span class="bubble">3</span><b>倒序收集</b><br>从 <code>max_cnt</code> 到 <code>1</code>，<code>len(ans) == k</code> 立即返回。</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>关键结构</h2>
+    <table>
+      <tr><th><code>cnt</code></th><td>元素 → 出现次数。</td></tr>
+      <tr><th><code>max_cnt</code></th><td>最大频率，决定桶数组长度。</td></tr>
+      <tr><th><code>buckets[c]</code></th><td>所有出现 <code>c</code> 次的元素。</td></tr>
+      <tr><th><code>ans</code></th><td>答案数组，收集前 <code>k</code> 个高频元素。</td></tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>速记卡</h2>
+    <div class="memory">
+      <div class="formula"><small>数</small><code>Counter(nums)</code></div>
+      <div class="formula"><small>桶</small><code>max_cnt + 1</code></div>
+      <div class="formula"><small>放</small><code>buckets[c].append(x)</code></div>
+      <div class="formula"><small>取</small><code>reversed(buckets)</code></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>易错点</h2>
+    <ul class="checklist">
+      <li><span class="key">桶下标就是频率</span>，不是元素值。</li>
+      <li><code>buckets</code> 长度为 <code>max_cnt + 1</code>，保留频率下标。</li>
+      <li>必须<span class="key">倒序扫桶</span>，高频优先。</li>
+      <li>同桶频率相同，<span class="key">不需要排序</span>。</li>
+      <li>题目保证答案唯一，可在 <code>len(ans) == k</code> 时返回。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>完整代码</h2>
+<pre><code>class Solution:
+    def topKFrequent(self, nums: List[int], k: int) -&gt; List[int]:
+        # 第一步：统计每个元素的出现次数
+        cnt = Counter(nums)
+        max_cnt = max(cnt.values())
+
+        # 第二步：把出现次数相同的元素，放到同一个桶中
+        buckets = [[] for _ in range(max_cnt + 1)]  # 也可以用 defaultdict(list)
+        for x, c in cnt.items():
+            buckets[c].append(x)
+
+        # 第三步：倒序遍历 buckets，把出现次数前 k 大的元素加入答案
+        ans = []
+        for bucket in reversed(buckets):
+            ans += bucket
+            # 注意题目保证答案唯一，一定会出现恰好等于 k 的情况
+            if len(ans) == k:
+                return ans</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>复杂度 & 结论</h2>
+    <table>
+      <tr><th>时间</th><td><code>O(n)</code>：统计 + 入桶 + 扫桶。</td></tr>
+      <tr><th>空间</th><td><code>O(n)</code>：哈希表 + 桶数组。</td></tr>
+    </table>
+    <div class="okbox">
+      <b>结论：</b><span class="key">Counter 统计频率</span>，<span class="key">桶下标表示频率</span>，再<span class="key">倒序收集前 k 个</span>。
+    </div>
+  </section>
+
+  <div class="footer">手机端单栏｜紧凑复习｜截图 / 打印友好</div>
+
+</div>
+</body>
+</html>

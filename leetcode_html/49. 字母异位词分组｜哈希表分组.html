@@ -6,42 +6,81 @@
 <title>49. 字母异位词分组｜哈希表分组</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:#f5f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;line-height:1.32}
-  .page{max-width:1120px;margin:0 auto;padding:10px}
-  header{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(135deg,#e0f2fe,#eef2ff);border:1px solid #dbeafe}
-  h1{margin:0;font-size:20px;line-height:1.12;color:#0f172a}
-  h2{margin:0 0 6px;font-size:14px;color:#111827}
-  .sub{font-size:11px;color:#475569;margin-top:2px}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid}
+  html{-webkit-text-size-adjust:100%}
+  body{margin:0;background:#f5f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;line-height:1.35}
+  .page{max-width:1120px;margin:0 auto;padding:8px}
+  header{display:flex;justify-content:space-between;align-items:flex-start;gap:6px;margin-bottom:6px;padding:8px 9px;border-radius:11px;background:linear-gradient(135deg,#e0f2fe,#eef2ff);border:1px solid #dbeafe}
+  h1{margin:0;font-size:19px;line-height:1.12;color:#0f172a;letter-spacing:-.2px}
+  h2{margin:0 0 5px;font-size:14px;color:#111827;line-height:1.2}
+  .sub{font-size:11px;color:#475569;margin-top:2px;line-height:1.3}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:11px;padding:7px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid}
   .full{grid-column:1/-1}
-  .tag{display:inline-block;padding:2px 7px;margin:1px;border-radius:999px;background:#e0f2fe;color:#075985;border:1px solid #bae6fd;font-weight:800;font-size:11px;white-space:nowrap}
+  .tag{display:inline-block;padding:2px 6px;margin:1px;border-radius:999px;background:#e0f2fe;color:#075985;border:1px solid #bae6fd;font-weight:800;font-size:10.5px;white-space:nowrap;line-height:1.25}
   .tag.pink{background:#fce7f3;color:#9d174d;border-color:#fbcfe8}
   .tag.green{background:#dcfce7;color:#166534;border-color:#bbf7d0}
   .tag.orange{background:#ffedd5;color:#9a3412;border-color:#fed7aa}
-  .formula{padding:7px 8px;border-radius:10px;background:#fef3c7;border:1px solid #fde68a;text-align:center;font-size:15px;font-weight:900;color:#111827;margin:4px 0}
-  .flow{display:grid;grid-template-columns:1fr 22px 1fr 22px 1fr;align-items:center;gap:4px;margin-top:5px}
-  .node{min-height:54px;border-radius:10px;border:1px solid #dbeafe;background:#eff6ff;padding:6px;text-align:center;font-weight:750;display:flex;flex-direction:column;justify-content:center;gap:3px}
-  .node b{font-size:13px;color:#1d4ed8}
-  .arrow{text-align:center;font-weight:900;color:#64748b;font-size:18px}
-  .mini{font-size:11px;color:#475569;font-weight:600}
-  .map{display:grid;grid-template-columns:70px 1fr;gap:5px;margin-top:5px}
-  .key{border-radius:9px;background:#0f172a;color:#e5e7eb;font-family:Consolas,monospace;font-weight:800;text-align:center;padding:6px 4px}
-  .vals{border-radius:9px;background:#f8fafc;border:1px solid #e5e7eb;padding:5px 6px;font-weight:700}
-  .pill{display:inline-block;margin:1px 2px;padding:2px 6px;border-radius:7px;background:#ecfeff;border:1px solid #67e8f9;color:#155e75;font-family:Consolas,monospace;font-weight:800}
-  .stepgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-top:5px}
-  .step{border-radius:10px;background:#f9fafb;border:1px solid #e5e7eb;padding:6px;text-align:center;min-height:58px}
-  .num{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#2563eb;color:#fff;font-size:11px;font-weight:900;margin-bottom:2px}
-  .warn{padding:6px 8px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:700;margin-top:6px}
-  .ok{padding:6px 8px;border-radius:10px;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;font-weight:700;margin-top:6px}
-  .kv{display:grid;grid-template-columns:64px 1fr;gap:4px 6px;margin-top:4px}
+  .formula{padding:6px 7px;border-radius:9px;background:#fef3c7;border:1px solid #fde68a;text-align:center;font-size:14px;font-weight:900;color:#111827;margin:3px 0}
+  .flow{display:grid;grid-template-columns:1fr 18px 1fr 18px 1fr;align-items:center;gap:3px;margin-top:4px}
+  .node{min-height:46px;border-radius:9px;border:1px solid #dbeafe;background:#eff6ff;padding:5px;text-align:center;font-weight:750;display:flex;flex-direction:column;justify-content:center;gap:2px}
+  .node b{font-size:12.5px;color:#1d4ed8;line-height:1.15}
+  .arrow{text-align:center;font-weight:900;color:#64748b;font-size:16px;line-height:1}
+  .mini{font-size:10.5px;color:#475569;font-weight:600;line-height:1.2}
+  .map{display:grid;grid-template-columns:58px 1fr;gap:4px;margin-top:4px}
+  .key{border-radius:8px;background:#0f172a;color:#e5e7eb;font-family:Consolas,monospace;font-weight:800;text-align:center;padding:5px 3px;font-size:11px}
+  .vals{border-radius:8px;background:#f8fafc;border:1px solid #e5e7eb;padding:4px 5px;font-weight:700;min-width:0}
+  .pill{display:inline-block;margin:1px;padding:1px 5px;border-radius:7px;background:#ecfeff;border:1px solid #67e8f9;color:#155e75;font-family:Consolas,monospace;font-weight:800;font-size:11px;line-height:1.35}
+  .stepgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;margin-top:4px}
+  .step{border-radius:9px;background:#f9fafb;border:1px solid #e5e7eb;padding:5px;text-align:center;min-height:50px;line-height:1.25}
+  .num{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;border-radius:50%;background:#2563eb;color:#fff;font-size:10px;font-weight:900;margin-bottom:1px}
+  .warn{padding:5px 7px;border-radius:9px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:700;margin-top:5px;line-height:1.3}
+  .ok{padding:5px 7px;border-radius:9px;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;font-weight:700;margin-top:5px;line-height:1.3}
+  .kv{display:grid;grid-template-columns:54px 1fr;gap:3px 5px;margin-top:3px}
   .k{font-weight:900;color:#475569}
+  .v{min-width:0}
   .v b{color:#dc2626}
-  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;background:#f1f5f9;border-radius:4px;padding:0 3px}
-  pre{margin:0;background:#0f172a;color:#e5e7eb;border-radius:12px;padding:10px;overflow:auto;font-size:11.3px;line-height:1.35;border:1px solid #1e293b;tab-size:4}
-  pre code{background:transparent;padding:0;color:inherit}
+  code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;background:#f1f5f9;border-radius:4px;padding:0 3px;word-break:break-word}
+  pre{margin:0;background:#0f172a;color:#e5e7eb;border-radius:10px;padding:8px;overflow:auto;font-size:11px;line-height:1.35;border:1px solid #1e293b;tab-size:4;-webkit-overflow-scrolling:touch}
+  pre code{background:transparent;padding:0;color:inherit;word-break:normal}
+
+  @media(max-width:760px){
+    body{font-size:11.5px;line-height:1.3;background:#f8fafc}
+    .page{width:100%;padding:6px}
+    header{display:block;margin-bottom:6px;padding:7px;border-radius:10px}
+    h1{font-size:16px;line-height:1.18;margin-bottom:3px}
+    h2{font-size:13px;margin-bottom:4px}
+    .sub{font-size:10.5px;line-height:1.25}
+    header>div:last-child{margin-top:5px;display:flex;gap:3px;flex-wrap:wrap}
+    .grid{grid-template-columns:1fr;gap:6px}
+    .full{grid-column:auto}
+    .card{padding:6px;border-radius:10px;box-shadow:none}
+    .formula{font-size:13px;padding:5px 6px;margin:3px 0}
+    .flow{grid-template-columns:1fr;gap:3px;margin-top:4px}
+    .node{min-height:auto;padding:5px 6px;gap:1px}
+    .node b{font-size:12px}
+    .arrow{font-size:14px;transform:rotate(90deg);height:12px;line-height:12px}
+    .map{grid-template-columns:50px 1fr;gap:3px}
+    .key,.vals{border-radius:7px;padding:4px}
+    .pill{font-size:10.5px;padding:1px 4px}
+    .stepgrid{grid-template-columns:repeat(5,minmax(58px,1fr));gap:3px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch}
+    .step{min-height:47px;padding:4px 3px;font-size:10.5px;white-space:nowrap}
+    .num{width:15px;height:15px;font-size:9px}
+    .kv{grid-template-columns:48px 1fr;gap:3px 4px}
+    .warn,.ok{padding:5px 6px;margin-top:4px}
+    pre{font-size:10.5px;line-height:1.32;padding:7px;border-radius:9px;white-space:pre;max-width:100%}
+  }
+
+  @media(max-width:420px){
+    .page{padding:5px}
+    body{font-size:11px}
+    h1{font-size:15px}
+    .tag{font-size:10px;padding:1px 5px}
+    .card{padding:5px}
+    .stepgrid{grid-template-columns:repeat(5,56px)}
+    pre{font-size:10px}
+  }
+
   @media print{body{background:#fff;font-size:10.5px}.page{max-width:none;padding:6mm}.card,header{box-shadow:none}pre{font-size:9.3px;white-space:pre-wrap}.step{min-height:48px}}
-  @media(max-width:760px){.grid{grid-template-columns:1fr}.full{grid-column:auto}.stepgrid{grid-template-columns:1fr}.flow{grid-template-columns:1fr}.arrow{transform:rotate(90deg)}h1{font-size:18px}}
 </style>
 </head>
 <body>
@@ -117,7 +156,7 @@
     def groupAnagrams(self, strs: List[str]) -&gt; List[List[str]]:
         d = defaultdict(list)  # 如果 key 不在字典中，defaultdict 会自动创建一个空列表作为 value
         
-	for s in strs:
+        for s in strs:
             sorted_s = ''.join(sorted(s))  # 把 s 排序，作为字典的 key
             d[sorted_s].append(s)  # 排序后相同的字符串，分到同一组
 

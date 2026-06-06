@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>53. 最大子数组和｜前缀和 + 贪心 / 动态规划</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    padding: 10px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "PingFang SC",
+      "Microsoft YaHei", sans-serif;
+    background: #f6f7fb;
+    color: #222;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .page {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 20px;
+    line-height: 1.25;
+    margin: 0 0 10px;
+    padding: 12px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #e8f1ff, #f4f8ff);
+    color: #123;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin: 14px 0 8px;
+    padding-left: 8px;
+    border-left: 4px solid #4f7cff;
+  }
+
+  h3 {
+    font-size: 14px;
+    margin: 10px 0 6px;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.06);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin: 6px 0;
+  }
+
+  .tag {
+    display: inline-block;
+    padding: 2px 7px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+    background: #eef3ff;
+    color: #315cd6;
+  }
+
+  .tag.warn {
+    background: #fff4df;
+    color: #a56400;
+  }
+
+  .tag.ok {
+    background: #eaf8ef;
+    color: #217a3a;
+  }
+
+  ul {
+    margin: 6px 0 6px 18px;
+    padding: 0;
+  }
+
+  li {
+    margin: 3px 0;
+  }
+
+  strong {
+    color: #111;
+  }
+
+  .note {
+    padding: 8px 9px;
+    border-radius: 10px;
+    background: #fff9e8;
+    border-left: 4px solid #ffb020;
+    margin: 8px 0;
+  }
+
+  .formula {
+    padding: 8px;
+    border-radius: 10px;
+    background: #f1f8ff;
+    font-weight: 700;
+    overflow-wrap: anywhere;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 6px;
+    font-size: 13px;
+  }
+
+  th,
+  td {
+    border: 1px solid #e1e5ee;
+    padding: 6px;
+    text-align: left;
+    vertical-align: top;
+    word-break: break-word;
+  }
+
+  th {
+    background: #f0f4ff;
+  }
+
+  code {
+    font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 12.5px;
+  }
+
+  pre {
+    margin: 8px 0 0;
+    padding: 10px;
+    border-radius: 10px;
+    background: #1f2430;
+    color: #f7f7f7;
+    overflow-x: auto;
+    white-space: pre;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .flow {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    margin-top: 6px;
+  }
+
+  .step {
+    padding: 8px;
+    border-radius: 10px;
+    background: #f7f9ff;
+    border: 1px solid #e4e9f8;
+  }
+
+  .mini {
+    font-size: 12px;
+    color: #555;
+  }
+
+  @media print {
+    body {
+      background: #fff;
+      padding: 0;
+      font-size: 12px;
+    }
+
+    .card {
+      box-shadow: none;
+      border: 1px solid #ddd;
+      break-inside: avoid;
+    }
+
+    pre {
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+</style>
+</head>
+
+<body>
+<div class="page">
+
+  <h1>53. 最大子数组和｜前缀和 + 贪心 / 动态规划</h1>
+
+  <section class="card">
+    <h2>题目核心</h2>
+    <p>
+      给定整数数组 <code>nums</code>，找出一个<strong>连续子数组</strong>，使其和最大，返回最大和。
+    </p>
+    <div class="tags">
+      <span class="tag">连续子数组</span>
+      <span class="tag">至少 1 个元素</span>
+      <span class="tag ok">O(n)</span>
+      <span class="tag warn">不能为空</span>
+    </div>
+
+    <table>
+      <tr>
+        <th>输入</th>
+        <td><code>[-2,1,-3,4,-1,2,1,-5,4]</code></td>
+      </tr>
+      <tr>
+        <th>输出</th>
+        <td><code>6</code></td>
+      </tr>
+      <tr>
+        <th>原因</th>
+        <td><code>[4,-1,2,1]</code> 的和最大，为 <strong>6</strong></td>
+      </tr>
+    </table>
+  </section>
+
+  <section class="card">
+    <h2>一眼记忆</h2>
+
+    <div class="formula">
+      DP：以 i 结尾的最大和 = max(自己, 自己 + 前一个结尾最大和)
+    </div>
+
+    <br />
+
+    <div class="formula">
+      前缀和：当前最大子数组和 = 当前前缀和 - 历史最小前缀和
+    </div>
+
+    <ul>
+      <li><strong>动态规划</strong>：决定“要不要接上前面的子数组”。</li>
+      <li><strong>前缀和 + 贪心</strong>：用当前前缀和减去之前最小前缀和。</li>
+      <li>两种方法时间复杂度都是 <strong>O(n)</strong>。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>V1｜前缀和 + 贪心</h2>
+
+    <h3>核心思路</h3>
+    <div class="flow">
+      <div class="step">① 子数组和 = 两个前缀和之差</div>
+      <div class="step">② 遍历时维护 <strong>当前前缀和 con_sum</strong></div>
+      <div class="step">③ 维护历史最小前缀和 <strong>min_pre</strong></div>
+      <div class="step">④ 用 <code>con_sum - min_pre</code> 更新答案</div>
+    </div>
+
+    <div class="note">
+      ⚠️ 易错点：子数组<strong>不能为空</strong>，所以要先计算
+      <code>con_sum - min_pre</code>，再更新 <code>min_pre</code>。
+      类比股票：不能同一天买入又卖出。
+    </div>
+
+    <pre><code>class Solution: 
+    def maxSubArray(self, nums: List[int]) -> int:
+        ans = con_sum = nums[0]
+        min_pre = min(0, nums[0])
+
+        for i in range(1, len(nums)):
+            con_sum += nums[i]  # 当前的前缀和
+            ans = max(ans, (con_sum - min_pre)) # 减去前缀和的最小值
+            min_pre = min(min_pre, con_sum)     # 维护前缀和的最小值
+
+        return ans</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>V2｜动态规划</h2>
+
+    <h3>状态定义</h3>
+    <div class="formula">
+      dp[i]：以 nums[i] 结尾的最大连续子数组和
+    </div>
+
+    <h3>状态转移</h3>
+    <div class="formula">
+      dp[i] = max(nums[i], dp[i-1] + nums[i])
+    </div>
+
+    <ul>
+      <li><code>nums[i]</code>：从当前元素重新开始。</li>
+      <li><code>dp[i-1] + nums[i]</code>：接上前面的最大子数组。</li>
+      <li>最终答案：<code>max(dp)</code>。</li>
+    </ul>
+
+    <pre><code>class Solution:
+    def maxSubArray(self, nums: List[int]) -> int:
+        n = len(nums)
+        dp = [0] * n
+        dp[0] = nums[0]
+
+        for i in range(1, n):
+            dp[i] = max(nums[i], (dp[i-1] + nums[i]))
+        
+        return max(dp)</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>对比速记</h2>
+
+    <table>
+      <tr>
+        <th>方法</th>
+        <th>核心变量</th>
+        <th>记忆点</th>
+      </tr>
+      <tr>
+        <td>前缀和 + 贪心</td>
+        <td><code>con_sum</code>, <code>min_pre</code></td>
+        <td>当前前缀和 - 历史最小前缀和</td>
+      </tr>
+      <tr>
+        <td>动态规划</td>
+        <td><code>dp[i]</code></td>
+        <td>接前面 or 自己重新开始</td>
+      </tr>
+    </table>
+
+    <div class="note">
+      ✅ 结论：本题本质是“<strong>连续区间最大和</strong>”。
+      看到连续子数组最大/最小和，优先想到 <strong>DP</strong> 或 <strong>前缀和差值</strong>。
+    </div>
+  </section>
+
+</div>
+</body>
+</html>

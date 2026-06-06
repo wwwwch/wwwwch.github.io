@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>21. 合并两个有序链表｜手机端紧凑复习笔记</title>
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;padding:8px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    background:#f4f7fb;color:#172033;
+    font-size:13px;line-height:1.42;
+    overflow-wrap:anywhere;word-break:break-word;
+  }
+  .page{max-width:760px;margin:0 auto;background:#fff;border:1px solid #e5e7eb;border-radius:14px;padding:10px;box-shadow:0 2px 12px rgba(15,23,42,.06)}
+  h1{font-size:18px;line-height:1.2;margin:0 0 8px;color:#0f172a}
+  h2{font-size:15px;margin:10px 0 6px;padding-left:7px;border-left:4px solid #2563eb;color:#111827;line-height:1.25}
+  h3{font-size:13px;margin:7px 0 4px;color:#374151}
+  p{margin:4px 0}
+  ul,ol{margin:4px 0 4px 18px;padding:0}
+  li{margin:2px 0}
+  strong{color:#111827}
+  .top{background:linear-gradient(135deg,#eff6ff,#f8fafc);border:1px solid #dbeafe;border-radius:12px;padding:9px;margin-bottom:8px}
+  .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
+  .tag{display:inline-flex;align-items:center;border-radius:999px;padding:2px 8px;font-size:12px;font-weight:700;background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe}
+  .tag.ok{background:#ecfdf5;color:#047857;border-color:#a7f3d0}.tag.warn{background:#fff7ed;color:#c2410c;border-color:#fed7aa}.tag.gray{background:#f1f5f9;color:#475569;border-color:#e2e8f0}
+  .grid{display:grid;grid-template-columns:1fr;gap:8px}
+  .card{border:1px solid #e5e7eb;border-radius:12px;padding:8px;background:#fff}
+  .tip{border-radius:10px;padding:7px 8px;margin:6px 0;border:1px solid #fde68a;background:#fffbeb;color:#78350f}
+  .okbox{border-radius:10px;padding:7px 8px;margin:6px 0;border:1px solid #bbf7d0;background:#f0fdf4;color:#14532d}
+  .danger{border-radius:10px;padding:7px 8px;margin:6px 0;border:1px solid #fecaca;background:#fef2f2;color:#7f1d1d}
+  .flow{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin:6px 0;font-size:12px}
+  .node{min-width:32px;text-align:center;border:1px solid #94a3b8;border-radius:8px;padding:4px 7px;background:#f8fafc;font-weight:800;color:#0f172a}
+  .arrow{color:#64748b;font-weight:900}.null{color:#94a3b8;font-weight:800}
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:6px}
+  .mini{border:1px solid #e2e8f0;background:#f8fafc;border-radius:10px;padding:7px}
+  .mini b{display:block;margin-bottom:3px}
+  table{width:100%;border-collapse:collapse;margin:6px 0;font-size:12px;table-layout:fixed}
+  th,td{border:1px solid #e5e7eb;padding:5px;vertical-align:top;text-align:left;overflow-wrap:anywhere}
+  th{background:#f1f5f9;color:#0f172a}
+  code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;font-size:12px;background:#f1f5f9;border-radius:4px;padding:0 3px}
+  pre{margin:6px 0 0;padding:9px;border-radius:10px;background:#0f172a;color:#e5e7eb;overflow-x:auto;white-space:pre;line-height:1.38;font-size:12px;-webkit-overflow-scrolling:touch}
+  pre code{background:transparent;color:inherit;padding:0;border-radius:0;font-size:12px;white-space:pre}
+  .k{font-weight:800;color:#1d4ed8}.red{font-weight:800;color:#dc2626}.green{font-weight:800;color:#047857}
+  .memory{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}
+  .mem{border-radius:10px;padding:7px 5px;text-align:center;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px}.mem b{display:block;font-size:15px;color:#2563eb}
+  @media print{body{background:#fff;padding:0}.page{box-shadow:none;border:0;border-radius:0}pre{white-space:pre-wrap;overflow:visible}.tag{border-color:#ddd}}
+  @media (max-width:420px){body{padding:6px;font-size:12.5px}.page{padding:8px;border-radius:12px}h1{font-size:17px}h2{font-size:14px}.compare{grid-template-columns:1fr}.memory{grid-template-columns:1fr 1fr 1fr}pre{font-size:11.5px;padding:8px}}
+</style>
+</head>
+<body>
+<main class="page">
+  <section class="top">
+    <h1>21. 合并两个有序链表</h1>
+    <p><strong>目标：</strong>把两个<strong>升序链表</strong>合并为一个<strong>升序链表</strong>，复用原节点。</p>
+    <div class="tags">
+      <span class="tag">链表</span><span class="tag ok">双指针</span><span class="tag">递归</span><span class="tag gray">LeetCode 21</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>图解核心</h2>
+    <div class="flow"><span class="node">1</span><span class="arrow">→</span><span class="node">2</span><span class="arrow">→</span><span class="node">4</span><span class="null">→ null</span></div>
+    <div class="flow"><span class="node">1</span><span class="arrow">→</span><span class="node">3</span><span class="arrow">→</span><span class="node">4</span><span class="null">→ null</span></div>
+    <div class="flow"><span class="tag ok">合并</span><span class="arrow">⇒</span><span class="node">1</span><span class="arrow">→</span><span class="node">1</span><span class="arrow">→</span><span class="node">2</span><span class="arrow">→</span><span class="node">3</span><span class="arrow">→</span><span class="node">4</span><span class="arrow">→</span><span class="node">4</span></div>
+    <div class="tip">记忆：<strong>谁小接谁，指针后移；一边空了，直接接另一边剩余部分。</strong></div>
+  </section>
+
+  <section class="card">
+    <h2>方法一：迭代（尾插法）</h2>
+    <ol>
+      <li>建 <code>dummy</code> 哨兵，<code>cur</code> 指向结果链表尾部。</li>
+      <li>比较 <code>list1.val</code> 与 <code>list2.val</code>，小者接到 <code>cur.next</code>。</li>
+      <li>被接入链表指针后移，<code>cur</code> 后移。</li>
+      <li>循环结束后，<strong>拼接剩余链表</strong>：<code>cur.next = list1 or list2</code>。</li>
+    </ol>
+    <div class="okbox">返回：<code>dummy.next</code>，不是 <code>dummy</code>。</div>
+<pre><code># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        cur = dummy = ListNode()    # 用哨兵节点简化代码逻辑
+        while list1 and list2:
+            if list1.val &lt; list2.val:
+                cur.next = list1    # 把 list1 加到新链表中
+                list1 = list1.next
+            else:
+                cur.next = list2    # 把 list2 加到新链表中
+                list2 = list2.next
+            cur = cur.next
+        # 拼接剩余链表
+        cur.next = list1 or list2
+        return dummy.next</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>方法二：递归（头插法）</h2>
+    <ol>
+      <li><strong>终止：</strong><code>list1</code> 空返回 <code>list2</code>；<code>list2</code> 空返回 <code>list1</code>。</li>
+      <li><strong>选择头：</strong>较小节点作为当前合并链表的头。</li>
+      <li><strong>递归接尾：</strong>头节点的 <code>next</code> 指向剩余链表的合并结果。</li>
+    </ol>
+    <div class="tip">递归式：<code>小头.next = merge(小头.next, 另一条链)</code></div>
+<pre><code># Definition for singly-linked list.
+# class ListNode:
+#     def __init__(self, val=0, next=None):
+#         self.val = val
+#         self.next = next
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -&gt; Optional[ListNode]:
+        if list1 is None:
+            return list2
+        if list2 is None:
+            return list1
+        
+        if list1.val &lt; list2.val:
+            list1.next = self.mergeTwoLists(list1.next, list2)
+            return list1
+        else:
+            list2.next = self.mergeTwoLists(list1, list2.next)
+            return list2</code></pre>
+  </section>
+
+  <section class="card">
+    <h2>复杂度 & 对比</h2>
+    <table>
+      <thead><tr><th>版本</th><th>时间</th><th>空间</th><th>特点</th></tr></thead>
+      <tbody>
+        <tr><td><strong>V1 迭代</strong></td><td><code>O(m+n)</code></td><td><code>O(1)</code></td><td>最稳；面试首选</td></tr>
+        <tr><td><strong>V2 递归</strong></td><td><code>O(m+n)</code></td><td><code>O(m+n)</code></td><td>代码短；有递归栈</td></tr>
+      </tbody>
+    </table>
+    <div class="compare">
+      <div class="mini"><b>迭代关键</b><span class="k">dummy + cur</span><br>尾部持续接小节点。</div>
+      <div class="mini"><b>递归关键</b><span class="k">先定头，再接尾</span><br>返回当前较小节点。</div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>易错点</h2>
+    <ul>
+      <li><span class="red">忘记移动</span>：接入节点后，要移动对应的 <code>list1/list2</code>。</li>
+      <li><span class="red">忘记移动 cur</span>：否则结果链表无法继续增长。</li>
+      <li><span class="red">返回错节点</span>：迭代返回 <code>dummy.next</code>。</li>
+      <li><span class="red">漏接剩余</span>：循环后必须 <code>cur.next = list1 or list2</code>。</li>
+      <li><span class="red">递归栈风险</span>：链表很长时递归可能栈溢出。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>速记卡</h2>
+    <div class="memory">
+      <div class="mem"><b>1</b>比大小</div>
+      <div class="mem"><b>2</b>接小的</div>
+      <div class="mem"><b>3</b>接剩余</div>
+    </div>
+    <div class="danger">结论：优先写 <strong>迭代尾插法</strong>；递归写法用于理解“当前最小头 + 剩余递归合并”。</div>
+  </section>
+</main>
+</body>
+</html>

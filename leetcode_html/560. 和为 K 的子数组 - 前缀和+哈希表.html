@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>560. 和为K的子数组｜手机端紧凑复习笔记</title>
+  <style>
+    :root {
+      --bg:#f4f7fb; --card:#ffffff; --ink:#172033; --muted:#64748b;
+      --blue:#1554b7; --blue2:#eaf3ff; --green:#17803b; --green2:#eaf8ee;
+      --red:#d82424; --red2:#fff0f0; --orange:#f08a24; --orange2:#fff6e8;
+      --line:#dbe5f1; --code-bg:#111820; --code-fg:#edf4ff; --shadow:0 8px 24px rgba(15,39,72,.10);
+    }
+    * { box-sizing:border-box; }
+    html { -webkit-text-size-adjust:100%; }
+    body {
+      margin:0; background:var(--bg); color:var(--ink);
+      font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+      font-size:14px; line-height:1.48;
+    }
+    .page {
+      width:min(100%, 760px); margin:0 auto; padding:10px;
+    }
+    .sheet {
+      background:linear-gradient(180deg,#fff,#fbfdff); border:1px solid var(--line);
+      border-radius:16px; box-shadow:var(--shadow); overflow:hidden;
+    }
+    header {
+      padding:14px 14px 10px; border-bottom:3px solid var(--blue);
+      background:radial-gradient(circle at top left, rgba(21,84,183,.12), transparent 38%), #fff;
+    }
+    h1 { margin:0; color:var(--blue); font-size:22px; line-height:1.2; letter-spacing:-.3px; }
+    .subtitle { margin-top:5px; color:var(--muted); font-size:12.5px; font-weight:700; }
+    .tags { display:flex; flex-wrap:wrap; gap:6px; margin-top:9px; }
+    .tag {
+      padding:4px 8px; border-radius:999px; background:var(--blue2); color:#0b3f91;
+      font-size:12px; font-weight:800; border:1px solid #c7dcff;
+    }
+    main { padding:10px; }
+    section {
+      margin:9px 0; background:var(--card); border:1px solid var(--line);
+      border-radius:13px; overflow:hidden;
+    }
+    .title {
+      display:flex; align-items:center; gap:7px; padding:8px 10px;
+      font-size:16px; font-weight:900; color:var(--blue); background:#f8fbff;
+      border-bottom:1px solid var(--line);
+    }
+    .body { padding:9px 10px; }
+    p { margin:0 0 7px; }
+    ul { margin:6px 0 0; padding-left:18px; }
+    li { margin:2px 0; }
+    b,strong { font-weight:900; }
+    code.inline, .mono {
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+      font-weight:750; color:#b42318; background:#fff1f1; padding:0 4px; border-radius:5px;
+      overflow-wrap:anywhere;
+    }
+    .callout {
+      margin:8px 0 0; padding:9px 10px; border-radius:11px; border:1px solid #bfe4c7;
+      background:var(--green2); color:#115a2a; font-weight:800;
+    }
+    .warn { border-color:#ffd293; background:var(--orange2); color:#784400; }
+    .danger { border-color:#f5b5b5; background:var(--red2); color:#8d1616; }
+    .mini-grid { display:grid; grid-template-columns:1fr; gap:8px; }
+    .card {
+      border:1px solid var(--line); border-radius:12px; padding:9px;
+      background:#fff; box-shadow:0 1px 0 rgba(15,39,72,.03);
+    }
+    .card-head { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:6px; }
+    .card-title { font-size:15px; font-weight:900; color:#123f8f; }
+    .pill {
+      flex:0 0 auto; padding:3px 7px; border-radius:999px; font-size:11.5px; font-weight:900;
+      background:#eef6ff; color:#0b3f91; border:1px solid #c9defe;
+    }
+    .pill.best { background:var(--green2); color:var(--green); border-color:#aee0b8; }
+    .diagram { display:grid; grid-template-columns:1fr; gap:7px; margin-top:8px; }
+    .step {
+      display:grid; grid-template-columns:30px 1fr; gap:8px; align-items:center;
+      border:1px solid #cbdaf0; border-radius:12px; padding:7px 8px; background:#fbfdff;
+    }
+    .num {
+      width:28px; height:28px; display:grid; place-items:center; border-radius:50%;
+      background:var(--blue); color:white; font-weight:900;
+    }
+    .arrow { text-align:center; color:var(--muted); font-weight:900; margin:-2px 0; }
+    .formula {
+      margin:7px 0 0; padding:9px 10px; border-radius:11px; background:#f4fbf6;
+      border-left:5px solid var(--green); font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+      font-weight:850; color:#115a2a; overflow-wrap:anywhere;
+    }
+    table { width:100%; border-collapse:separate; border-spacing:0; table-layout:fixed; font-size:12.5px; }
+    th,td { border-right:1px solid #d1deee; border-bottom:1px solid #d1deee; padding:7px 6px; vertical-align:top; overflow-wrap:anywhere; }
+    th:first-child,td:first-child { border-left:1px solid #d1deee; }
+    tr:first-child th { border-top:1px solid #d1deee; }
+    th { background:var(--blue2); color:#0b3f91; font-weight:900; text-align:left; }
+    tr:first-child th:first-child { border-top-left-radius:10px; }
+    tr:first-child th:last-child { border-top-right-radius:10px; }
+    tr:last-child td:first-child { border-bottom-left-radius:10px; }
+    tr:last-child td:last-child { border-bottom-right-radius:10px; }
+    pre {
+      margin:8px 0 0; padding:10px; border-radius:12px; background:var(--code-bg); color:var(--code-fg);
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
+      font-size:12px; line-height:1.45; white-space:pre-wrap; overflow-wrap:anywhere; tab-size:4;
+      border:1px solid rgba(255,255,255,.10);
+    }
+    .code-label { margin-top:7px; color:var(--muted); font-size:12px; font-weight:800; }
+    .memory {
+      display:grid; gap:7px; margin-top:7px;
+    }
+    .memory-row {
+      display:flex; align-items:center; gap:8px; padding:8px; border-radius:11px;
+      background:#f7fbff; border:1px dashed #a9c8f8; font-weight:800;
+    }
+    .emoji { width:24px; text-align:center; flex:0 0 auto; }
+    footer {
+      padding:10px 14px 14px; color:var(--muted); font-size:11.5px; text-align:center;
+    }
+    @media (min-width:680px) {
+      body { font-size:15px; }
+      h1 { font-size:26px; }
+      .page { padding:14px; }
+      .mini-grid { grid-template-columns:1fr 1fr; }
+      .diagram { grid-template-columns:1fr auto 1fr auto 1fr auto 1fr; align-items:center; }
+      .arrow { margin:0; }
+    }
+    @media print {
+      body { background:#fff; }
+      .page { width:100%; padding:0; }
+      .sheet { border:none; box-shadow:none; border-radius:0; }
+      section { break-inside:avoid; }
+      pre { white-space:pre-wrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="sheet">
+      <header>
+        <h1>📚 560. 和为 K 的子数组</h1>
+        <div class="subtitle">前缀和 + 哈希表｜连续子数组计数｜可含负数</div>
+        <div class="tags">
+          <span class="tag">核心：prefix[j]-prefix[i]=k</span>
+          <span class="tag">最优：O(n)</span>
+          <span class="tag">易错：先查后存</span>
+        </div>
+      </header>
+
+      <main>
+        <section>
+          <div class="title">🎯 问题本质</div>
+          <div class="body">
+            统计数组中<strong>和为 <code class="inline">k</code></strong> 的<strong>连续子数组</strong>个数。
+            <div class="callout danger">关键词：连续、计数、可有负数 → 不能用普通滑动窗口。</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">🧠 记忆图</div>
+          <div class="body">
+            <div class="diagram">
+              <div class="step"><span class="num">1</span><span>遍历 <code class="inline">num</code><br><b>累加</b>当前前缀和</span></div>
+              <div class="arrow">➜</div>
+              <div class="step"><span class="num">2</span><span>查 <code class="inline">cur_sum-k</code><br><b>已有多少次</b></span></div>
+              <div class="arrow">➜</div>
+              <div class="step"><span class="num">3</span><span>答案加次数<br><b>count += ...</b></span></div>
+              <div class="arrow">➜</div>
+              <div class="step"><span class="num">4</span><span>记录 <code class="inline">cur_sum</code><br><b>给后面用</b></span></div>
+            </div>
+            <div class="formula">prefix[j] - prefix[i] = k<br>⇒ prefix[i] = prefix[j] - k</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">📊 方法对比</div>
+          <div class="body">
+            <div class="mini-grid">
+              <article class="card">
+                <div class="card-head"><div class="card-title">暴力枚举</div><span class="pill">O(n²) / O(1)</span></div>
+                固定起点 <code class="inline">i</code>，累加终点 <code class="inline">j</code>；直观但慢。
+              </article>
+              <article class="card">
+                <div class="card-head"><div class="card-title">前缀和 + 哈希表</div><span class="pill best">O(n) / O(n)</span></div>
+                查 <code class="inline">cur_sum-k</code> 出现次数；一次遍历统计全部答案。
+              </article>
+            </div>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">⚙️ 最优解步骤</div>
+          <div class="body">
+            <ol style="margin:0; padding-left:20px;">
+              <li><code class="inline">cur_sum</code> 记录当前前缀和。</li>
+              <li><code class="inline">prefix_count</code> 存「前缀和 → 出现次数」。</li>
+              <li>每个元素：先查 <code class="inline">prefix_count[cur_sum-k]</code>，再存 <code class="inline">cur_sum</code>。</li>
+              <li>初始化 <code class="inline">prefix_count[0]=1</code>，覆盖从数组开头开始的子数组。</li>
+            </ol>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">⚠️ 易错点速记</div>
+          <div class="body">
+            <table>
+              <thead><tr><th style="width:38%">点</th><th>记法</th></tr></thead>
+              <tbody>
+                <tr><td><b>存次数</b></td><td>相同前缀和可能来自多个起点。</td></tr>
+                <tr><td><b><code class="inline">0:1</code></b></td><td>处理 <code class="inline">cur_sum == k</code>。</td></tr>
+                <tr><td><b>先查后存</b></td><td>避免当前前缀和自己匹配自己。</td></tr>
+                <tr><td><b>负数可用</b></td><td>前缀和差值法不依赖单调性。</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">💻 代码 1：暴力枚举</div>
+          <div class="body">
+            <div class="code-label">完整保留原代码块：</div>
+            <pre><code>def subarraySum(self, nums, k):
+    total = 0
+    n = len(nums)
+    for i in range(n):
+        s = 0
+        for j in range(i, n):
+            s += nums[j]
+            if s == k:
+                total += 1
+    return total</code></pre>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">💻 代码 2：前缀和 + 哈希表</div>
+          <div class="body">
+            <div class="code-label">完整保留原代码块：</div>
+            <pre><code>def subarraySum(self, nums, k):
+    count = 0
+    cur_sum = 0
+    prefix_count = defaultdict(int)
+    prefix_count[0] = 1
+
+    for num in nums:
+        cur_sum += num
+        count += prefix_count[cur_sum - k]   # 查找能凑成k的前缀和
+        prefix_count[cur_sum] += 1          # 记录当前前缀和
+
+    return count</code></pre>
+            <div class="callout warn">注意：若单独运行，需确保环境中已有 <code class="inline">defaultdict</code>；例如通常来自 <code class="inline">collections</code>。</div>
+          </div>
+        </section>
+
+        <section>
+          <div class="title">💎 一句话结论</div>
+          <div class="body">
+            <div class="memory">
+              <div class="memory-row"><span class="emoji">🔁</span><span>子数组和 → 两个前缀和之差。</span></div>
+              <div class="memory-row"><span class="emoji">🧺</span><span>哈希表记录过去的前缀和次数。</span></div>
+              <div class="memory-row"><span class="emoji">✅</span><span>当前只需找 <code class="inline">cur_sum-k</code>，答案一次遍历得到。</span></div>
+            </div>
+          </div>
+        </section>
+      </main>
+
+      <footer>移动端紧凑复习版｜适合截图、打印、快速回顾</footer>
+    </div>
+  </div>
+</body>
+</html>

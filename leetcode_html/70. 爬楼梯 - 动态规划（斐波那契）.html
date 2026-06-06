@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>爬楼梯 Climbing Stairs｜紧凑复习笔记</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      background: #f6f7fb;
+      color: #1f2937;
+      line-height: 1.48;
+      font-size: 14px;
+    }
+    .page {
+      width: 100%;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 10px;
+    }
+    header {
+      background: linear-gradient(135deg, #eff6ff, #f8fafc);
+      border: 1px solid #dbeafe;
+      border-radius: 14px;
+      padding: 12px 13px;
+      margin-bottom: 10px;
+    }
+    h1 {
+      font-size: 22px;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+    h2 {
+      font-size: 17px;
+      margin: 0 0 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    h3 {
+      font-size: 15px;
+      margin: 10px 0 6px;
+    }
+    p { margin: 5px 0; }
+    .sub {
+      color: #4b5563;
+      font-size: 13px;
+      margin: 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .card {
+      background: #fff;
+      border: 1px solid #e5e7eb;
+      border-radius: 14px;
+      padding: 11px;
+      box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+      overflow: hidden;
+    }
+    .mini-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 7px 0 2px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 3px 8px;
+      background: #eef2ff;
+      color: #3730a3;
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .tag.warn { background: #fff7ed; color: #9a3412; }
+    .tag.good { background: #ecfdf5; color: #047857; }
+    .tag.bad { background: #fef2f2; color: #b91c1c; }
+    .tag.neutral { background: #f1f5f9; color: #334155; }
+    ul, ol {
+      margin: 6px 0 0 20px;
+      padding: 0;
+    }
+    li { margin: 3px 0; }
+    strong, .key { color: #111827; font-weight: 800; }
+    .formula {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 10px;
+      margin: 8px 0;
+      font-size: 18px;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: center;
+      overflow-wrap: anywhere;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 5px;
+      margin: 8px 0;
+      font-size: 12px;
+    }
+    .node {
+      text-align: center;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 7px 5px;
+      font-weight: 700;
+      min-width: 0;
+      overflow-wrap: anywhere;
+    }
+    .arrow { color: #64748b; font-weight: 800; }
+    .tip {
+      border-left: 4px solid #60a5fa;
+      background: #eff6ff;
+      padding: 8px 9px;
+      border-radius: 10px;
+      margin-top: 8px;
+      font-size: 13px;
+    }
+    .danger {
+      border-left-color: #fb923c;
+      background: #fff7ed;
+    }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-top: 6px;
+    }
+    table {
+      width: 100%;
+      min-width: 520px;
+      border-collapse: collapse;
+      font-size: 12.5px;
+      background: #fff;
+    }
+    th, td {
+      border: 1px solid #e5e7eb;
+      padding: 7px 6px;
+      text-align: left;
+      vertical-align: top;
+      word-break: break-word;
+    }
+    th { background: #f8fafc; font-weight: 800; }
+    code, pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    }
+    pre {
+      margin: 8px 0 0;
+      padding: 10px;
+      background: #0f172a;
+      color: #e5e7eb;
+      border-radius: 12px;
+      font-size: 12px;
+      line-height: 1.42;
+      overflow-x: auto;
+      white-space: pre;
+      tab-size: 4;
+    }
+    .code-title {
+      margin-top: 9px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+    }
+    .badge {
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: #475569;
+      white-space: nowrap;
+    }
+    .compact-list {
+      display: grid;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .kv {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 6px;
+      border: 1px solid #eef2f7;
+      border-radius: 10px;
+      padding: 7px;
+      background: #fcfcfd;
+    }
+    .kv b { color: #475569; }
+    footer {
+      color: #64748b;
+      font-size: 12px;
+      text-align: center;
+      padding: 12px 0 6px;
+    }
+    @media (min-width: 720px) {
+      .grid.two { grid-template-columns: 1fr 1fr; }
+      body { font-size: 14.5px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .page { max-width: none; padding: 0; }
+      .card, header { box-shadow: none; break-inside: avoid; }
+      pre { white-space: pre-wrap; overflow: visible; }
+      .table-wrap { overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>🪜 爬楼梯 Climbing Stairs</h1>
+      <p class="sub">核心：每次爬 <strong>1</strong> 或 <strong>2</strong> 级，求到第 <strong>n</strong> 级共有多少种走法。</p>
+      <div class="mini-row">
+        <span class="tag good">动态规划</span>
+        <span class="tag">斐波那契</span>
+        <span class="tag warn">递归会超时</span>
+        <span class="tag neutral">LeetCode 70</span>
+      </div>
+    </header>
+
+    <section class="grid two">
+      <div class="card">
+        <h2>🧠 记忆核心</h2>
+        <div class="formula">f(n) = f(n-1) + f(n-2)</div>
+        <div class="flow">
+          <div class="node">到 n-1 级<br>再走 1 步</div>
+          <div class="arrow">+</div>
+          <div class="node">到 n-2 级<br>再走 2 步</div>
+          <div class="arrow">=</div>
+          <div class="node">到 n 级<br>总方法数</div>
+        </div>
+        <div class="compact-list">
+          <div class="kv"><b>边界</b><span><strong>f(1)=1</strong>，<strong>f(2)=2</strong>；DP 也可设 <strong>dp[0]=1, dp[1]=1</strong>。</span></div>
+          <div class="kv"><b>本质</b><span>最后一步只有两种来源：从 <strong>n-1</strong> 来，或从 <strong>n-2</strong> 来。</span></div>
+          <div class="kv"><b>结论</b><span>最优写法：<strong>滚动数组</strong>，时间 O(n)，空间 O(1)。</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>⚠️ 易错点</h2>
+        <ul>
+          <li><strong>暴力递归</strong>重复计算严重：如 f(5) 会多次算 f(3)、f(2)。</li>
+          <li><strong>dp 长度</strong>通常设为 <code>n+1</code>，方便访问 <code>dp[n]</code>。</li>
+          <li><code>dp[0]=1</code> 表示「不走也是一种起点状态」，不是爬 0 级的题目答案混淆。</li>
+          <li>滚动数组中 <code>a,b = b,a+b</code> 是<strong>同时赋值</strong>，不会先覆盖 <code>a</code>。</li>
+        </ul>
+        <div class="tip danger"><strong>记忆口诀：</strong>看「最后一步」：走 1 步来自 n-1，走 2 步来自 n-2。</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>📊 四种解法对比</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>思路</th>
+              <th>时间</th>
+              <th>空间</th>
+              <th>评价</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>暴力递归</strong></td>
+              <td>直接套 f(n)=f(n-1)+f(n-2)</td>
+              <td>O(2^n)</td>
+              <td>O(n)</td>
+              <td><span class="tag bad">会超时</span></td>
+            </tr>
+            <tr>
+              <td><strong>记忆化递归</strong></td>
+              <td>递归 + 缓存子问题</td>
+              <td>O(n)</td>
+              <td>O(n)</td>
+              <td><span class="tag good">避免重复</span></td>
+            </tr>
+            <tr>
+              <td><strong>DP 数组</strong></td>
+              <td>自底向上填表</td>
+              <td>O(n)</td>
+              <td>O(n)</td>
+              <td><span class="tag">清晰</span></td>
+            </tr>
+            <tr>
+              <td><strong>滚动数组</strong></td>
+              <td>只保留前两个状态</td>
+              <td>O(n)</td>
+              <td>O(1)</td>
+              <td><span class="tag good">最优</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🧩 递推小图</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr><th>n</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th></tr>
+          </thead>
+          <tbody>
+            <tr><td><strong>f(n)</strong></td><td>1</td><td>2</td><td>3</td><td>5</td><td>8</td><td>13</td></tr>
+            <tr><td><strong>来源</strong></td><td>-</td><td>-</td><td>1+2</td><td>2+3</td><td>3+5</td><td>5+8</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="tip"><strong>视觉记忆：</strong>爬楼梯答案序列就是从 1、2 开始的斐波那契序列。</div>
+    </section>
+
+    <section class="card">
+      <h2>💻 代码完整保留</h2>
+
+      <div class="code-title">1）暴力递归 <span class="badge">O(2^n)</span></div>
+<pre><code>class Solution: 
+    def climbStairs(self, n: int) -&gt; int:
+        # 基础情况：只有1级台阶时，只有一种走法
+        if n == 1:
+            return 1
+        # 基础情况：有2级台阶时，有两种走法（1+1 或 2）
+        if n == 2:
+            return 2
+        
+        # 递归关系：到达第n级台阶的方式数 = 
+        # 到达第(n-1)级的方式数（再走1步） + 到达第(n-2)级的方式数（再走2步）
+        return self.climbStairs(n - 1) + self.climbStairs(n - 2)</code></pre>
+
+      <div class="code-title">2）记忆化递归 <span class="badge">O(n) / O(n)</span></div>
+<pre><code>class Solution:
+    def climbStairs(self, n: int) -&gt; int:
+        # 创建记忆数组 N，长度为 n+1，以便使用下标 1 到 n 存储对应台阶的方案数
+        # 说明：数组下标从 0 开始，我们让 N[0] 空出不使用（或视为第 0 级台阶），
+        # 第 1 级台阶对应 N[1]，第 n 级台阶对应 N[n]，因此需要 n+1 的长度
+        N = [0] * (n + 1)
+        return self.climbStairs_N(n, N)
+    
+    def climbStairs_N(self, n: int, N: List[int]) -&gt; int:
+        """
+        记忆化递归：计算到达第 n 级台阶的方法数
+        若结果已缓存，则直接返回；否则递归计算并保存
+        """
+        # 如果已计算过该子问题，直接返回缓存结果
+        if N[n] &gt; 0:
+            return N[n]
+        
+        # 基础情况
+        if n == 1:
+            N[n] = 1
+        elif n == 2:
+            N[n] = 2
+        else:
+            # 递归关系：f(n) = f(n-1) + f(n-2)
+            N[n] = self.climbStairs_N(n - 1, N) + self.climbStairs_N(n - 2, N)
+        
+        return N[n]</code></pre>
+
+      <div class="code-title">3）DP 数组 <span class="badge">O(n) / O(n)</span></div>
+<pre><code>class Solution:
+    def climbStairs(self, n: int) -&gt; int:
+        # 创建 DP 数组，dp[i] 表示爬到第 i 级台阶的方法数
+        # 长度为 n+1 是为了方便索引：0 到 n 均可访问
+        dp = [0] * (n + 1)
+        
+        # 初始状态：
+        # dp[0] = 1：表示在地面（第 0 级）有一种方式（不走也算起点）
+        # dp[1] = 1：爬到第 1 级只能走一步，因此只有一种方法
+        dp[0] = 1
+        dp[1] = 1
+        
+        # 从第 2 级台阶开始，递推计算每一级的方案数
+        for i in range(2, n + 1):
+            # 当前台阶的方案数 = 
+            #   从上一级走 1 步过来的方法数 (dp[i-1]) +
+            #   从上两级走 2 步过来的方法数 (dp[i-2])
+            dp[i] = dp[i - 1] + dp[i - 2]
+        
+        # 返回爬到第 n 级台阶的总方法数
+        return dp[n]</code></pre>
+
+      <div class="code-title">4）滚动数组 <span class="badge">O(n) / O(1)</span></div>
+<pre><code>class Solution:
+    def climbStairs(self, n: int) -&gt; int:
+        # 滚动数组优化：只保留前两个状态，节省空间
+        a, b = 1, 1
+        
+        # 从第 2 级台阶开始递推到第 n 级
+        for _ in range(2, n + 1):
+            # 新的 b = 原 b + 原 a → 即 dp[i] = dp[i-1] + dp[i-2]
+            # 同时更新 a 和 b：向前滚动一步
+            a, b = b, a + b
+            # 解释：
+            #   a 更新为原来的 b（即前一级台阶的方案数）
+            #   b 更新为 a + b（即当前级的新方案数）
+        
+        return b</code></pre>
+    </section>
+
+    <footer>适合手机快速回顾、截图与打印｜重点：最后一步拆分 + 滚动数组优化</footer>
+  </main>
+</body>
+</html>

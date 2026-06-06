@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>121. 买卖股票的最佳时机｜手机复习笔记</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --ink: #111827;
+      --muted: #5f6b7a;
+      --line: #dbe4f0;
+      --blue: #1d4ed8;
+      --blue-soft: #edf5ff;
+      --green: #16803a;
+      --green-soft: #eefaf1;
+      --red: #d21f2b;
+      --red-soft: #fff1f2;
+      --orange: #b86100;
+      --orange-soft: #fff7e8;
+      --purple: #6d28d9;
+      --purple-soft: #f4efff;
+      --code-bg: #101820;
+      --code-ink: #e8edf2;
+    }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      line-height: 1.45;
+    }
+    .page {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 12px 10px 18px;
+    }
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      margin: -12px -10px 10px;
+      padding: 12px 12px 10px;
+      background: rgba(245, 247, 251, .94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 5.3vw, 28px);
+      line-height: 1.18;
+      letter-spacing: -.3px;
+      color: var(--blue);
+      font-weight: 900;
+    }
+    .sub {
+      margin-top: 4px;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff;
+      white-space: nowrap;
+    }
+    .card {
+      margin: 8px 0;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 2px 10px rgba(15, 23, 42, .05);
+      overflow: hidden;
+    }
+    .card.problem { background: var(--red-soft); border-color: #ffd0d5; }
+    .card.idea { background: var(--green-soft); border-color: #c8ebd0; }
+    .card.warn { background: var(--orange-soft); border-color: #f4d49b; }
+    .card.summary { background: var(--blue-soft); border-color: #c9defa; }
+    h2 {
+      margin: 0 0 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 900;
+      color: var(--blue);
+    }
+    .problem h2 { color: var(--red); }
+    .idea h2 { color: var(--green); }
+    .warn h2 { color: var(--orange); }
+    p { margin: 0; }
+    b, strong { font-weight: 900; }
+    .key { color: var(--red); font-weight: 900; }
+    code:not(pre code) {
+      padding: 1px 5px;
+      border-radius: 6px;
+      background: rgba(29, 78, 216, .08);
+      color: var(--red);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: .92em;
+      font-weight: 800;
+      word-break: break-word;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .formula {
+      min-width: 0;
+      padding: 7px 5px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: #fff;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .formula span {
+      display: block;
+      margin-bottom: 2px;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+    .flow {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 30px 1fr;
+      gap: 8px;
+      align-items: start;
+      padding: 7px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .num {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 8px;
+      background: var(--blue);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 900;
+    }
+    .step p { font-size: 13px; font-weight: 750; }
+    .step small {
+      display: block;
+      margin-top: 1px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 650;
+    }
+    .mini-table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 13px;
+    }
+    .mini-table th, .mini-table td {
+      padding: 7px 8px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      overflow-wrap: anywhere;
+    }
+    .mini-table th {
+      background: var(--blue-soft);
+      color: var(--blue);
+      text-align: left;
+      font-weight: 900;
+    }
+    .callout {
+      display: grid;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .pill {
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.72);
+      border: 1px dashed rgba(184, 97, 0, .35);
+      font-size: 13px;
+      font-weight: 750;
+    }
+    .code-card {
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--code-bg);
+      border: 1px solid #263241;
+      box-shadow: 0 6px 16px rgba(16, 24, 32, .18);
+    }
+    .code-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 7px 10px;
+      background: #182331;
+      color: #b9c5d4;
+      font-size: 12px;
+      font-weight: 900;
+    }
+    .dots { display: flex; gap: 5px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #6b778c; }
+    pre {
+      margin: 0;
+      padding: 10px;
+      max-width: 100%;
+      overflow-x: auto;
+      white-space: pre;
+      color: var(--code-ink);
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12.5px;
+      line-height: 1.48;
+      tab-size: 4;
+      -webkit-overflow-scrolling: touch;
+    }
+    pre code {
+      display: block;
+      min-width: max-content;
+      background: transparent;
+      color: inherit;
+      font: inherit;
+    }
+    .memory-line {
+      padding: 8px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      font-size: 14px;
+      font-weight: 900;
+      text-align: center;
+    }
+    .dense-list {
+      margin: 0;
+      padding-left: 18px;
+      font-size: 13px;
+      font-weight: 730;
+    }
+    .dense-list li { margin: 2px 0; }
+    @media (max-width: 390px) {
+      .page { padding-left: 8px; padding-right: 8px; }
+      header { margin-left: -8px; margin-right: -8px; }
+      .formula-grid { grid-template-columns: 1fr; }
+      pre { font-size: 11.6px; }
+    }
+    @media print {
+      body { background: #fff; }
+      header { position: static; background: #fff; }
+      .page { width: 100%; max-width: none; padding: 8mm; }
+      .card { break-inside: avoid; box-shadow: none; }
+      pre { white-space: pre-wrap; overflow: visible; }
+      pre code { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>📈 121. 买卖股票的最佳时机</h1>
+      <div class="sub">
+        <span class="tag">一次遍历</span>
+        <span class="tag">贪心</span>
+        <span class="tag">O(n) / O(1)</span>
+      </div>
+    </header>
+
+    <section class="card problem">
+      <h2>🎯 题意压缩</h2>
+      <p>数组 <code>prices</code> 表示每天股价，<strong>只能买卖一次</strong>，求最大利润；亏钱则返回 <code>0</code>。</p>
+    </section>
+
+    <section class="card idea">
+      <h2>🔑 核心记忆</h2>
+      <p><strong>边走边看最低价：</strong>当前价当卖出价，用 <code>price - min_price</code> 更新答案。</p>
+      <div class="formula-grid">
+        <div class="formula"><span>买入</span><code>min_price</code></div>
+        <div class="formula"><span>卖出</span><code>price</code></div>
+        <div class="formula"><span>利润</span><code>max_profit</code></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🧭 流程图式步骤</h2>
+      <div class="flow">
+        <div class="step"><div class="num">1</div><p>初始化：<code>min_price = prices[0]</code>，<code>max_profit = 0</code><small>先假设第 1 天买入</small></p></div>
+        <div class="step"><div class="num">2</div><p>遍历每个 <code>price</code><small>每一天都尝试作为卖出日</small></p></div>
+        <div class="step"><div class="num">3</div><p><code>price &gt;= min_price</code>：计算利润并更新最大值<small><code>profit = price - min_price</code></small></p></div>
+        <div class="step"><div class="num">4</div><p><code>price &lt; min_price</code>：更新最低买入价<small>更便宜，未来更可能赚</small></p></div>
+        <div class="step"><div class="num">5</div><p>返回 <code>max_profit</code><small>全程最大可得利润</small></p></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>💻 代码完整保留</h2>
+      <div class="code-card">
+        <div class="code-head"><span>Python</span><span class="dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></span></div>
+<pre><code>def maxProfit(self, prices: List[int]) -&gt; int:
+    min_price = prices[0]      # 当前最低买入价
+    max_profit = 0             # 最大利润
+
+    for price in prices:
+        if price &gt;= min_price:
+            # 尝试卖出，更新最大利润
+            profit = price - min_price
+            max_profit = max(max_profit, profit)
+        else:
+            # 遇到更低价格，更新最低买入价
+            min_price = price
+
+    return max_profit</code></pre>
+      </div>
+    </section>
+
+    <section class="card warn">
+      <h2>⚠️ 易错点</h2>
+      <div class="callout">
+        <div class="pill">买入必须在卖出前：所以只维护<strong>当前之前/当前为止</strong>的最低价。</div>
+        <div class="pill">价格一直下降：<code>max_profit</code> 保持 <code>0</code>，不能返回负数。</div>
+        <div class="pill"><code>min_price</code> 和 <code>max_profit</code> 都是在遍历中动态更新。</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>🧠 变量速查</h2>
+      <table class="mini-table">
+        <thead>
+          <tr><th style="width: 38%">变量</th><th>含义</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>min_price</code></td><td>到当前为止的历史最低价</td></tr>
+          <tr><td><code>max_profit</code></td><td>到当前为止可获得的最大利润</td></tr>
+          <tr><td><code>profit</code></td><td>当前价格卖出的临时利润</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section class="card summary">
+      <h2>✅ 复杂度 & 结论</h2>
+      <table class="mini-table">
+        <tbody>
+          <tr><th>时间</th><td><span class="key">O(n)</span>：一次遍历</td></tr>
+          <tr><th>空间</th><td><span class="key">O(1)</span>：常数变量</td></tr>
+        </tbody>
+      </table>
+      <div class="memory-line" style="margin-top:8px;">一句话：<span class="key">最低买入价 + 当前卖出价 = 更新最大利润</span></div>
+    </section>
+  </main>
+</body>
+</html>

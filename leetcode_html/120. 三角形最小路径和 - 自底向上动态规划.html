@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>120. 三角形最小路径和｜手机复习笔记</title>
+  <style>
+    :root {
+      --bg: #f7f4ed;
+      --card: #fffdf8;
+      --ink: #2f3a40;
+      --muted: #65727a;
+      --line: #ded6c8;
+      --blue: #3f6478;
+      --green: #53765b;
+      --sand: #8a6d45;
+      --red: #9a5550;
+      --soft-blue: #e7eef2;
+      --soft-green: #edf4eb;
+      --soft-sand: #f4ead8;
+      --soft-red: #f7e8e4;
+      --code: #f0eee8;
+      --shadow: 0 2px 12px rgba(75, 65, 48, .10);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.42;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    .page {
+      width: min(100%, 820px);
+      margin: 0 auto;
+      padding: 10px;
+    }
+
+    .hero {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 8px 10px;
+      align-items: center;
+      margin: -10px -10px 8px;
+      padding: 10px;
+      background: rgba(247, 244, 237, .95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .num {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: var(--soft-blue);
+      color: var(--blue);
+      font-weight: 900;
+      font-size: 20px;
+      border: 1px solid #c8d4da;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(20px, 5.4vw, 28px);
+      line-height: 1.12;
+      letter-spacing: -.02em;
+    }
+
+    .chips {
+      grid-column: 1 / -1;
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #fffaf0;
+      border: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .chip.hot { background: var(--soft-red); color: var(--red); border-color: #e6c6c0; }
+    .chip.ok { background: var(--soft-green); color: var(--green); border-color: #cbdcc9; }
+
+    .card {
+      margin: 8px 0;
+      padding: 10px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+    }
+
+    .blue { background: var(--soft-blue); border-color: #c9d6dd; }
+    .green { background: var(--soft-green); border-color: #cbdcc9; }
+    .sand { background: var(--soft-sand); border-color: #dfcdaa; }
+    .red { background: var(--soft-red); border-color: #e6c6c0; }
+
+    h2 {
+      margin: 0 0 7px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--blue);
+      font-size: 16px;
+      line-height: 1.2;
+    }
+
+    h2 .tag {
+      margin-left: auto;
+      padding: 2px 7px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.65);
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 800;
+    }
+
+    p { margin: 4px 0; }
+
+    ul, ol {
+      margin: 4px 0 0 18px;
+      padding: 0;
+    }
+
+    li { margin: 3px 0; }
+
+    b, .key { color: var(--red); font-weight: 900; }
+    .blue .key, .em { color: var(--blue); font-weight: 900; }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    @media (min-width: 720px) {
+      .grid.two { grid-template-columns: 1fr 1fr; }
+    }
+
+    .formula {
+      margin-top: 6px;
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.62);
+      border: 1px dashed #bcc8cc;
+      color: #39474f;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.42;
+      white-space: normal;
+      overflow-wrap: anywhere;
+    }
+
+    .viz {
+      display: grid;
+      place-items: center;
+      padding: 2px 0 0;
+    }
+
+    .triangle {
+      display: grid;
+      gap: 4px;
+      font-size: 12px;
+      text-align: center;
+      max-width: 100%;
+    }
+
+    .tri-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(10px, 4vw, 22px);
+    }
+
+    .node {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: #fffaf1;
+      border: 1.4px solid #aeb7b0;
+      color: #3f4d55;
+      font-weight: 800;
+    }
+
+    .node.path {
+      border-color: #b97971;
+      background: #fae9e5;
+      color: var(--red);
+    }
+
+    .caption {
+      margin-top: 5px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .flash {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 6px;
+    }
+
+    .flash > div {
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,.58);
+      border: 1px solid rgba(180, 170, 150, .55);
+      font-size: 13px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: rgba(255,255,255,.52);
+      border-radius: 10px;
+      overflow: hidden;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      border: 1px solid #d9d0bf;
+      padding: 6px;
+      vertical-align: top;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+
+    th {
+      background: #e4ecef;
+      color: var(--blue);
+      font-weight: 900;
+    }
+
+    td:first-child { font-weight: 900; color: #465961; }
+
+    .table-compact td:first-child { width: 30%; }
+
+    .code-card { padding: 0; overflow: hidden; }
+
+    .code-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 10px;
+      background: #dfe8ec;
+      border-bottom: 1px solid #c8d4db;
+      color: var(--blue);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    .code-head small {
+      color: var(--muted);
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    pre {
+      margin: 0;
+      padding: 10px;
+      max-width: 100%;
+      background: var(--code);
+      color: #3d4b53;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12.5px;
+      line-height: 1.45;
+      white-space: pre-wrap;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      overflow-x: hidden;
+    }
+
+    .kw { color: #596f7d; font-weight: 800; }
+    .fn { color: #526f59; font-weight: 800; }
+    .cm { color: #737c72; }
+    .n { color: var(--sand); }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 6px;
+    }
+
+    @media (max-width: 380px) {
+      .steps { grid-template-columns: 1fr; }
+    }
+
+    .step {
+      padding: 6px;
+      border: 1px solid #d4c9b5;
+      border-radius: 10px;
+      background: rgba(255,255,255,.55);
+      text-align: center;
+    }
+
+    .mini-tri {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      font-size: 11.5px;
+      line-height: 1.28;
+      white-space: pre;
+      overflow-x: auto;
+      word-break: normal;
+    }
+
+    .step b {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .summary {
+      margin: 8px 0 0;
+      padding: 10px;
+      border-radius: 14px;
+      background: #f7ead3;
+      border: 1.5px solid #d9bd83;
+      color: #3e4a50;
+      font-size: 14px;
+      font-weight: 800;
+      box-shadow: var(--shadow);
+    }
+
+    .print-note {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      text-align: center;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; max-width: none; padding: 8mm; }
+      .hero { position: static; margin: 0 0 6px; padding: 0 0 7px; background: transparent; }
+      .card, .summary { box-shadow: none; break-inside: avoid; }
+      pre { font-size: 10.5px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div class="num">120</div>
+      <h1>三角形最小路径和</h1>
+      <div class="chips">
+        <span class="chip hot">🎯 LeetCode 120</span>
+        <span class="chip ok">自底向上 DP</span>
+        <span class="chip">时间 O(n²)</span>
+        <span class="chip">空间 O(1)</span>
+      </div>
+    </header>
+
+    <section class="grid two">
+      <article class="card red">
+        <h2>🎯 问题本质 <span class="tag">只记规则</span></h2>
+        <p>从三角形 <b>顶部</b> 走到底部，求路径数字和的 <b>最小值</b>。</p>
+        <p><span class="em">移动：</span>每步只能到下一行的 <b>同列 j</b> 或 <b>右邻 j+1</b>。</p>
+        <div class="formula">triangle[i][j] → triangle[i+1][j] / triangle[i+1][j+1]</div>
+      </article>
+
+      <article class="card blue">
+        <h2>📌 图解记忆 <span class="tag">路径</span></h2>
+        <div class="viz">
+          <div>
+            <div class="triangle" aria-label="三角形路径示意">
+              <div class="tri-row"><div class="node path">2</div></div>
+              <div class="tri-row"><div class="node">3</div><div class="node path">4</div></div>
+              <div class="tri-row"><div class="node">6</div><div class="node path">5</div><div class="node">7</div></div>
+              <div class="tri-row"><div class="node">4</div><div class="node path">1</div><div class="node">8</div><div class="node">3</div></div>
+            </div>
+            <div class="caption">例：2 → 4 → 5 → 1 = <b>12</b></div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="grid two">
+      <article class="card green">
+        <h2>🔍 核心思想 <span class="tag">从底往上</span></h2>
+        <ul>
+          <li>底部节点的答案就是它自己。</li>
+          <li>上层节点只需选择 <b>下方两个相邻子路径</b> 的较小值。</li>
+          <li>更新到顶部后，<b>triangle[0][0]</b> 就是全局最优。</li>
+        </ul>
+      </article>
+
+      <article class="card">
+        <h2>🧠 DP 定义 <span class="tag">公式</span></h2>
+        <div class="formula">dp[i][j] = 从第 i 行第 j 列到底部的最小路径和</div>
+        <div class="formula">初始：dp[last][j] = triangle[last][j]</div>
+        <div class="formula">转移：dp[i][j] = triangle[i][j] + min(dp[i+1][j], dp[i+1][j+1])</div>
+      </article>
+    </section>
+
+    <section class="card code-card">
+      <div class="code-head">
+        <span>💻 关键代码：原地修改</span>
+        <small>完整保留｜空间 O(1)</small>
+      </div>
+      <pre><span class="kw">def</span> <span class="fn">minimumTotal</span>(self, triangle: List[List[<span class="kw">int</span>]]) -&gt; <span class="kw">int</span>:
+    <span class="cm"># 从倒数第二行开始向上处理</span>
+    <span class="kw">for</span> row <span class="kw">in</span> range(len(triangle) - <span class="n">2</span>, -<span class="n">1</span>, -<span class="n">1</span>):
+        <span class="kw">for</span> col <span class="kw">in</span> range(len(triangle[row])):
+            <span class="cm"># 选择下一行相邻两个中较小的路径和</span>
+            triangle[row][col] += min(triangle[row+<span class="n">1</span>][col], triangle[row+<span class="n">1</span>][col+<span class="n">1</span>])
+    <span class="kw">return</span> triangle[<span class="n">0</span>][<span class="n">0</span>]</pre>
+    </section>
+
+    <section class="grid two">
+      <article class="card sand">
+        <h2>🔄 示例压缩流程 <span class="tag">自底向上</span></h2>
+        <div class="steps">
+          <div class="step"><pre class="mini-tri">   2
+  3 4
+ 6 5 7
+4 1 8 3</pre><b>原始</b></div>
+          <div class="step"><pre class="mini-tri">   2
+  3 4
+ 7 6 10
+4 1 8 3</pre><b>处理第 3 行</b></div>
+          <div class="step"><pre class="mini-tri">   2
+  9 10
+ 7 6 10
+4 1 8 3</pre><b>处理第 2 行</b></div>
+          <div class="step"><pre class="mini-tri">   11
+  9 10
+ 7 6 10
+4 1 8 3</pre><b>顶部答案</b></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <h2>📊 复杂度 <span class="tag">结论</span></h2>
+        <table class="table-compact">
+          <tbody>
+            <tr><td>时间</td><td><b>O(n²)</b>：每个元素遍历一次。</td></tr>
+            <tr><td>空间</td><td><b>O(1)</b>：复用 triangle 原数组。</td></tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <section class="grid two">
+      <article class="card red">
+        <h2>⚠️ 易错点 <span class="tag">必看</span></h2>
+        <table class="table-compact">
+          <tbody>
+            <tr><td>起点</td><td>从 <b>倒数第二行</b> 开始，不处理最后一行。</td></tr>
+            <tr><td>循环</td><td><code>range(len(triangle)-2, -1, -1)</code>。</td></tr>
+            <tr><td>子节点</td><td>只能取 <b>col</b> 和 <b>col+1</b>。</td></tr>
+            <tr><td>副作用</td><td>原地修改会改变输入；不想改就复制最后一行做滚动 DP。</td></tr>
+          </tbody>
+        </table>
+      </article>
+
+      <article class="card green">
+        <h2>🧩 方法对比 <span class="tag">推荐</span></h2>
+        <table>
+          <thead>
+            <tr><th>方法</th><th>空间</th><th>备注</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>自顶向下</td><td>O(n²)/O(n)</td><td>边界较多</td></tr>
+            <tr><td>自底向上原地</td><td><b>O(1)</b></td><td><b>最推荐</b></td></tr>
+            <tr><td>递归记忆化</td><td>O(n²)</td><td>思路直观，代码偏长</td></tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <section class="card blue">
+      <h2>🧷 速记卡 <span class="tag">背这个</span></h2>
+      <div class="flash">
+        <div><b>方向：</b>从下往上。</div>
+        <div><b>选择：</b>当前位置 + min(左下, 右下)。</div>
+        <div><b>答案：</b>更新完后返回 triangle[0][0]。</div>
+        <div><b>坑：</b>原地 DP 会修改输入。</div>
+      </div>
+    </section>
+
+    <section class="summary">
+      💡 一句话：从倒数第二行开始，每个位置累加下方相邻较小路径和；最后顶部就是最小路径和，<b>O(n²)</b> 时间，<b>O(1)</b> 空间。
+    </section>
+
+    <p class="print-note">适配手机截图与打印：单栏优先、自动换行、代码不横向撑屏。</p>
+  </main>
+</body>
+</html>

@@ -1,17 +1,17 @@
 ﻿[
     {
-        "number":  null,
-        "title":  "STMTNIN 论文面试复习笔记",
-        "file":  "STMTNIN_面试复习HTML笔记.html"
+        "number":  1,
+        "title":  "1. ECAT_EMD_CNN_Attention_ZOA",
+        "file":  "1. ECAT_EMD_CNN_Attention_ZOA.html"
     },
     {
-        "number":  null,
-        "title":  "MADGN 面试复习笔记：记忆增强动态图网络用于长期多变量时空预测",
-        "file":  "MADGN_面试复习HTML笔记.html"
+        "number":  2,
+        "title":  "2. STMTNIN",
+        "file":  "2. STMTNIN.html"
     },
     {
-        "number":  null,
-        "title":  "ECAT：EMD-CNN-Attention-ZOA 故障检测模型｜算法岗面试复习笔记",
-        "file":  "ECAT_EMD_CNN_Attention_ZOA_面试复习HTML笔记.html"
+        "number":  3,
+        "title":  "3. MADGN",
+        "file":  "3. MADGN.html"
     }
 ]

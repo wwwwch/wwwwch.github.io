@@ -2,46 +2,67 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <title>189. 轮转数组｜负负得正</title>
 <style>
   *{box-sizing:border-box}
-  body{margin:0;background:#f6f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;line-height:1.35}
-  .page{max-width:1100px;margin:0 auto;padding:10px}
-  header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:8px 10px;border-radius:12px;background:linear-gradient(135deg,#e0f2fe,#eef2ff);border:1px solid #dbeafe}
-  h1{margin:0;font-size:20px;line-height:1.15;color:#0f172a}
-  h2{margin:0 0 6px;font-size:14px;color:#111827}
-  .tag{display:inline-block;padding:2px 7px;margin:1px;border-radius:999px;background:#fff;border:1px solid #c7d2fe;color:#3730a3;font-weight:700;font-size:11px;white-space:nowrap}
-  .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .card{background:#fff;border:1px solid #e5e7eb;border-radius:12px;padding:8px;box-shadow:0 2px 8px rgba(15,23,42,.05);break-inside:avoid}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+  body{margin:0;background:#f6f7fb;color:#1f2937;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;font-size:12px;line-height:1.32}
+  .page{width:min(100%,720px);margin:0 auto;padding:7px}
+  header{display:flex;flex-direction:column;align-items:flex-start;gap:5px;margin-bottom:6px;padding:8px;border-radius:10px;background:linear-gradient(135deg,#e0f2fe,#eef2ff);border:1px solid #dbeafe}
+  h1{margin:0;font-size:18px;line-height:1.12;color:#0f172a;letter-spacing:-.2px}
+  h2{margin:0 0 5px;font-size:13.5px;line-height:1.15;color:#111827}
+  header>div:last-child{display:flex;flex-wrap:wrap;gap:3px}
+  .tag{display:inline-flex;align-items:center;padding:2px 6px;border-radius:999px;background:#fff;border:1px solid #c7d2fe;color:#3730a3;font-weight:700;font-size:10px;line-height:1.2;white-space:nowrap}
+  .grid{display:grid;grid-template-columns:1fr;gap:6px}
+  .card{background:#fff;border:1px solid #e5e7eb;border-radius:10px;padding:7px;box-shadow:0 1px 5px rgba(15,23,42,.045);break-inside:avoid}
   .full{grid-column:1 / -1}
-  .mini{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-  .box{border-radius:10px;padding:7px;border:1px solid #e5e7eb;background:#f9fafb;text-align:center}
+  .mini{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .box{border-radius:8px;padding:5px 4px;border:1px solid #e5e7eb;background:#f9fafb;text-align:center;line-height:1.25}
   .box b{color:#dc2626}
-  .formula{font-size:14px;font-weight:800;color:#111827;background:#fef3c7;border:1px solid #fde68a;border-radius:10px;padding:6px 8px;text-align:center;margin:4px 0}
-  .arr{display:flex;align-items:center;justify-content:center;gap:3px;flex-wrap:wrap;margin:4px 0}
-  .cell{min-width:24px;padding:3px 5px;border-radius:7px;text-align:center;font-weight:700;border:1px solid #d1d5db;background:#f8fafc}
+  .formula{font-size:13px;font-weight:800;color:#111827;background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:5px 6px;text-align:center;margin:3px 0}
+  .arr{display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;margin:3px 0}
+  .cell{min-width:22px;padding:2px 4px;border-radius:6px;text-align:center;font-weight:700;border:1px solid #d1d5db;background:#f8fafc;font-size:11.5px;line-height:1.25}
   .a{background:#ecfeff;border-color:#67e8f9;color:#155e75}
   .b{background:#fce7f3;border-color:#f9a8d4;color:#9d174d}
   .rev{background:#fee2e2;border-color:#fca5a5;color:#991b1b}
-  .arrow{text-align:center;font-weight:900;color:#64748b;font-size:15px;margin:1px 0}
-  ol,ul{margin:4px 0 0 18px;padding:0}
-  li{margin:2px 0}
-  .tip{padding:6px 8px;border-radius:10px;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;font-weight:650}
-  .warn{padding:6px 8px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:650}
-  .kv{display:grid;grid-template-columns:70px 1fr;gap:4px 6px;margin-top:4px}
+  .arrow{text-align:center;font-weight:900;color:#64748b;font-size:13px;line-height:1.2;margin:1px 0}
+  ol,ul{margin:3px 0 0 16px;padding:0}
+  li{margin:1px 0}
+  .tip{padding:5px 6px;border-radius:8px;background:#ecfdf5;border:1px solid #bbf7d0;color:#065f46;font-weight:650}
+  .warn{padding:5px 6px;border-radius:8px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:650}
+  .kv{display:grid;grid-template-columns:54px 1fr;gap:3px 5px;margin-top:3px}
   .k{font-weight:800;color:#475569}
-  pre{margin:0;background:#0f172a;color:#e5e7eb;border-radius:12px;padding:10px;overflow:auto;font-size:11.5px;line-height:1.35;border:1px solid #1e293b}
+  pre{margin:0;background:#0f172a;color:#e5e7eb;border-radius:10px;padding:8px;overflow-x:auto;overflow-y:hidden;font-size:11px;line-height:1.32;border:1px solid #1e293b;-webkit-overflow-scrolling:touch;white-space:pre}
   code{font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace}
-  .hl{font-weight:900;color:#dc2626;background:#fee2e2;border-radius:5px;padding:0 3px}
-  .note{font-size:11px;color:#64748b}
+  .hl{font-weight:900;color:#dc2626;background:#fee2e2;border-radius:4px;padding:0 2px}
+  .note{font-size:10.5px;line-height:1.25;color:#64748b}
+  @media(min-width:820px){
+    body{font-size:12.5px;line-height:1.35}
+    .page{max-width:1100px;padding:10px}
+    header{flex-direction:row;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;padding:9px 10px;border-radius:12px}
+    h1{font-size:20px}
+    h2{font-size:14px}
+    .grid{grid-template-columns:1fr 1fr;gap:8px}
+    .card{border-radius:12px;padding:8px}
+    .cell{min-width:24px;padding:3px 5px;font-size:12px}
+    pre{font-size:11.5px;padding:10px;border-radius:12px}
+    .kv{grid-template-columns:70px 1fr}
+  }
+  @media(max-width:360px){
+    body{font-size:11.5px}
+    .page{padding:5px}
+    h1{font-size:16px}
+    .card{padding:6px}
+    .cell{min-width:20px;padding:2px 3px;font-size:11px}
+    pre{font-size:10.5px;padding:7px}
+  }
   @media print{
     body{background:#fff;font-size:10.8px}
-    .page{max-width:none;padding:6mm}
+    .page{width:auto;max-width:none;padding:6mm}
     header,.card{box-shadow:none}
     pre{font-size:9.5px;white-space:pre-wrap}
   }
-  @media(max-width:760px){.grid{grid-template-columns:1fr}.mini{grid-template-columns:1fr}h1{font-size:18px}}
 </style>
 </head>
 <body>

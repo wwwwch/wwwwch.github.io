@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>136. 只出现一次的数字｜手机端紧凑复习笔记</title>
+  <style>
+    * { box-sizing: border-box; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      margin: 0;
+      background: #eef3f9;
+      color: #172033;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "PingFang SC", Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .page {
+      width: min(100%, 760px);
+      margin: 0 auto;
+      padding: 10px;
+      background: linear-gradient(180deg, #ffffff 0%, #fbfdff 100%);
+    }
+    header {
+      display: grid;
+      grid-template-columns: 42px 1fr;
+      gap: 9px;
+      align-items: center;
+      padding: 10px 10px 9px;
+      border: 1px solid #d7e4f5;
+      border-radius: 14px;
+      background: #f8fbff;
+      box-shadow: 0 3px 12px rgba(31, 54, 89, .08);
+    }
+    .icon {
+      width: 42px; height: 42px;
+      display: grid; place-items: center;
+      border-radius: 12px;
+      background: #eaf3ff;
+      border: 1.5px solid #2f6fda;
+      font-size: 25px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 20px;
+      line-height: 1.18;
+      color: #0d4da8;
+      letter-spacing: -.2px;
+    }
+    .sub { margin-top: 3px; color: #5b6d86; font-size: 12px; font-weight: 700; }
+    h2 {
+      margin: 12px 0 7px;
+      font-size: 16px;
+      color: #0d4da8;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    h3 { margin: 0 0 6px; font-size: 15px; color: #1559b7; }
+    .tagline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+    }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 7px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      background: #edf5ff;
+      color: #0d4da8;
+      border: 1px solid #bed5f3;
+      white-space: nowrap;
+    }
+    .tag.best { background: #eaf8ed; color: #167330; border-color: #9bd1a7; }
+    .tag.warn { background: #fff5e9; color: #b95708; border-color: #f0c48f; }
+    .stack { display: grid; gap: 8px; }
+    .card {
+      border: 1.5px solid #d3e0f1;
+      border-radius: 12px;
+      background: #fff;
+      padding: 9px;
+      overflow: hidden;
+      box-shadow: 0 1px 8px rgba(20, 40, 70, .05);
+    }
+    .card.green { border-color: #9bd1a7; background: #fbfffc; }
+    .card.blue { border-color: #9dbcec; background: #fbfdff; }
+    .card.purple { border-color: #c6b3ed; background: #fefdff; }
+    .card.orange { border-color: #f1bb8a; background: #fffdfb; }
+    .method-title {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+      font-size: 15px;
+      font-weight: 900;
+      color: #0d4da8;
+    }
+    .green .method-title { color: #167330; }
+    .purple .method-title { color: #6e38bd; }
+    .orange .method-title { color: #c34b0d; }
+    p { margin: 4px 0 7px; }
+    .lead { color: #28374e; font-size: 13px; }
+    strong, .key { font-weight: 900; }
+    .red { color: #d91515; font-weight: 900; }
+    .blue-text { color: #0d4da8; font-weight: 900; }
+    .green-text { color: #167330; font-weight: 900; }
+    .purple-text { color: #6e38bd; font-weight: 900; }
+    .orange-text { color: #c34b0d; font-weight: 900; }
+    .table-wrap {
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      border-radius: 10px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      table-layout: fixed;
+      background: white;
+      font-size: 12.2px;
+      border: 1px solid #c9d8eb;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 6px 5px;
+      border: 1px solid #d7e2f0;
+      vertical-align: top;
+      text-align: left;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+    }
+    th { background: #eaf3ff; color: #0d4da8; font-weight: 900; text-align: center; }
+    .center { text-align: center; }
+    .stars { color: #ffad00; white-space: nowrap; letter-spacing: -1px; }
+    ul, ol { margin: 4px 0 0 18px; padding: 0; font-size: 13px; }
+    li { margin: 1px 0; }
+    .note {
+      margin-top: 7px;
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: #fffdf0;
+      border: 1px solid #e5c35d;
+      font-size: 12.8px;
+    }
+    .note b { color: #a86200; }
+    .formula {
+      margin: 6px 0;
+      padding: 7px 8px;
+      border-radius: 10px;
+      background: #f4f8ff;
+      border: 1px solid #c9dcf7;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12.5px;
+      overflow-wrap: anywhere;
+    }
+    .xor-box {
+      margin-top: 7px;
+      padding: 8px;
+      background: #fff7ec;
+      border: 1px solid #f1b36d;
+      border-radius: 10px;
+      font-size: 12px;
+      line-height: 1.38;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+    pre {
+      margin: 7px 0 0;
+      padding: 9px;
+      background: #111923;
+      color: #f4f7fb;
+      border-radius: 10px;
+      border: 1px solid #2b3a4c;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      font-size: 12px;
+      line-height: 1.42;
+      white-space: pre;
+    }
+    code { font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace; }
+    .kw { color: #ff8fe3; font-weight: 700; }
+    .fn { color: #a8d6ff; font-weight: 700; }
+    .cm { color: #7ed957; }
+    .num { color: #ffd166; }
+    .chips { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+    .chip {
+      padding: 4px 7px;
+      border-radius: 8px;
+      background: #f3f6fb;
+      border: 1px solid #d6e0ec;
+      font-size: 12px;
+      font-weight: 800;
+    }
+    .choice {
+      display: grid;
+      grid-template-columns: 24px 1fr;
+      gap: 6px;
+      align-items: start;
+      margin: 5px 0;
+      font-size: 13px;
+    }
+    .num-circle {
+      width: 21px; height: 21px;
+      display: grid; place-items: center;
+      border-radius: 50%;
+      background: #0d4da8;
+      color: white;
+      font-size: 11px;
+      font-weight: 900;
+    }
+    .summary {
+      margin: 9px 0 2px;
+      padding: 10px;
+      border: 1.5px solid #f0a21f;
+      background: linear-gradient(180deg, #fffdf5 0%, #fff6dd 100%);
+      border-radius: 12px;
+      font-size: 14px;
+      line-height: 1.5;
+      font-weight: 900;
+    }
+    .print-tip { margin: 9px 0 0; color: #69788d; font-size: 11.5px; text-align: center; }
+    @media (min-width: 720px) {
+      .two { grid-template-columns: 1fr 1fr; }
+      body { background: #e8edf5; }
+      .page { padding: 14px; }
+    }
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; max-width: none; padding: 8mm; }
+      .card, header { box-shadow: none; }
+      pre { white-space: pre-wrap; overflow: visible; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <div class="icon">🧠</div>
+      <div>
+        <h1>136. 只出现一次的数字</h1>
+        <div class="sub">集合 / 哈希表 / 数学 / 异或：核心解法速记</div>
+        <div class="tagline">
+          <span class="tag best">✅ 最优：异或</span>
+          <span class="tag">O(n)</span>
+          <span class="tag">O(1)</span>
+          <span class="tag warn">⚠️ 前提：其余数成对</span>
+        </div>
+      </div>
+    </header>
+
+    <section>
+      <h2>📊 方法对比</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>时间</th>
+              <th>空间</th>
+              <th>核心</th>
+              <th>推荐</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>集合添加/删除</strong></td>
+              <td class="center red">O(n)</td>
+              <td class="center red">O(n)</td>
+              <td>唯一性；成对删除</td>
+              <td class="center stars">⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td><strong>哈希表计数</strong></td>
+              <td class="center red">O(n)</td>
+              <td class="center red">O(n)</td>
+              <td>统计频率，找 1 次</td>
+              <td class="center stars">⭐⭐⭐</td>
+            </tr>
+            <tr>
+              <td><strong>数学法</strong></td>
+              <td class="center red">O(n)</td>
+              <td class="center red">O(n)</td>
+              <td>2×集合和 - 数组和</td>
+              <td class="center stars">⭐⭐</td>
+            </tr>
+            <tr>
+              <td><strong class="red">异或法</strong></td>
+              <td class="center red">O(n)</td>
+              <td class="center red">O(1)</td>
+              <td>a⊕a=0；a⊕0=a</td>
+              <td class="center stars">⭐⭐⭐⭐⭐</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section>
+      <h2>🔍 四种解法</h2>
+      <div class="stack two">
+        <article class="card green">
+          <div class="method-title">1️⃣ 集合存储法</div>
+          <p class="lead"><strong>思路：</strong>首次出现加入；再次出现删除；最后剩下目标数。</p>
+          <pre><code><span class="kw">def</span> <span class="fn">singleNumber</span>(nums):
+    seen = <span class="fn">set</span>()
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        <span class="kw">if</span> num <span class="kw">in</span> seen:
+            seen.remove(num)    <span class="cm"># 成对出现，从集合中删除</span>
+        <span class="kw">else</span>:
+            seen.add(num)       <span class="cm"># 首次出现，加入集合</span>
+    <span class="kw">return</span> seen.pop()           <span class="cm"># 集合中剩余的唯一元素</span></code></pre>
+          <div class="note"><b>💡 注意：</b>要求其他数字都出现两次；最终集合中只剩一个元素。</div>
+        </article>
+
+        <article class="card blue">
+          <div class="method-title">2️⃣ 哈希表计数法</div>
+          <p class="lead"><strong>思路：</strong>记录每个数字出现次数，再返回频率为 1 的数字。</p>
+          <pre><code><span class="kw">def</span> <span class="fn">singleNumber</span>(nums):
+    count = {}
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        count[num] = count.get(num, <span class="num">0</span>) + <span class="num">1</span>   <span class="cm"># 统计频率</span>
+    <span class="kw">for</span> num, freq <span class="kw">in</span> count.items():
+        <span class="kw">if</span> freq == <span class="num">1</span>:                        <span class="cm"># 找到只出现一次的数字</span>
+            <span class="kw">return</span> num</code></pre>
+          <div class="note"><b>💡 注意：</b>两次遍历；空间与不同数字个数相关；通用性最好。</div>
+        </article>
+
+        <article class="card purple">
+          <div class="method-title">3️⃣ 数学法</div>
+          <p class="lead"><strong>思路：</strong>每个重复数在集合和中只算一次。</p>
+          <div class="formula">2 × sum(set(nums)) - sum(nums) = 只出现一次的数</div>
+          <pre><code><span class="kw">def</span> <span class="fn">singleNumber</span>(nums):
+    <span class="kw">return</span> <span class="num">2</span> * <span class="fn">sum</span>(<span class="fn">set</span>(nums)) - <span class="fn">sum</span>(nums)</code></pre>
+          <div class="note"><b>💡 注意：</b>严格依赖“其他数字都恰好出现两次”；Python 无整数溢出问题。</div>
+        </article>
+
+        <article class="card orange">
+          <div class="method-title">4️⃣ 位运算：异或法 <span class="tag best">最优解</span></div>
+          <p class="lead"><strong>思路：</strong>成对数字异或后抵消为 0，剩下唯一数字。</p>
+          <div class="chips">
+            <span class="chip">a ⊕ 0 = a</span>
+            <span class="chip">a ⊕ a = 0</span>
+            <span class="chip">可交换 / 可结合</span>
+          </div>
+          <pre><code><span class="kw">def</span> <span class="fn">singleNumber</span>(nums):
+    result = <span class="num">0</span>
+    <span class="kw">for</span> num <span class="kw">in</span> nums:
+        result ^= num   <span class="cm"># 依次异或所有数字</span>
+    <span class="kw">return</span> result</code></pre>
+          <div class="xor-box">假设数组: [a, b, c, a, b]
+计算过程:
+0 ⊕ a = a
+a ⊕ b = a⊕b
+a⊕b ⊕ c = a⊕b⊕c
+a⊕b⊕c ⊕ a = (a⊕a)⊕b⊕c = 0⊕b⊕c = b⊕c
+b⊕c ⊕ b = (b⊕b)⊕c = 0⊕c = c ✅</div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h2>⚠️ 适用条件 / 易错点</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>方法</th>
+              <th>适用</th>
+              <th>限制</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="green-text">集合</td>
+              <td>其他数字出现次数为偶数</td>
+              <td>额外 <span class="red">O(n)</span> 空间</td>
+            </tr>
+            <tr>
+              <td class="blue-text">哈希表</td>
+              <td>任意频率统计</td>
+              <td>额外 <span class="red">O(n)</span> 空间</td>
+            </tr>
+            <tr>
+              <td class="purple-text">数学</td>
+              <td>其他数字都出现两次</td>
+              <td>频率条件严格</td>
+            </tr>
+            <tr>
+              <td class="orange-text">异或</td>
+              <td>其他数字出现偶数次</td>
+              <td>不适合任意频率统计</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="note"><b>记忆点：</b><span class="red">成对抵消</span>是本题核心；面试优先写异或，解释三条性质。</div>
+    </section>
+
+    <section>
+      <h2>📝 解题选择</h2>
+      <div class="card">
+        <div class="choice"><div class="num-circle">1</div><div><strong>面试 / 竞赛：</strong>首选 <span class="red">异或法</span>，时间 O(n)、空间 O(1)。</div></div>
+        <div class="choice"><div class="num-circle">2</div><div><strong>通用统计：</strong>选 <span class="blue-text">哈希表</span>，扩展性强。</div></div>
+        <div class="choice"><div class="num-circle">3</div><div><strong>快速理解：</strong>集合法直观，数学法最短但限制严格。</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>💎 一句话总结</h2>
+      <div class="summary">
+        异或法用 <span class="red">a⊕a=0</span> 抵消成对数字，最终留下唯一值；本题最优为 <span class="red">O(n)</span> 时间、<span class="red">O(1)</span> 空间。
+      </div>
+      <div class="print-tip">手机截图 / 打印友好：单栏优先，表格与代码块局部横向滚动，避免整页横向滚动。</div>
+    </section>
+  </main>
+</body>
+</html>

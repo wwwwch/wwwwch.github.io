@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>20. 有效的括号｜邻项消除 · 栈</title>
+<style>
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;padding:8px;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",Arial,sans-serif;
+    background:#f3f4f6;color:#111827;font-size:13px;line-height:1.38;
+  }
+  .wrap{max-width:760px;margin:0 auto;background:#fff;border-radius:14px;padding:10px;box-shadow:0 2px 12px rgba(15,23,42,.08)}
+  h1{font-size:18px;line-height:1.18;margin:0 0 6px;letter-spacing:-.2px}
+  h2{font-size:14px;margin:9px 0 5px;display:flex;align-items:center;gap:5px}
+  p{margin:4px 0}
+  ul{margin:4px 0 0 17px;padding:0}
+  li{margin:2px 0}
+  .tags{display:flex;flex-wrap:wrap;gap:4px;margin:4px 0 7px}
+  .tag{display:inline-flex;align-items:center;gap:2px;padding:2px 7px;border-radius:999px;background:#e0f2fe;color:#075985;font-size:12px;font-weight:700;white-space:nowrap}
+  .tag.good{background:#dcfce7;color:#166534} .tag.bad{background:#fee2e2;color:#991b1b} .tag.hot{background:#fef3c7;color:#92400e}
+  .card{border:1px solid #e5e7eb;border-radius:11px;background:#fafafa;padding:8px;margin-top:7px;overflow:hidden}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+  .k{font-weight:800;background:#fef3c7;border-radius:4px;padding:0 4px}
+  .muted{color:#4b5563;font-size:12px}
+  .flow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-top:5px;font-weight:800}
+  .node{background:#eef2ff;color:#3730a3;border:1px solid #c7d2fe;border-radius:8px;padding:4px 7px;white-space:nowrap}
+  .arrow{color:#6b7280;font-weight:900}
+  .mini-stack{display:flex;gap:6px;align-items:flex-end;justify-content:center;margin:6px 0}
+  .stack{width:56px;border:2px solid #94a3b8;border-top:0;border-radius:0 0 7px 7px;padding:3px;background:#f8fafc;display:flex;flex-direction:column-reverse;gap:3px;min-height:58px}
+  .stk{display:block;text-align:center;border-radius:5px;background:#dbeafe;color:#1d4ed8;font-weight:800;padding:2px 0}
+  .caption{text-align:center;font-size:11.5px;color:#475569;font-weight:700}
+  table{width:100%;border-collapse:collapse;margin-top:4px;font-size:12px;table-layout:fixed}
+  th,td{border:1px solid #e5e7eb;padding:5px;vertical-align:top;word-break:break-word}
+  th{background:#f1f5f9;text-align:left}
+  .tip{margin-top:6px;padding:7px 8px;border-radius:9px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-weight:800}
+  .formula{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;text-align:center;margin-top:6px}
+  .formula div{border-radius:9px;padding:6px 4px;background:#f8fafc;border:1px solid #e2e8f0;font-size:12px}
+  .formula b{display:block;font-size:15px;margin-bottom:2px}
+  details{margin-top:7px;border:1px solid #e5e7eb;border-radius:10px;background:#111827;overflow:hidden}
+  summary{cursor:pointer;list-style:none;padding:7px 9px;background:#1f2937;color:#f9fafb;font-weight:800;font-size:13px}
+  summary::-webkit-details-marker{display:none}
+  pre{margin:0;padding:8px;background:#111827;color:#e5e7eb;overflow:auto;max-width:100%;font-size:11.2px;line-height:1.34;white-space:pre}
+  code{font-family:Consolas,Monaco,"Courier New",monospace}
+  .print-note{font-size:11px;color:#64748b;text-align:right;margin-top:6px}
+  @media(max-width:560px){
+    body{padding:6px;font-size:12.5px}
+    .wrap{padding:8px;border-radius:12px}
+    h1{font-size:16px}
+    h2{font-size:13.5px;margin-top:8px}
+    .grid{grid-template-columns:1fr;gap:6px}
+    .formula{grid-template-columns:1fr 1fr 1fr;gap:4px}
+    pre{font-size:10.5px}
+    th,td{padding:4px}
+  }
+  @media print{body{background:#fff;padding:0}.wrap{box-shadow:none;max-width:none;border-radius:0}details{break-inside:avoid}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <h1>20. 有效的括号｜邻项消除 · 栈</h1>
+  <div class="tags">
+    <span class="tag">LC 20</span><span class="tag">Stack</span><span class="tag">邻项消除</span><span class="tag hot">左入右出</span>
+  </div>
+
+  <section class="card">
+    <h2>🎯 核心判定</h2>
+    <div class="formula">
+      <div><b>同类</b><span>() [] {}</span></div>
+      <div><b>有序</b><span>先开后闭</span></div>
+      <div><b>成对</b><span>栈空结束</span></div>
+    </div>
+    <div class="flow">
+      <span class="node">左括号</span><span class="arrow">→</span><span class="node">压入“期望右括号”</span><span class="arrow">→</span><span class="node">右括号弹栈比对</span>
+    </div>
+  </section>
+
+  <div class="grid">
+    <section class="card">
+      <h2>🧩 消消乐图解</h2>
+      <div class="flow"><span class="node">[()]</span><span class="arrow">→</span><span class="node">[]</span><span class="arrow">→</span><span class="node">空串 ✅</span></div>
+      <div class="mini-stack">
+        <div><div class="stack"><span class="stk">]</span><span class="stk">)</span></div><div class="caption">存期望</div></div>
+        <div class="arrow">⇄</div>
+        <div><div class="stack"><span class="stk">c</span></div><div class="caption">遇右括号</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>✅ / ❌ 速记</h2>
+      <p><span class="tag good">()</span><span class="tag good">(())</span><span class="tag good">[()]</span><span class="tag good">[()]{}</span></p>
+      <table>
+        <tr><th>无效</th><th>原因</th></tr>
+        <tr><td><span class="tag bad">(()</span></td><td>缺右括号</td></tr>
+        <tr><td><span class="tag bad">())</span></td><td>缺左括号</td></tr>
+        <tr><td><span class="tag bad">[()]}</span></td><td>类型/顺序不匹配</td></tr>
+      </table>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>⚙️ 模板步骤</h2>
+    <table>
+      <tr><th>场景</th><th>动作</th><th>结论</th></tr>
+      <tr><td>长度奇数</td><td>直接返回 False</td><td>必无效</td></tr>
+      <tr><td>遇左括号</td><td>入栈对应右括号</td><td>等待匹配</td></tr>
+      <tr><td>遇右括号</td><td>栈顶弹出比较</td><td>空栈/不等即 False</td></tr>
+      <tr><td>遍历结束</td><td>检查栈</td><td><span class="k">栈空才 True</span></td></tr>
+    </table>
+    <div class="tip">易错点：不是把左括号入栈，而是把“期望的右括号”入栈；这样比较更直接。</div>
+  </section>
+
+  <details open>
+    <summary>代码 V1｜栈 + 映射表（完整保留）</summary>
+<pre><code>class Solution:
+    def isValid(self, s: str) -> bool:
+        if len(s) % 2: # s 长度必须是偶数
+            return False
+
+        mp = {'(':')', '[':']', '{':'}'} # 括号映射表
+        st = []  # 列表模拟栈
+        for c in s:
+            if c in mp: # c是左括号
+                st.append(mp[c]) # 入栈对应的右括号
+            elif (not st) or (st.pop() != c):   
+                return False    # 没有左括号，或者左括号类型不对
+
+        return (not st)    # 所有字符处理完后，栈应为空</code></pre>
+  </details>
+
+  <details>
+    <summary>代码 V2｜栈 + 判断（完整保留）</summary>
+<pre><code>class Solution:
+    def isValid(self, s: str) -> bool:
+        if len(s) % 2:  # s 长度必须是偶数
+            return False
+        
+        st = [] # 列表模拟栈
+        for c in s:
+            if c == '(':
+                st.append(')')
+            elif c == '[':
+                st.append(']')
+            elif c == '{':
+                st.append('}')
+            elif (not st) or (st.pop() != c):   
+                return False    # 没有左括号，或者左括号类型不对
+            
+        return (not st)   # 所有字符处理完后，栈应为空</code></pre>
+  </details>
+
+  <section class="card">
+    <h2>🧠 一句话记忆</h2>
+    <p><span class="k">左入右出，右来比顶，空栈才稳。</span></p>
+  </section>
+
+  <div class="print-note">适合手机复习 / 截图 / 打印</div>
+</main>
+</body>
+</html>
